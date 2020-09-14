@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Melville.Generated;
+using NodaTime;
+
 
 namespace Planner.Models.Tasks
 {
@@ -11,12 +13,15 @@ namespace Planner.Models.Tasks
         Pending = 4,
         Cancelled = 5
     }
-    public class PlannerTask
+    public partial class PlannerTask
     {
-        public string Name { get; set; } = "";
-        public char Priority { get; set; } = ' ';
-        public int Order { get; set; }
-        public PlannerTaskStatus Status { get; set; }
-        public string StatusDetail { get; set; } = "";
+        [AutoNotify] private LocalDate date;
+        [AutoNotify] private string name = "";
+        [AutoNotify] private char priority  = ' ';
+        [AutoNotify] private int order;
+        [AutoNotify] private PlannerTaskStatus status; 
+        [AutoNotify] private string statusDetail  = "";
+        [AutoNotify] public string PriorityDisplay => $"{Priority}{DisplayedOrder(Order)}";
+        private string DisplayedOrder(int o) => o > 0 ? o.ToString() : "";
     }
 }

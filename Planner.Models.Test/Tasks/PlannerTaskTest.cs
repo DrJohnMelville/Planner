@@ -1,4 +1,5 @@
-﻿using Planner.Models.Tasks;
+﻿using Melville.TestHelpers.InpcTesting;
+using Planner.Models.Tasks;
 using Xunit;
 
 namespace Planner.Models.Test.Tasks
@@ -49,6 +50,19 @@ namespace Planner.Models.Test.Tasks
             
         }
 
-
+        [Theory]
+        [InlineData(' ', 0, " ")]
+        [InlineData('A', 7, "A7")]
+        [InlineData('A', 10, "A10")]
+        [InlineData('B', 7, "B7")]
+        [InlineData('B', 0, "B")]
+        public void PriorityOrder(char priority, int order, string display)
+        {
+            sut.Priority = priority;
+            using var _ = INPCCounter.VerifyInpcFired(sut, i => i.Order, i => i.PriorityDisplay);
+            sut.Order = order;
+            Assert.Equal(display, sut.PriorityDisplay);
+            
+        }
     }
 }
