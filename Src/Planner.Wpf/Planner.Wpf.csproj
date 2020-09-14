@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
@@ -8,6 +8,12 @@
 
     <ItemGroup>
       <PackageReference Include="Melville.WpfAppFramework" Version="0.1.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="TaskList\DailyTaskListView.xaml.cs">
+        <DependentUpon>DailyTaskListView.xaml</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>
