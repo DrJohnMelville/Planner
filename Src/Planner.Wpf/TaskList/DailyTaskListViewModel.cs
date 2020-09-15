@@ -2,7 +2,7 @@
 using System.Windows.Data;
 using Melville.MVVM.AdvancedLists.PersistentLinq;
 using Planner.Models.Tasks;
-using Melville.Generated;
+using Melville.INPC;
 
 namespace Planner.Wpf.TaskList
 {
@@ -10,7 +10,7 @@ namespace Planner.Wpf.TaskList
     {
         private readonly PlannerTaskList sourceList;
         public CollectionView TaskItems { get; }
-        private bool isRankingTasks;
+        [AutoNotify]private bool isRankingTasks;
 
         private static void AddFakeData(PlannerTaskList src)
         {

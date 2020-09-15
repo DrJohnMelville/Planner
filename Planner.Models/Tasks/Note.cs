@@ -1,5 +1,5 @@
 ﻿using NodaTime;
-using Melville.Generated;
+using Melville.INPC;
 
 namespace Planner.Models.Tasks
 {
