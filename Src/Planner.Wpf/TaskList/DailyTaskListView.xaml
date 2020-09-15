@@ -4,9 +4,57 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Planner.Wpf.TaskList"
-             mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        <TextBlock>Foo</TextBlock>
-    </Grid>
+             xmlns:easyGrids="clr-namespace:Melville.WpfControls.EasyGrids;assembly=Melville.WpfControls"
+             xmlns:wpfHacks="clr-namespace:Melville.MVVM.Wpf.WpfHacks;assembly=Melville.MVVM.Wpf"
+             d:DataContext="{d:DesignData {x:Type local:DailyTaskListViewModel}}"
+             mc:Ignorable="d" Grid.IsSharedSizeScope="True">
+    <UserControl.Resources>
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="Margin" Value="4 2"/>
+        </Style>
+        <DataTemplate x:Key="TaskLineTemplate" DataType="{x:Type local:PlannerTaskViewModel}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="CheckMark"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="PriorityRank"/>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="2" Text="{Binding PlannerTask.Name}" Margin="4 2"/>
+                <Rectangle Grid.ColumnSpan="3" Height="0.5" VerticalAlignment="Top" HorizontalAlignment="Stretch" Fill="LightGray"/>
+                <Rectangle Grid.ColumnSpan="3" Height="0.5" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Fill="LightGray"/>
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+    <Border BorderThickness="2" BorderBrush="Black" x:Name="PlannerTaskListBorder" Background="Transparent">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="CheckMark"/>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="PriorityRank"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.Resources>
+            </Grid.Resources>
+            <TextBlock FontFamily="Marlett">a</TextBlock>
+            <TextBlock Grid.Column="1">P1</TextBlock>
+            <TextBlock Grid.Column="2">Task</TextBlock>
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"
+                          Grid.ColumnSpan="3" Grid.Row="1">
+                <ItemsControl ItemsSource="{Binding TaskItems}" ItemTemplate="{StaticResource TaskLineTemplate}"/>
+            </ScrollViewer>
+            <Rectangle Width="1" Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Right" Fill="LightGray"/>
+            <Rectangle Grid.Column="1" Grid.RowSpan="2" Width="1" VerticalAlignment="Stretch" HorizontalAlignment="Right" Fill="LightGray"/>
+            <ToggleButton Grid.Row="1" Grid.ColumnSpan="3" Margin="0 0 20 20"
+                    IsChecked="{Binding IsRankingTasks, Mode=TwoWay}"
+                    wpfHacks:VisibilityHack.HideUnless="{Binding IsMouseOver, ElementName=PlannerTaskListBorder}"
+                    HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="5 0">Rank</ToggleButton>
+        </Grid>
+    </Border>
 </UserControl>

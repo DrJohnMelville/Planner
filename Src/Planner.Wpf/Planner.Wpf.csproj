@@ -2,18 +2,24 @@
 
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>netcoreapp3.1-windows</TargetFramework>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
         <UseWPF>true</UseWPF>
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Melville.Generators.INPC" Version="0.1.0" />
       <PackageReference Include="Melville.WpfAppFramework" Version="0.1.4" />
+      <PackageReference Include="Melville.WpfControls" Version="0.2.6" />
     </ItemGroup>
 
     <ItemGroup>
       <Compile Update="TaskList\DailyTaskListView.xaml.cs">
         <DependentUpon>DailyTaskListView.xaml</DependentUpon>
       </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Planner.Models\Planner.Models.csproj" />
     </ItemGroup>
 
 </Project>
