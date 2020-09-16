@@ -4,8 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Planner.Wpf.TaskList"
-             xmlns:easyGrids="clr-namespace:Melville.WpfControls.EasyGrids;assembly=Melville.WpfControls"
              xmlns:wpfHacks="clr-namespace:Melville.MVVM.Wpf.WpfHacks;assembly=Melville.MVVM.Wpf"
+             xmlns:eventBindings="clr-namespace:Melville.MVVM.Wpf.EventBindings;assembly=Melville.MVVM.Wpf"
+             xmlns:bindings="clr-namespace:Melville.MVVM.Wpf.Bindings;assembly=Melville.MVVM.Wpf"
              d:DataContext="{d:DesignData {x:Type local:DailyTaskListViewModel}}"
              mc:Ignorable="d" Grid.IsSharedSizeScope="True">
     <UserControl.Resources>
@@ -23,9 +24,26 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
+                <TextBlock Grid.Column="1" Text="{Binding PlannerTask.PriorityDisplay}" Margin="4 2"/>
                 <TextBlock Grid.Column="2" Text="{Binding PlannerTask.Name}" Margin="4 2"/>
                 <Rectangle Grid.ColumnSpan="3" Height="0.5" VerticalAlignment="Top" HorizontalAlignment="Stretch" Fill="LightGray"/>
                 <Rectangle Grid.ColumnSpan="3" Height="0.5" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Fill="LightGray"/>
+                <Button Grid.Column="2" Background="Transparent" Click="{eventBindings:EventBinding ButtonA}"
+                        Visibility="{bindings:MultiBind {x:Static local:AndVisibilityConverter.Instance},
+                        {Binding DataContext.IsRankingTasks, 
+                             RelativeSource={RelativeSource AncestorType={x:Type local:DailyTaskListView}}},
+                             {Binding ShowBlankButton}}"
+                        />
+                <UniformGrid Columns="4" Grid.Column="2"
+                             Visibility="{bindings:MultiBind {x:Static local:AndVisibilityConverter.Instance},
+                        {Binding DataContext.IsRankingTasks, 
+                             RelativeSource={RelativeSource AncestorType={x:Type local:DailyTaskListView}}},
+                             {Binding ShowPriorityButton}}">
+                    <Button Background="#77FF0000" Content="A" Click="{eventBindings:EventBinding ButtonA}"/>
+                    <Button Background="#77FFFF00" Content="B" Click="{eventBindings:EventBinding ButtonB}"/>
+                    <Button Background="#7700FF00" Content="C" Click="{eventBindings:EventBinding ButtonC}"/>
+                    <Button Background="#770000FF" Content="D" Click="{eventBindings:EventBinding ButtonD}"/>
+                </UniformGrid>
             </Grid>
         </DataTemplate>
     </UserControl.Resources>

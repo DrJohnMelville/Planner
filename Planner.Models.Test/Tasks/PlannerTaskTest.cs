@@ -64,5 +64,29 @@ namespace Planner.Models.Test.Tasks
             Assert.Equal(display, sut.PriorityDisplay);
             
         }
+
+        [Theory]
+        [InlineData('A', 1, "Foo", 'A', 1, "Foo", 0)]
+        [InlineData('A', 1, "Foo", ' ', 1, "Foo", 1)]
+        [InlineData('C', 1, "Foo", 'A', 1, "Foo", 1)]
+        [InlineData('A', 1, "Foo", 'C', 1, "Foo", -1)]
+        [InlineData('A', 2, "Foo", 'A', 1, "Foo", 1)]
+        [InlineData('A', 1, "Foo", 'A', 2, "Foo", -1)]
+        [InlineData('A', 1, "Foo", 'A', 1, "Aoo", 1)]
+        [InlineData('A', 1, "Foo", 'A', 1, "Zoo", -1)]
+        [InlineData('A', 1, "Foo", 'A', 2, "Bar", -1)]
+        public void SortLevel(char p1, int o1, string name1, char p2, int o2, string name2, int comp)
+        {
+            sut.Priority = p1;
+            sut.Order = o1;
+            sut.Name = name1;
+            var other = new PlannerTask();
+            other.Priority = p2;
+            other.Order = o2;
+            other.Name = name2;
+
+            Assert.Equal(comp, sut.CompareTo(other));
+            
+        }
     }
 }

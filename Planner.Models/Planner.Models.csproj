@@ -7,8 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Melville.INPC" Version="0.1.1" />
-      <PackageReference Include="Melville.Generators.INPC" Version="0.1.1" />
+      <PackageReference Include="Melville.INPC" Version="0.1.2" />
+      <PackageReference Include="Melville.Generators.INPC" Version="0.1.2" />
       <PackageReference Include="Melville.MVVM" Version="0.3.6" />
       <PackageReference Include="NodaTime" Version="3.0.0" />
     </ItemGroup>
