@@ -15,7 +15,7 @@ namespace Planner.Wpf.TaskList
     {
         private readonly PlannerTaskList sourceList;
         public CollectionView TaskItems { get; }
-        [AutoNotify]private bool isRankingTasks;
+        [AutoNotify] private bool isRankingTasks;
 
         private static void AddFakeData(PlannerTaskList src)
         {
@@ -30,18 +30,28 @@ namespace Planner.Wpf.TaskList
             sourceList = new PlannerTaskList();
             AddFakeData(sourceList);
             TaskItems = new ListCollectionView(sourceList.SelectCol(i => new PlannerTaskViewModel(i)));
-            TaskItems.SortDescriptions.Add(new SortDescription("Priority", ListSortDirection.Ascending));
-            TaskItems.SortDescriptions.Add(new SortDescription("Order", ListSortDirection.Ascending));
-            TaskItems.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
-            ((ICollectionViewLiveShaping) TaskItems).IsLiveSorting = true;
+            var lsCol = (ICollectionViewLiveShaping) TaskItems;
+            TaskItems.SortDescriptions.Add(new SortDescription("PlannerTask.Priority", ListSortDirection.Ascending));
+            TaskItems.SortDescriptions.Add(new SortDescription("PlannerTask.Order", ListSortDirection.Ascending));
+            lsCol.IsLiveSorting = true;
         }
-        public void ButtonA(PlannerTaskViewModel model) => sourceList.PickPriority(model.PlannerTask, 'A');
-        public void ButtonB(PlannerTaskViewModel model) => sourceList.PickPriority(model.PlannerTask, 'B');
-        public void ButtonC(PlannerTaskViewModel model) => sourceList.PickPriority(model.PlannerTask, 'C');
-        public void ButtonD(PlannerTaskViewModel model) => sourceList.PickPriority(model.PlannerTask, 'D');
+        public void ButtonA(PlannerTaskViewModel model) => PriorityButtonPress(model, 'A');
+        public void ButtonB(PlannerTaskViewModel model) => PriorityButtonPress(model, 'B');
+        public void ButtonC(PlannerTaskViewModel model) => PriorityButtonPress(model, 'C');
+        public void ButtonD(PlannerTaskViewModel model) => PriorityButtonPress(model, 'D');
 
+        private void PriorityButtonPress(PlannerTaskViewModel model, char button)
+        {
+            sourceList.PickPriority(model.PlannerTask, button);
+            CheckIfDonePrioritizing();
+        }
+
+        private void CheckIfDonePrioritizing()
+        {
+            if (sourceList.All(i => i.Prioritized)) isRankingTasks = false;
+        }
     }
-
+    
     [AutoNotify]
     public partial class PlannerTaskViewModel
     {
@@ -54,7 +64,7 @@ namespace Planner.Wpf.TaskList
                 .DelegatePropertyChangeFrom(PlannerTask, nameof(PlannerTask.PriorityDisplay),
             nameof(ShowPriorityButton), nameof(ShowBlankButton));
         }
-
+        
         public bool ShowPriorityButton => PlannerTask.Priority == ' ';
         public bool ShowBlankButton => !ShowPriorityButton;
     }

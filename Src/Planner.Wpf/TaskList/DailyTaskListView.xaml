@@ -24,16 +24,30 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
+                <Grid.Resources>
+                    <Style  TargetType="{x:Type Button}">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Grid Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center  "/>
+                                    </Grid>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Grid.Resources>
                 <TextBlock Grid.Column="1" Text="{Binding PlannerTask.PriorityDisplay}" Margin="4 2"/>
-                <TextBlock Grid.Column="2" Text="{Binding PlannerTask.Name}" Margin="4 2"/>
                 <Rectangle Grid.ColumnSpan="3" Height="0.5" VerticalAlignment="Top" HorizontalAlignment="Stretch" Fill="LightGray"/>
                 <Rectangle Grid.ColumnSpan="3" Height="0.5" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Fill="LightGray"/>
+                <TextBox Grid.Column="2" Text="{Binding PlannerTask.Name}" Margin="4 2" BorderThickness="0"/>
                 <Button Grid.Column="2" Background="Transparent" Click="{eventBindings:EventBinding ButtonA}"
                         Visibility="{bindings:MultiBind {x:Static local:AndVisibilityConverter.Instance},
                         {Binding DataContext.IsRankingTasks, 
                              RelativeSource={RelativeSource AncestorType={x:Type local:DailyTaskListView}}},
                              {Binding ShowBlankButton}}"
-                        />
+                />
                 <UniformGrid Columns="4" Grid.Column="2"
                              Visibility="{bindings:MultiBind {x:Static local:AndVisibilityConverter.Instance},
                         {Binding DataContext.IsRankingTasks, 

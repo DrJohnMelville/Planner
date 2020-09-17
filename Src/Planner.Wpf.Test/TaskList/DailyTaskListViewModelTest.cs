@@ -37,8 +37,22 @@ namespace Planner.Wpf.Test.TaskList
             Assert.False(itemVM.ShowPriorityButton);
             sut.ButtonA(itemVM);
             Assert.Equal(priority, itemVM.PlannerTask.PriorityDisplay);
-            
         }
+
+        [Fact]
+        public void TurnOffSortingWhenDone()
+        {
+            sut.IsRankingTasks = true;
+            foreach (var model in sut.TaskItems.OfType<PlannerTaskViewModel>())
+            {
+                while (!model.PlannerTask.Prioritized)
+                {
+                    sut.ButtonA(model);
+                }
+            }
+            Assert.False(sut.IsRankingTasks);
+        }
+
 
     }
 }

@@ -59,17 +59,16 @@ namespace Planner.Models.Test.Tasks
         public void PriorityOrder(char priority, int order, string display)
         {
             sut.Priority = priority;
-            using var _ = INPCCounter.VerifyInpcFired(sut, i => i.Order, i => i.PriorityDisplay);
+            using var _ = INPCCounter.VerifyInpcFired(sut, i => i.Order, i=>i.Prioritized, i => i.PriorityDisplay);
             sut.Order = order;
             Assert.Equal(display, sut.PriorityDisplay);
-            
         }
 
         [Theory]
         [InlineData('A', 1, "Foo", 'A', 1, "Foo", 0)]
-        [InlineData('A', 1, "Foo", ' ', 1, "Foo", 1)]
-        [InlineData('C', 1, "Foo", 'A', 1, "Foo", 1)]
-        [InlineData('A', 1, "Foo", 'C', 1, "Foo", -1)]
+        [InlineData('A', 1, "Foo", ' ', 1, "Foo", 33)]
+        [InlineData('C', 1, "Foo", 'A', 1, "Foo", 2)]
+        [InlineData('A', 1, "Foo", 'C', 1, "Foo", -2)]
         [InlineData('A', 2, "Foo", 'A', 1, "Foo", 1)]
         [InlineData('A', 1, "Foo", 'A', 2, "Foo", -1)]
         [InlineData('A', 1, "Foo", 'A', 1, "Aoo", 1)]

@@ -23,6 +23,8 @@ namespace Planner.Models.Tasks
         [AutoNotify] private PlannerTaskStatus status; 
         [AutoNotify] private string statusDetail  = "";
         [AutoNotify] public string PriorityDisplay => $"{Priority}{DisplayedOrder(Order)}";
+        [AutoNotify] public bool Prioritized => Priority != ' ' && Order > 0;
+
         private string DisplayedOrder(int o) => o > 0 ? o.ToString() : "";
 
         public int CompareTo(PlannerTask? other)

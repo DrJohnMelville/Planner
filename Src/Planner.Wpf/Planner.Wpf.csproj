@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Planner.Models\Planner.Models.csproj" />
+      <ProjectReference Include="..\Planner.Models\Planner.Models.csproj" />
     </ItemGroup>
 
 </Project>
