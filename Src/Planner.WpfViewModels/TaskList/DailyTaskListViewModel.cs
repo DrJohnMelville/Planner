@@ -1,8 +1,6 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
 using System.Linq;
-using System.Windows;
 using System.Windows.Data;
 using Melville.INPC;
 using Melville.MVVM.AdvancedLists.PersistentLinq;
@@ -28,12 +26,19 @@ namespace Planner.WpfViewModels.TaskList
         {
             sourceList = new PlannerTaskList();
             AddFakeData(sourceList);
-            TaskItems = new ListCollectionView(sourceList.SelectCol(i => new PlannerTaskViewModel(i)));
-            var lsCol = (ICollectionViewLiveShaping) TaskItems;
-            TaskItems.SortDescriptions.Add(new SortDescription("PlannerTask.Priority", ListSortDirection.Ascending));
-            TaskItems.SortDescriptions.Add(new SortDescription("PlannerTask.Order", ListSortDirection.Ascending));
-            lsCol.IsLiveSorting = true;
+            TaskItems = CreateTaskItemsCollectionView();
+            
         }
+
+        private CollectionView CreateTaskItemsCollectionView()
+        {
+            var ret = new ListCollectionView(sourceList.SelectCol(i => new PlannerTaskViewModel(i)));
+            ret.SortDescriptions.Add(new SortDescription("PlannerTask.Priority", ListSortDirection.Ascending));
+            ret.SortDescriptions.Add(new SortDescription("PlannerTask.Order", ListSortDirection.Ascending));
+            ret.IsLiveSorting = true;
+            return ret;
+        }
+
         public void ButtonA(PlannerTaskViewModel model) => PriorityButtonPress(model, 'A');
         public void ButtonB(PlannerTaskViewModel model) => PriorityButtonPress(model, 'B');
         public void ButtonC(PlannerTaskViewModel model) => PriorityButtonPress(model, 'C');
@@ -42,41 +47,32 @@ namespace Planner.WpfViewModels.TaskList
         private void PriorityButtonPress(PlannerTaskViewModel model, char button)
         {
             sourceList.PickPriority(model.PlannerTask, button);
+            TryAutoOrder();
             CheckIfDonePrioritizing();
         }
+
+        private void TryAutoOrder()
+        {
+            if (AnyTaskLacksAPriority()) return;
+            foreach (var task in SingleUnassignedTasksWithinTheirPriority())
+            {
+                sourceList.PickPriority(task.PlannerTask, 'A');                              
+            }
+        }
+
+        private IEnumerable<PlannerTaskViewModel> SingleUnassignedTasksWithinTheirPriority() =>
+            TaskItems
+                .OfType<PlannerTaskViewModel>()
+                .Where(i=>i.PlannerTask.Order < 1)
+                .GroupBy(i=>i.PlannerTask.Priority)
+                .Where(i=>i.Count() == 1)
+                .Select(i=>i.First());
+
+        private bool AnyTaskLacksAPriority() => TaskItems.OfType<PlannerTaskViewModel>().Any(i => i.PlannerTask.Priority == ' ');
 
         private void CheckIfDonePrioritizing()
         {
             if (sourceList.All(i => i.Prioritized)) IsRankingTasks = false;
-        }
-    }
-    
-    [AutoNotify]
-    public partial class PlannerTaskViewModel
-    {
-        public PlannerTask PlannerTask {get;}
-
-        public PlannerTaskViewModel(PlannerTask plannerTask)
-        {
-            PlannerTask = plannerTask;
-            ((IExternalNotifyPropertyChanged)this)
-                .DelegatePropertyChangeFrom(PlannerTask, nameof(PlannerTask.PriorityDisplay),
-            nameof(ShowPriorityButton), nameof(ShowBlankButton));
-        }
-        
-        public bool ShowPriorityButton => PlannerTask.Priority == ' ';
-        public bool ShowBlankButton => !ShowPriorityButton;
-    }
-    
-    public class AndVisibilityConverter: IMultiValueConverter
-    {
-        public static readonly AndVisibilityConverter Instance = new AndVisibilityConverter(); 
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) => 
-            values?.All(i => i is bool b && b)??false ? Visibility.Visible : Visibility.Collapsed;
-
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            throw new NotSupportedException();
         }
     }
 }
