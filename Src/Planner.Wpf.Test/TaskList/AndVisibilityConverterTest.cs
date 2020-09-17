@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows;
 using Planner.Wpf.TaskList;
+using Planner.WpfViewModels.TaskList;
 using Xunit;
 
 namespace Planner.Wpf.Test.TaskList

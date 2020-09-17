@@ -9,9 +9,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Melville.Generators.INPC" Version="0.1.2" />
-      <PackageReference Include="Melville.MVVM.Wpf" Version="0.3.4" />
-      <PackageReference Include="Melville.WpfAppFramework" Version="0.1.4" />
+      <PackageReference Include="Melville.MVVM.Wpf" Version="0.3.5" />
+      <PackageReference Include="Melville.WpfAppFramework" Version="0.1.5" />
       <PackageReference Include="Melville.WpfControls" Version="0.2.6" />
     </ItemGroup>
 
@@ -23,6 +22,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Planner.Models\Planner.Models.csproj" />
+      <ProjectReference Include="..\Planner.WpfViewModels\Planner.WpfViewModels.csproj" />
     </ItemGroup>
 
 </Project>

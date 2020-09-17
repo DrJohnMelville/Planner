@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
+using Melville.INPC;
 using Melville.MVVM.AdvancedLists.PersistentLinq;
 using Planner.Models.Tasks;
-using Melville.INPC;
 
-namespace Planner.Wpf.TaskList
+namespace Planner.WpfViewModels.TaskList
 {
     public partial class DailyTaskListViewModel
     {
@@ -48,7 +47,7 @@ namespace Planner.Wpf.TaskList
 
         private void CheckIfDonePrioritizing()
         {
-            if (sourceList.All(i => i.Prioritized)) isRankingTasks = false;
+            if (sourceList.All(i => i.Prioritized)) IsRankingTasks = false;
         }
     }
     

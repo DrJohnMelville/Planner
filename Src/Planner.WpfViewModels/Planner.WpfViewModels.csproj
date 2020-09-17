@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <LangVersion>preview</LangVersion>
+        <UseWPF>true</UseWPF>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Melville.Generators.INPC" Version="0.1.2" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Planner.Models\Planner.Models.csproj" />
+    </ItemGroup>
+</Project>

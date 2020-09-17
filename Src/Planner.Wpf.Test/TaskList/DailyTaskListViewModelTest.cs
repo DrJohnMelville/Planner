@@ -1,7 +1,6 @@
 ﻿using System.Linq;
-using System.Windows;
 using Melville.TestHelpers.InpcTesting;
-using Planner.Wpf.TaskList;
+using Planner.WpfViewModels.TaskList;
 using Xunit;
 
 namespace Planner.Wpf.Test.TaskList

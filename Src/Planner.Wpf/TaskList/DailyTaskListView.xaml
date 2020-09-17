@@ -7,13 +7,14 @@
              xmlns:wpfHacks="clr-namespace:Melville.MVVM.Wpf.WpfHacks;assembly=Melville.MVVM.Wpf"
              xmlns:eventBindings="clr-namespace:Melville.MVVM.Wpf.EventBindings;assembly=Melville.MVVM.Wpf"
              xmlns:bindings="clr-namespace:Melville.MVVM.Wpf.Bindings;assembly=Melville.MVVM.Wpf"
-             d:DataContext="{d:DesignData {x:Type local:DailyTaskListViewModel}}"
+             xmlns:taskList="clr-namespace:Planner.WpfViewModels.TaskList;assembly=Planner.WpfViewModels"
+             d:DataContext="{d:DesignData {x:Type taskList:DailyTaskListViewModel}}"
              mc:Ignorable="d" Grid.IsSharedSizeScope="True">
     <UserControl.Resources>
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="Margin" Value="4 2"/>
         </Style>
-        <DataTemplate x:Key="TaskLineTemplate" DataType="{x:Type local:PlannerTaskViewModel}">
+        <DataTemplate x:Key="TaskLineTemplate" DataType="{x:Type taskList:PlannerTaskViewModel}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="CheckMark"/>
@@ -43,13 +44,13 @@
                 <Rectangle Grid.ColumnSpan="3" Height="0.5" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Fill="LightGray"/>
                 <TextBox Grid.Column="2" Text="{Binding PlannerTask.Name}" Margin="4 2" BorderThickness="0"/>
                 <Button Grid.Column="2" Background="Transparent" Click="{eventBindings:EventBinding ButtonA}"
-                        Visibility="{bindings:MultiBind {x:Static local:AndVisibilityConverter.Instance},
+                        Visibility="{bindings:MultiBind {x:Static taskList:AndVisibilityConverter.Instance},
                         {Binding DataContext.IsRankingTasks, 
                              RelativeSource={RelativeSource AncestorType={x:Type local:DailyTaskListView}}},
                              {Binding ShowBlankButton}}"
                 />
                 <UniformGrid Columns="4" Grid.Column="2"
-                             Visibility="{bindings:MultiBind {x:Static local:AndVisibilityConverter.Instance},
+                             Visibility="{bindings:MultiBind {x:Static taskList:AndVisibilityConverter.Instance},
                         {Binding DataContext.IsRankingTasks, 
                              RelativeSource={RelativeSource AncestorType={x:Type local:DailyTaskListView}}},
                              {Binding ShowPriorityButton}}">

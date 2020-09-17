@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Models", "Src\Plann
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Models.Test", "Src\Planner.Models.Test\Planner.Models.Test.csproj", "{AD718B3A-F579-4A60-B542-B1E16DBB450D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.WpfViewModels", "Src\Planner.WpfViewModels\Planner.WpfViewModels.csproj", "{73608029-45E1-4316-829D-EE866C6B6B78}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{AD718B3A-F579-4A60-B542-B1E16DBB450D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD718B3A-F579-4A60-B542-B1E16DBB450D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD718B3A-F579-4A60-B542-B1E16DBB450D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73608029-45E1-4316-829D-EE866C6B6B78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73608029-45E1-4316-829D-EE866C6B6B78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73608029-45E1-4316-829D-EE866C6B6B78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73608029-45E1-4316-829D-EE866C6B6B78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
