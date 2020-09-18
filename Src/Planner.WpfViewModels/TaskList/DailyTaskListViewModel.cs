@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Windows.Data;
 using System.Windows.Input;
 using Melville.INPC;
@@ -18,7 +16,7 @@ namespace Planner.WpfViewModels.TaskList
         private readonly PlannerTaskList sourceList;
         public CollectionView TaskItems { get; }
         [AutoNotify] private bool isRankingTasks;
-        [AutoNotify] private string newTaskName;
+        [AutoNotify] private string newTaskName = "";
         
 
         private static void AddFakeData(PlannerTaskList src)
@@ -56,32 +54,13 @@ namespace Planner.WpfViewModels.TaskList
         private void PriorityButtonPress(PlannerTaskViewModel model, char button)
         {
             sourceList.PickPriority(model.PlannerTask, button);
-            TryAutoOrder();
+            sourceList.SetImpliedOrders();
             CheckIfDonePrioritizing();
         }
 
-        private void TryAutoOrder()
-        {
-            if (AnyTaskLacksAPriority()) return;
-            foreach (var task in SingleUnassignedTasksWithinTheirPriority())
-            {
-                sourceList.PickPriority(task.PlannerTask, 'A');                              
-            }
-        }
-
-        private IEnumerable<PlannerTaskViewModel> SingleUnassignedTasksWithinTheirPriority() =>
-            TaskItems
-                .OfType<PlannerTaskViewModel>()
-                .Where(i=>i.PlannerTask.Order < 1)
-                .GroupBy(i=>i.PlannerTask.Priority)
-                .Where(i=>i.Count() == 1)
-                .Select(i=>i.First());
-
-        private bool AnyTaskLacksAPriority() => TaskItems.OfType<PlannerTaskViewModel>().Any(i => i.PlannerTask.Priority == ' ');
-
         private void CheckIfDonePrioritizing()
         {
-            if (sourceList.All(i => i.Prioritized)) IsRankingTasks = false;
+            if (sourceList.CompletelyPrioritized()) IsRankingTasks = false;
         }
 
         public void NewTaskKeyDown(Key key)

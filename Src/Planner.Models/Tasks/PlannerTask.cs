@@ -12,7 +12,7 @@ namespace Planner.Models.Tasks
         Deferred = 2,
         Delegated =3,
         Pending = 4,
-        Cancelled = 5
+        Canceled = 5
     }
     public partial class PlannerTask: IComparable<PlannerTask>, IComparable
     {
@@ -42,5 +42,16 @@ namespace Planner.Models.Tasks
         }
 
         public int CompareTo(object? obj) => (obj is PlannerTask other) ? CompareTo(other) : -1;
+
+        public void ToggleStatus() =>
+            Status = Status switch
+            {
+                PlannerTaskStatus.Incomplete => PlannerTaskStatus.Done,
+                PlannerTaskStatus.Done => PlannerTaskStatus.Pending,
+                PlannerTaskStatus.Pending => PlannerTaskStatus.Canceled,
+                PlannerTaskStatus.Delegated => PlannerTaskStatus.Done,
+                PlannerTaskStatus.Deferred =>PlannerTaskStatus.Deferred,
+                _=> PlannerTaskStatus.Incomplete
+            };
     }
 }

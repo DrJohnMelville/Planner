@@ -8,56 +8,143 @@
              xmlns:eventBindings="clr-namespace:Melville.MVVM.Wpf.EventBindings;assembly=Melville.MVVM.Wpf"
              xmlns:bindings="clr-namespace:Melville.MVVM.Wpf.Bindings;assembly=Melville.MVVM.Wpf"
              xmlns:taskList="clr-namespace:Planner.WpfViewModels.TaskList;assembly=Planner.WpfViewModels"
+             xmlns:mouseClicks="clr-namespace:Melville.MVVM.Wpf.MouseClicks;assembly=Melville.MVVM.Wpf"
+             xmlns:hacks="clr-namespace:Melville.WpfControls.Hacks;assembly=Melville.WpfControls"
              d:DataContext="{d:DesignData {x:Type taskList:DailyTaskListViewModel}}"
              mc:Ignorable="d" Grid.IsSharedSizeScope="True">
     <UserControl.Resources>
         <Style TargetType="{x:Type TextBlock}">
-            <Setter Property="Margin" Value="4 2"/>
+            <Setter Property="Margin" Value="4 2" />
         </Style>
+        <DataTemplate DataType="{x:Type taskList:DelegatedContext}">
+            <StackPanel Margin="10">
+                <TextBlock Margin="0 0 0 10" Text="{Binding Prompt}"/>
+                <TextBox Text="{Binding EditText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="200"
+                         hacks:SetSelection.Immediate="true"/>
+            </StackPanel>
+        </DataTemplate>
         <DataTemplate x:Key="TaskLineTemplate" DataType="{x:Type taskList:PlannerTaskViewModel}">
-            <Grid>
+            <Grid Background="Transparent" 
+                  ToolTip="{Binding PlannerTask.StatusDetail, 
+                  Converter={x:Static taskList:PlannerTaskViewModel.ToolTipOnlyWithText}}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" SharedSizeGroup="CheckMark"/>
-                    <ColumnDefinition Width="Auto" SharedSizeGroup="PriorityRank"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="CheckMark" />
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="PriorityRank" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.Resources>
-                    <Style  TargetType="{x:Type Button}">
+                    <Style TargetType="{x:Type Button}">
                         <Setter Property="Background" Value="Transparent" />
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="Button">
                                     <Grid Background="{TemplateBinding Background}">
-                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center  "/>
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center  " />
                                     </Grid>
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
                     </Style>
                 </Grid.Resources>
-                <TextBlock Grid.Column="1" Text="{Binding PlannerTask.PriorityDisplay}" Margin="4 2"/>
-                <Rectangle Grid.ColumnSpan="3" Height="0.5" VerticalAlignment="Top" HorizontalAlignment="Stretch" Fill="LightGray"/>
-                <Rectangle Grid.ColumnSpan="3" Height="0.5" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Fill="LightGray"/>
-                <TextBox Grid.Column="2" Text="{Binding PlannerTask.Name}" Margin="4 2" BorderThickness="0"/>
+                <Grid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Incomplete" Click="{eventBindings:EventBinding MarkIncomplete}">
+                            <MenuItem.Icon>
+                                <TextBox Text="" FontFamily="Wingdings"></TextBox>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Done" Click="{eventBindings:EventBinding MarkDone}">
+                            <MenuItem.Icon>
+                                <TextBox Text="a" FontFamily="Marlett"></TextBox>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Canceled" Click="{eventBindings:EventBinding MarkCanceled}">
+                            <MenuItem.Icon>
+                                <TextBox Text="r" FontFamily="Marlett"></TextBox>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Pending" Click="{eventBindings:EventBinding MarkPending}">
+                            <MenuItem.Icon>
+                                <TextBox Text="¡" FontFamily="Wingdings"></TextBox>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Delegated" Click="{eventBindings:EventBinding MarkDelegated}">
+                            <MenuItem.Icon>
+                                <TextBox Text="n" FontFamily="Marlett"></TextBox>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <Separator />
+                        <MenuItem Header="Deferred" />
+                    </ContextMenu>
+                </Grid.ContextMenu>
+                <Popup IsOpen="{Binding PopupOpen}" StaysOpen="False" Placement="Bottom">
+                    <Border BorderThickness="1" BorderBrush="Black" Background="Silver">
+                        <ContentPresenter Content="{Binding PopUpContent}"/>
+                    </Border>
+                </Popup>
+                <TextBlock Grid.Column="0" Text="{Binding StatusDisplayText}" FontFamily="{Binding StatusDisplayFont}"
+                           Margin="4 2" mouseClicks:Click.LeftClick="PlannerTask.ToggleStatus" FontSize="18">
+                </TextBlock>
+                <TextBlock Grid.Column="1" Text="{Binding PlannerTask.PriorityDisplay}" Margin="4 2" />
+                <Rectangle Grid.ColumnSpan="3" Height="0.5" VerticalAlignment="Top" HorizontalAlignment="Stretch"
+                           Fill="LightGray" />
+                <Rectangle Grid.ColumnSpan="3" Height="0.5" VerticalAlignment="Bottom" HorizontalAlignment="Stretch"
+                           Fill="LightGray" />
+                <TextBox Grid.Column="2" Text="{Binding PlannerTask.Name}" Margin="4 2" BorderThickness="0">
+                    <TextBox.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="ApplicationCommands.Copy" />
+                            <MenuItem Command="ApplicationCommands.Cut" />
+                            <MenuItem Command="ApplicationCommands.Paste" />
+                            <Separator />
+                            <MenuItem Header="Incomplete" Click="{eventBindings:EventBinding MarkIncomplete}">
+                                <MenuItem.Icon>
+                                    <TextBox Text="" FontFamily="Wingdings"></TextBox>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Done" Click="{eventBindings:EventBinding MarkDone}">
+                                <MenuItem.Icon>
+                                    <TextBox Text="a" FontFamily="Marlett"></TextBox>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Canceled" Click="{eventBindings:EventBinding MarkCanceled}">
+                                <MenuItem.Icon>
+                                    <TextBox Text="r" FontFamily="Marlett"></TextBox>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Pending" Click="{eventBindings:EventBinding MarkPending}">
+                                <MenuItem.Icon>
+                                    <TextBox Text="¡" FontFamily="Wingdings"></TextBox>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Delegated" Click="{eventBindings:EventBinding MarkDelegated}">
+                                <MenuItem.Icon>
+                                    <TextBox Text="n" FontFamily="Marlett"></TextBox>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <Separator />
+                            <MenuItem Header="Deferred" />
+                        </ContextMenu>
+                    </TextBox.ContextMenu>
+                </TextBox>
                 <Button Grid.Column="2" Background="Transparent" Click="{eventBindings:EventBinding ButtonA}"
                         Visibility="{bindings:MultiBind {x:Static taskList:AndVisibilityConverter.Instance},
                         {Binding DataContext.IsRankingTasks, 
                              RelativeSource={RelativeSource AncestorType={x:Type local:DailyTaskListView}}},
-                             {Binding ShowBlankButton}}"
-                />
+                             {Binding ShowBlankButton}}" />
                 <UniformGrid Columns="4" Grid.Column="2"
                              Visibility="{bindings:MultiBind {x:Static taskList:AndVisibilityConverter.Instance},
                         {Binding DataContext.IsRankingTasks, 
                              RelativeSource={RelativeSource AncestorType={x:Type local:DailyTaskListView}}},
                              {Binding ShowPriorityButton}}">
-                    <Button Background="#77FF0000" Content="A" Click="{eventBindings:EventBinding ButtonA}"/>
-                    <Button Background="#77FFFF00" Content="B" Click="{eventBindings:EventBinding ButtonB}"/>
-                    <Button Background="#7700FF00" Content="C" Click="{eventBindings:EventBinding ButtonC}"/>
-                    <Button Background="#770000FF" Content="D" Click="{eventBindings:EventBinding ButtonD}"/>
+                    <Button Background="#77FF0000" Content="A" Click="{eventBindings:EventBinding ButtonA}" />
+                    <Button Background="#77FFFF00" Content="B" Click="{eventBindings:EventBinding ButtonB}" />
+                    <Button Background="#7700FF00" Content="C" Click="{eventBindings:EventBinding ButtonC}" />
+                    <Button Background="#770000FF" Content="D" Click="{eventBindings:EventBinding ButtonD}" />
                 </UniformGrid>
             </Grid>
         </DataTemplate>
@@ -65,13 +152,13 @@
     <Border BorderThickness="2" BorderBrush="Black" x:Name="PlannerTaskListBorder" Background="Transparent">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="CheckMark"/>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="PriorityRank"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="CheckMark" />
+                <ColumnDefinition Width="Auto" SharedSizeGroup="PriorityRank" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.Resources>
             </Grid.Resources>
@@ -81,29 +168,35 @@
             <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"
                           Grid.ColumnSpan="3" Grid.Row="1">
                 <StackPanel>
-                    <ItemsControl ItemsSource="{Binding TaskItems}" ItemTemplate="{StaticResource TaskLineTemplate}"/>
+                    <ItemsControl ItemsSource="{Binding TaskItems}" ItemTemplate="{StaticResource TaskLineTemplate}" />
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="CheckMark"/>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="PriorityRank"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="CheckMark" />
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="PriorityRank" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <TextBox Grid.Column="2" Text="{Binding NewTaskName, UpdateSourceTrigger=PropertyChanged}" Margin="4 2" BorderThickness="0"
+                        <TextBox Grid.Column="2" Text="{Binding NewTaskName, UpdateSourceTrigger=PropertyChanged}"
+                                 Margin="4 2" BorderThickness="0"
                                  LostKeyboardFocus="{eventBindings:EventBinding TryAddPlannerTask}"
-                                 KeyDown="{eventBindings:EventBinding NewTaskKeyDown, Parameters=$arg.Key}"/>
+                                 KeyDown="{eventBindings:EventBinding NewTaskKeyDown, Parameters=$arg.Key}" />
                     </Grid>
-                    <Rectangle Grid.ColumnSpan="3" Height="1.0" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Fill="LightGray"/>
+                    <Rectangle Grid.ColumnSpan="3" Height="1.0" VerticalAlignment="Bottom"
+                               HorizontalAlignment="Stretch" Fill="LightGray" />
                 </StackPanel>
             </ScrollViewer>
-            <Rectangle Width="1" Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Right" Fill="LightGray"/>
-            <Rectangle Grid.Column="1" Grid.RowSpan="2" Width="1" VerticalAlignment="Stretch" HorizontalAlignment="Right" Fill="LightGray"/>
+            <Rectangle Width="1" Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Right"
+                       Fill="LightGray" />
+            <Rectangle Grid.Column="1" Grid.RowSpan="2" Width="1" VerticalAlignment="Stretch"
+                       HorizontalAlignment="Right" Fill="LightGray" />
             <ToggleButton Grid.Row="1" Grid.ColumnSpan="3" Margin="0 0 20 20"
-                    IsChecked="{Binding IsRankingTasks, Mode=TwoWay}"
-                    wpfHacks:VisibilityHack.HideUnless="{Binding IsMouseOver, ElementName=PlannerTaskListBorder}"
-                    HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="5 0">Rank</ToggleButton>
+                          IsChecked="{Binding IsRankingTasks, Mode=TwoWay}"
+                          wpfHacks:VisibilityHack.HideUnless="{Binding IsMouseOver, ElementName=PlannerTaskListBorder}"
+                          HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="5 0">
+                Rank
+            </ToggleButton>
         </Grid>
     </Border>
 </UserControl>

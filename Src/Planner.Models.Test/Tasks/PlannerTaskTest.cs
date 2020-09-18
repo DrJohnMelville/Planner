@@ -36,8 +36,8 @@ namespace Planner.Models.Test.Tasks
         public void TaskHasStatus()
         {
             Assert.Equal(PlannerTaskStatus.Incomplete, sut.Status);
-            sut.Status = PlannerTaskStatus.Cancelled;
-            Assert.Equal(PlannerTaskStatus.Cancelled, sut.Status);
+            sut.Status = PlannerTaskStatus.Canceled;
+            Assert.Equal(PlannerTaskStatus.Canceled, sut.Status);
                
         }
 
@@ -85,7 +85,22 @@ namespace Planner.Models.Test.Tasks
             other.Name = name2;
 
             Assert.Equal(comp, sut.CompareTo(other));
+        }
+
+        [Theory]
+        [InlineData(PlannerTaskStatus.Incomplete, PlannerTaskStatus.Done)]
+        [InlineData(PlannerTaskStatus.Done, PlannerTaskStatus.Pending)]
+        [InlineData(PlannerTaskStatus.Pending, PlannerTaskStatus.Canceled)]
+        [InlineData(PlannerTaskStatus.Canceled, PlannerTaskStatus.Incomplete)]
+        [InlineData(PlannerTaskStatus.Delegated, PlannerTaskStatus.Done)]
+        [InlineData(PlannerTaskStatus.Deferred, PlannerTaskStatus.Deferred)]
+        public void ToggleStatus(PlannerTaskStatus prior, PlannerTaskStatus next)
+        {
+            sut.Status = prior;
+            sut.ToggleStatus();
+            Assert.Equal(next, sut.Status);
             
         }
+
     }
 }

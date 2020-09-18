@@ -8,6 +8,7 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Melville.Generators.INPC" Version="0.1.2" />
+        <PackageReference Include="Melville.MVVM.Wpf" Version="0.3.5" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Planner.Models\Planner.Models.csproj" />

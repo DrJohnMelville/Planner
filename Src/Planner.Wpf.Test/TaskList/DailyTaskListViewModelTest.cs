@@ -140,7 +140,5 @@ namespace Planner.Wpf.Test.TaskList
             Assert.Equal("Foo", sut.TaskItems.OfType<PlannerTaskViewModel>().First().PlannerTask.Name);
             Assert.Equal("", sut.NewTaskName);
         }
-
-
     }
 }

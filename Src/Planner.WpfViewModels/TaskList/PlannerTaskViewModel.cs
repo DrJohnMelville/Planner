@@ -1,4 +1,8 @@
-﻿using Melville.INPC;
+﻿using System.Windows;
+using System.Windows.Data;
+using System.Windows.Media;
+using Melville.INPC;
+using Melville.MVVM.Wpf.Bindings;
 using Planner.Models.Tasks;
 
 namespace Planner.WpfViewModels.TaskList
@@ -11,12 +15,85 @@ namespace Planner.WpfViewModels.TaskList
         public PlannerTaskViewModel(PlannerTask plannerTask)
         {
             PlannerTask = plannerTask;
+            
             ((IExternalNotifyPropertyChanged)this)
                 .DelegatePropertyChangeFrom(PlannerTask, nameof(PlannerTask.PriorityDisplay),
                     nameof(ShowPriorityButton), nameof(ShowBlankButton));
+            
+            ((IExternalNotifyPropertyChanged)this).DelegatePropertyChangeFrom(PlannerTask,
+                nameof(PlannerTask.Status), nameof(StatusDisplayText), nameof(StatusDisplayFont));
+
         }
         
         public bool ShowPriorityButton => PlannerTask.Priority == ' ';
         public bool ShowBlankButton => !ShowPriorityButton;
+
+        public void MarkIncomplete() => PlannerTask.Status = PlannerTaskStatus.Incomplete;
+        public void MarkDone() => PlannerTask.Status = PlannerTaskStatus.Done;
+        public void MarkCanceled() => PlannerTask.Status = PlannerTaskStatus.Canceled;
+        public void MarkPending() => ShowStatusPopup(PlannerTaskStatus.Pending, 
+            new DelegatedContext(this, "Task Waiting For:"));
+        public void MarkDelegated() => 
+            ShowStatusPopup(PlannerTaskStatus.Delegated, 
+                new DelegatedContext(this, "Task Delegated To:"));
+
+        private void ShowStatusPopup(PlannerTaskStatus status, DelegatedContext context)
+        {
+            PlannerTask.Status = status;
+            PopUpContent = context;
+            PopupOpen = true;
+        }
+
+        public string StatusDisplayText => 
+            PlannerTask.Status switch
+            {
+                PlannerTaskStatus.Incomplete => "",
+                PlannerTaskStatus.Done => "a",
+                PlannerTaskStatus.Canceled => "r",
+                PlannerTaskStatus.Pending => "¡",
+                PlannerTaskStatus.Delegated => "n",
+              _ => "Error"    
+            };
+    
+        private static readonly FontFamily Marlett = new FontFamily("Marlett");
+        private static readonly FontFamily Wingdings = new FontFamily("Wingdings");
+
+        public FontFamily StatusDisplayFont =>
+            PlannerTask.Status switch
+            {
+                PlannerTaskStatus.Incomplete =>Wingdings,
+                PlannerTaskStatus.Pending =>Wingdings,
+                _ => Marlett
+            };
+
+        public static readonly IValueConverter ToolTipOnlyWithText = LambdaConverter.Create(
+            (string s)=> string.IsNullOrWhiteSpace(s)?DependencyProperty.UnsetValue:s);
+
+        [AutoNotify] private ITaskPopUpContent popUpContent = new NullContext();
+        [AutoNotify] private bool popupOpen;
+        public class NullContext: ITaskPopUpContent
+        {}
+    }
+
+    public interface ITaskPopUpContent
+    {
+    }
+
+    public class DelegatedContext : ITaskPopUpContent
+    {
+        public string Prompt { get; }
+        private PlannerTaskViewModel model;
+
+        public DelegatedContext(PlannerTaskViewModel model, string prompt)
+        {
+            Prompt = prompt;
+            this.model = model;
+        }
+
+        public string EditText
+        {
+            get => model.PlannerTask.StatusDetail;
+            set => model.PlannerTask.StatusDetail = value;
+        }
     }
 }
