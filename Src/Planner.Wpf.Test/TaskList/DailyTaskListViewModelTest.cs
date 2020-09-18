@@ -1,5 +1,8 @@
 ﻿using System.Linq;
+using System.Windows.Input;
 using Melville.TestHelpers.InpcTesting;
+using Moq;
+using Planner.Models.Tasks;
 using Planner.WpfViewModels.TaskList;
 using Xunit;
 
@@ -7,11 +10,17 @@ namespace Planner.Wpf.Test.TaskList
 {
     public class DailyTaskListViewModelTest
     {
-        private readonly DailyTaskListViewModel sut = new DailyTaskListViewModel();
+        private readonly Mock<IPlannerTaskFactory> taskFactory = new Mock<IPlannerTaskFactory>();
+        
+
+        private readonly DailyTaskListViewModel sut;
         private readonly PlannerTaskViewModel itemVM;
 
         public DailyTaskListViewModelTest()
         {
+            taskFactory.Setup(i => i.Task(It.IsAny<string>())).Returns(
+                (string s) => new PlannerTask() {Name = s});
+            sut = new DailyTaskListViewModel(taskFactory.Object);
             itemVM = sut.TaskItems.OfType<PlannerTaskViewModel>().First();
         }
 
@@ -94,6 +103,44 @@ namespace Planner.Wpf.Test.TaskList
             Assert.Equal(2, models[2].PlannerTask.Order);
             Assert.Equal(1, models[3].PlannerTask.Order);
         }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("   ")]
+        public void TryAddNothing(string newName)
+        {
+            sut.NewTaskName = newName;
+            sut.TryAddPlannerTask();
+            Assert.Equal(4, sut.TaskItems.Count);
+            Assert.Equal("", sut.NewTaskName);
+            
+        }
+
+        [Fact]
+        public void EnterTriesToCreateNewTask()
+        {
+            Assert.Equal(4, sut.TaskItems.Count);
+            sut.NewTaskKeyDown(Key.Enter);
+            Assert.Equal(4, sut.TaskItems.Count);
+            sut.NewTaskName = "Foo";
+            sut.NewTaskKeyDown(Key.A);
+            Assert.Equal(4, sut.TaskItems.Count);
+            sut.NewTaskKeyDown(Key.Enter);
+            Assert.Equal(5, sut.TaskItems.Count);
+            
+        }
+
+
+        [Fact]
+        public void TryAddTask()
+        {
+            sut.NewTaskName = "Foo";
+            sut.TryAddPlannerTask();
+            Assert.Equal(5, sut.TaskItems.Count);
+            Assert.Equal("Foo", sut.TaskItems.OfType<PlannerTaskViewModel>().First().PlannerTask.Name);
+            Assert.Equal("", sut.NewTaskName);
+        }
+
 
     }
 }

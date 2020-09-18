@@ -4,6 +4,7 @@ using Melville.IOC.IocContainers;
 using Melville.MVVM.Wpf.RootWindows;
 using Melville.MVVM.Wpf.ViewFrames;
 using Melville.WpfAppFramework.StartupBases;
+using Planner.Models.Tasks;
 using Planner.WpfViewModels.TaskList;
 
 namespace Planner.Wpf.AppRoot
@@ -25,6 +26,17 @@ namespace Planner.Wpf.AppRoot
                 .And<Window>()
                 .To<RootNavigationWindow>()
                 .AsSingleton();
+            
+            //Temporary binding until dailyPlannerPage is implemented
+            service.Bind<IPlannerTaskFactory>().To<TemporaryPTF>();
+        }
+    }
+    
+    public class TemporaryPTF : IPlannerTaskFactory
+    {
+        public PlannerTask Task(string title)
+        {
+            return new PlannerTask() {Name = title};
         }
     }
 }

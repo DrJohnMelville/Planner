@@ -2,17 +2,24 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
+using System.Windows.Input;
 using Melville.INPC;
 using Melville.MVVM.AdvancedLists.PersistentLinq;
 using Planner.Models.Tasks;
 
 namespace Planner.WpfViewModels.TaskList
 {
+    public interface IPlannerTaskFactory
+    {
+        PlannerTask Task(string title);
+    }
     public partial class DailyTaskListViewModel
     {
         private readonly PlannerTaskList sourceList;
         public CollectionView TaskItems { get; }
         [AutoNotify] private bool isRankingTasks;
+        [AutoNotify] private string newTaskName;
+        
 
         private static void AddFakeData(PlannerTaskList src)
         {
@@ -22,8 +29,10 @@ namespace Planner.WpfViewModels.TaskList
             src.Add(new PlannerTask() {Name = "Task4"});
         }
 
-        public DailyTaskListViewModel()
+        private readonly IPlannerTaskFactory taskFactory;
+        public DailyTaskListViewModel(IPlannerTaskFactory taskFactory)
         {
+            this.taskFactory = taskFactory;
             sourceList = new PlannerTaskList();
             AddFakeData(sourceList);
             TaskItems = CreateTaskItemsCollectionView();
@@ -74,5 +83,17 @@ namespace Planner.WpfViewModels.TaskList
         {
             if (sourceList.All(i => i.Prioritized)) IsRankingTasks = false;
         }
+
+        public void NewTaskKeyDown(Key key)
+        {
+            if (key == Key.Enter) TryAddPlannerTask();
+        }
+        public void TryAddPlannerTask()
+        {
+            if (!string.IsNullOrWhiteSpace(NewTaskName)) AddNewTask(NewTaskName);
+            NewTaskName = "";
+        }
+
+        private void AddNewTask(string name) => sourceList.Add(taskFactory.Task(name));
     }
 }
