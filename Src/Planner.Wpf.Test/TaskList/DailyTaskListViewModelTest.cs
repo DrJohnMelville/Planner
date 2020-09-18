@@ -20,7 +20,7 @@ namespace Planner.Wpf.Test.TaskList
         {
             taskFactory.Setup(i => i.Task(It.IsAny<string>())).Returns(
                 (string s) => new PlannerTask() {Name = s});
-            sut = new DailyTaskListViewModel(taskFactory.Object);
+            sut = new DailyTaskListViewModel(taskFactory.Object, i=>new PlannerTaskViewModel(i));
             itemVM = sut.TaskItems.OfType<PlannerTaskViewModel>().First();
         }
 

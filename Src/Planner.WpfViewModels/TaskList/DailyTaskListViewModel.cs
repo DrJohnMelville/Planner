@@ -1,8 +1,10 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Windows.Data;
 using System.Windows.Input;
 using Melville.INPC;
 using Melville.MVVM.AdvancedLists.PersistentLinq;
+using Melville.MVVM.Wpf.Bindings;
 using Planner.Models.Tasks;
 
 namespace Planner.WpfViewModels.TaskList
@@ -28,9 +30,12 @@ namespace Planner.WpfViewModels.TaskList
         }
 
         private readonly IPlannerTaskFactory taskFactory;
-        public DailyTaskListViewModel(IPlannerTaskFactory taskFactory)
+        private readonly Func<PlannerTask, PlannerTaskViewModel> viewModelFactory;
+        public DailyTaskListViewModel(IPlannerTaskFactory taskFactory,
+            Func<PlannerTask, PlannerTaskViewModel> viewModelFactory)
         {
             this.taskFactory = taskFactory;
+            this.viewModelFactory = viewModelFactory;
             sourceList = new PlannerTaskList();
             AddFakeData(sourceList);
             TaskItems = CreateTaskItemsCollectionView();
@@ -39,7 +44,7 @@ namespace Planner.WpfViewModels.TaskList
 
         private CollectionView CreateTaskItemsCollectionView()
         {
-            var ret = new ListCollectionView(sourceList.SelectCol(i => new PlannerTaskViewModel(i)));
+            var ret = new ListCollectionView(sourceList.SelectCol(viewModelFactory));
             ret.SortDescriptions.Add(new SortDescription("PlannerTask.Priority", ListSortDirection.Ascending));
             ret.SortDescriptions.Add(new SortDescription("PlannerTask.Order", ListSortDirection.Ascending));
             ret.IsLiveSorting = true;
