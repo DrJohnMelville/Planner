@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows.Input;
 using Melville.TestHelpers.InpcTesting;
 using Moq;
+using NodaTime;
 using Planner.Models.Tasks;
 using Planner.WpfViewModels.TaskList;
 using Xunit;
@@ -18,10 +20,23 @@ namespace Planner.Wpf.Test.TaskList
 
         public DailyTaskListViewModelTest()
         {
+            var localDate = new LocalDate(1975, 07, 28);
             taskFactory.Setup(i => i.Task(It.IsAny<string>())).Returns(
                 (string s) => new PlannerTask() {Name = s});
-            sut = new DailyTaskListViewModel(taskFactory.Object, i=>new PlannerTaskViewModel(i));
+            taskFactory.Setup(i => i.TasksForDate(localDate)).Returns(
+                (Func<LocalDate, PlannerTaskList>)GenerateDailyTaskList);
+                sut = new DailyTaskListViewModel(taskFactory.Object, i=>new PlannerTaskViewModel(i),
+                localDate);
             itemVM = sut.TaskItems.OfType<PlannerTaskViewModel>().First();
+        }
+        public PlannerTaskList GenerateDailyTaskList(LocalDate date)
+        {
+            var src = new PlannerTaskList();
+            src.Add(new PlannerTask() {Name = "Task1"});
+            src.Add(new PlannerTask() {Name = "Task2"});
+            src.Add(new PlannerTask() {Name = "Task3"});
+            src.Add(new PlannerTask() {Name = "Task4"});
+            return src;
         }
 
         [Theory]

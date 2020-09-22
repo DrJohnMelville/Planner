@@ -5,6 +5,7 @@ using System.Windows.Input;
 using Melville.INPC;
 using Melville.MVVM.AdvancedLists.PersistentLinq;
 using Melville.MVVM.Wpf.Bindings;
+using NodaTime;
 using Planner.Models.Tasks;
 
 namespace Planner.WpfViewModels.TaskList
@@ -12,6 +13,7 @@ namespace Planner.WpfViewModels.TaskList
     public interface IPlannerTaskFactory
     {
         PlannerTask Task(string title);
+        PlannerTaskList TasksForDate(LocalDate date);
     }
     public partial class DailyTaskListViewModel
     {
@@ -19,25 +21,17 @@ namespace Planner.WpfViewModels.TaskList
         public CollectionView TaskItems { get; }
         [AutoNotify] private bool isRankingTasks;
         [AutoNotify] private string newTaskName = "";
-        
-
-        private static void AddFakeData(PlannerTaskList src)
-        {
-            src.Add(new PlannerTask() {Name = "Task1"});
-            src.Add(new PlannerTask() {Name = "Task2"});
-            src.Add(new PlannerTask() {Name = "Task3"});
-            src.Add(new PlannerTask() {Name = "Task4"});
-        }
 
         private readonly IPlannerTaskFactory taskFactory;
         private readonly Func<PlannerTask, PlannerTaskViewModel> viewModelFactory;
+        private readonly LocalDate date;
         public DailyTaskListViewModel(IPlannerTaskFactory taskFactory,
-            Func<PlannerTask, PlannerTaskViewModel> viewModelFactory)
+            Func<PlannerTask, PlannerTaskViewModel> viewModelFactory, LocalDate date)
         {
             this.taskFactory = taskFactory;
             this.viewModelFactory = viewModelFactory;
-            sourceList = new PlannerTaskList();
-            AddFakeData(sourceList);
+            this.date = date;
+            sourceList = taskFactory.TasksForDate(date);
             TaskItems = CreateTaskItemsCollectionView();
             
         }
