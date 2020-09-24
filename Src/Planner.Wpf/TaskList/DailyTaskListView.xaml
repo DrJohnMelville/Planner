@@ -23,10 +23,21 @@
                          hacks:SetSelection.Immediate="true"/>
             </StackPanel>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type taskList:PickDeferDate}">
+            <StackPanel>
+                <Calendar DisplayDateStart="{Binding BeginDay, Mode=OneWay, Converter={x:Static taskList:PickDeferDate.DateConv}}"
+                          SelectedDate="{Binding SelectedDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,
+                      Converter={x:Static taskList:PickDeferDate.DateConv}}"
+                          local:CalendarHelper.SingleClickDefocus="true" 
+                          MouseDoubleClick="{eventBindings:EventBinding DoDeferral}"/>
+                <Button Click="{eventBindings:EventBinding DoDeferral}">Defer Task</Button>
+            </StackPanel>
+        </DataTemplate>
         <DataTemplate x:Key="TaskLineTemplate" DataType="{x:Type taskList:PlannerTaskViewModel}">
             <Grid Background="Transparent" 
                   ToolTip="{Binding PlannerTask.StatusDetail, 
-                  Converter={x:Static taskList:PlannerTaskViewModel.ToolTipOnlyWithText}}">
+                  Converter={x:Static taskList:PlannerTaskViewModel.ToolTipOnlyWithText}}"
+                  Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type local:DailyTaskListView}}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="CheckMark" />
                     <ColumnDefinition Width="Auto" SharedSizeGroup="PriorityRank" />
@@ -78,7 +89,28 @@
                             </MenuItem.Icon>
                         </MenuItem>
                         <Separator />
-                        <MenuItem Header="Deferred" />
+                        <MenuItem Header="{Binding PlacementTarget.Tag.DeferToName[0], 
+                            RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  Click="{eventBindings:EventBinding Defer0}" />
+                        <MenuItem Header="{Binding PlacementTarget.Tag.DeferToName[1], 
+                            RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  Click="{eventBindings:EventBinding Defer1}" />
+                        <MenuItem Header="{Binding PlacementTarget.Tag.DeferToName[2], 
+                            RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  Click="{eventBindings:EventBinding Defer2}" />
+                        <MenuItem Header="{Binding PlacementTarget.Tag.DeferToName[3], 
+                            RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  Click="{eventBindings:EventBinding Defer3}" />
+                        <MenuItem Header="{Binding PlacementTarget.Tag.DeferToName[4], 
+                            RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  Click="{eventBindings:EventBinding Defer4}" />
+                        <MenuItem Header="{Binding PlacementTarget.Tag.DeferToName[5], 
+                            RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  Click="{eventBindings:EventBinding Defer5}" />
+                        <MenuItem Header="{Binding PlacementTarget.Tag.DeferToName[6], 
+                            RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  Click="{eventBindings:EventBinding Defer6}"/>
+                        <MenuItem Header="Pick Date" Click="{eventBindings:EventBinding DeferToDate}"/>
                     </ContextMenu>
                 </Grid.ContextMenu>
                 <Popup IsOpen="{Binding PopupOpen}" StaysOpen="False" Placement="Bottom">
@@ -94,7 +126,8 @@
                            Fill="LightGray" />
                 <Rectangle Grid.ColumnSpan="3" Height="0.5" VerticalAlignment="Bottom" HorizontalAlignment="Stretch"
                            Fill="LightGray" />
-                <TextBox Grid.Column="2" Text="{Binding PlannerTask.Name}" Margin="4 2" BorderThickness="0">
+                <TextBox Grid.Column="2" Text="{Binding PlannerTask.Name}" Margin="4 2" BorderThickness="0"
+                         Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type local:DailyTaskListView}}}">
                     <TextBox.ContextMenu>
                         <ContextMenu>
                             <MenuItem Command="ApplicationCommands.Copy" />
@@ -127,7 +160,28 @@
                                 </MenuItem.Icon>
                             </MenuItem>
                             <Separator />
-                            <MenuItem Header="Deferred" />
+                            <MenuItem Header="{Binding PlacementTarget.Tag.DeferToName[0], 
+                            RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Click="{eventBindings:EventBinding Defer0}" />
+                            <MenuItem Header="{Binding PlacementTarget.Tag.DeferToName[1], 
+                            RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Click="{eventBindings:EventBinding Defer1}" />
+                            <MenuItem Header="{Binding PlacementTarget.Tag.DeferToName[2], 
+                            RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Click="{eventBindings:EventBinding Defer2}" />
+                            <MenuItem Header="{Binding PlacementTarget.Tag.DeferToName[3], 
+                            RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Click="{eventBindings:EventBinding Defer3}" />
+                            <MenuItem Header="{Binding PlacementTarget.Tag.DeferToName[4], 
+                            RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Click="{eventBindings:EventBinding Defer4}" />
+                            <MenuItem Header="{Binding PlacementTarget.Tag.DeferToName[5], 
+                            RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Click="{eventBindings:EventBinding Defer5}" />
+                            <MenuItem Header="{Binding PlacementTarget.Tag.DeferToName[6], 
+                            RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Click="{eventBindings:EventBinding Defer6}"/>
+                            <MenuItem Header="Pick Date" Click="{eventBindings:EventBinding DeferToDate}"/>
                         </ContextMenu>
                     </TextBox.ContextMenu>
                 </TextBox>

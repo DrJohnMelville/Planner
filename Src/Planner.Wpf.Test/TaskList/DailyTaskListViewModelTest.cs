@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Permissions;
 using System.Windows.Input;
 using Melville.TestHelpers.InpcTesting;
 using Moq;
@@ -12,7 +13,7 @@ namespace Planner.Wpf.Test.TaskList
 {
     public class DailyTaskListViewModelTest
     {
-        private readonly Mock<IPlannerTaskFactory> taskFactory = new Mock<IPlannerTaskFactory>();
+        private readonly Mock<IPlannerTaskRepository> taskFactory = new Mock<IPlannerTaskRepository>();
         
 
         private readonly DailyTaskListViewModel sut;
@@ -21,8 +22,8 @@ namespace Planner.Wpf.Test.TaskList
         public DailyTaskListViewModelTest()
         {
             var localDate = new LocalDate(1975, 07, 28);
-            taskFactory.Setup(i => i.Task(It.IsAny<string>())).Returns(
-                (string s) => new PlannerTask() {Name = s});
+            taskFactory.Setup(i => i.CreateTask(It.IsAny<string>(), It.IsAny<LocalDate>())).Returns(
+                (string s, LocalDate ld) => new PlannerTask() {Name = s});
             taskFactory.Setup(i => i.TasksForDate(localDate)).Returns(
                 (Func<LocalDate, PlannerTaskList>)GenerateDailyTaskList);
                 sut = new DailyTaskListViewModel(taskFactory.Object, i=>new PlannerTaskViewModel(i),
@@ -155,5 +156,72 @@ namespace Planner.Wpf.Test.TaskList
             Assert.Equal("Foo", sut.TaskItems.OfType<PlannerTaskViewModel>().First().PlannerTask.Name);
             Assert.Equal("", sut.NewTaskName);
         }
+
+        [Theory]
+        [InlineData(0,"Tomorrow")]
+        [InlineData(1,"Wednesday")]
+        [InlineData(2,"Thursday")]
+        [InlineData(3,"Friday")]
+        [InlineData(4,"Saturday")]
+        [InlineData(5,"Sunday")]
+        [InlineData(6,"Monday")]
+        public void DeferDayName(int index, string label)
+        {
+            Assert.Equal(label, sut.DeferToName[index]);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(2)]
+        [InlineData(3)]
+        [InlineData(4)]
+        [InlineData(5)]
+        [InlineData(6)]
+        public void TestDefer(int deferIndex)
+        {
+            var item = sut.TaskItems.OfType<PlannerTaskViewModel>().First();
+            switch (deferIndex)
+            {
+                case 0: sut.Defer0(item); break;
+                case 1: sut.Defer1(item); break;
+                case 2: sut.Defer2(item); break;
+                case 3: sut.Defer3(item); break;
+                case 4: sut.Defer4(item); break;
+                case 5: sut.Defer5(item); break;
+                case 6: sut.Defer6(item); break;
+            }
+
+            var targetDate = new LocalDate(1975, 07, 28).PlusDays(1 + deferIndex);
+            VerifyTaskDeferredToDate(targetDate, item.PlannerTask);
+        }
+
+        private void VerifyTaskDeferredToDate(LocalDate targetDate, PlannerTask task)
+        {
+            taskFactory.Verify(i => i.CreateTask(task.Name, targetDate), Times.Once);
+            Assert.Equal(PlannerTaskStatus.Deferred, task.Status);
+            Assert.Equal(targetDate.ToString("D", null), task.StatusDetail);
+        }
+
+        [Fact]
+        public void DeferToDateTest()
+        {
+            var item = sut.TaskItems.OfType<PlannerTaskViewModel>().First();
+            sut.DeferToDate(item);
+            
+            // show the popup
+            Assert.True(item.PopupOpen);
+            Assert.True(item.PopUpContent is PickDeferDate);
+            var po = (PickDeferDate) item.PopUpContent;
+            Assert.Equal("Defer Task", po.ButtonLabel);
+            var localDate = new LocalDate(2020,07,28);
+            
+            //pick a date
+            po.SelectedDate = localDate;
+            po.DoDeferral();
+            VerifyTaskDeferredToDate(localDate, item.PlannerTask);
+            Assert.False(item.PopupOpen);
+        }
+
     }
 }

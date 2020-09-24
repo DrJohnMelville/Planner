@@ -26,7 +26,7 @@ namespace Planner.Wpf.AppRoot
             RegisterNodaTimeClock(service);
             
             //Temporary binding until dailyPlannerPage is implemented
-            service.Bind<IPlannerTaskFactory>().To<TemporaryPTF>();
+            service.Bind<IPlannerTaskRepository>().To<TemporaryPTF>();
         }
 
         private static void RegisterNodaTimeClock(IBindableIocService service)
@@ -45,9 +45,9 @@ namespace Planner.Wpf.AppRoot
         }
     }
     
-    public class TemporaryPTF : IPlannerTaskFactory
+    public class TemporaryPTF : IPlannerTaskRepository
     {
-        public PlannerTask Task(string title)
+        public PlannerTask CreateTask(string title, LocalDate date)
         {
             return new PlannerTask() {Name = title};
         }

@@ -52,6 +52,7 @@ namespace Planner.WpfViewModels.TaskList
                 PlannerTaskStatus.Canceled => "r",
                 PlannerTaskStatus.Pending => "¡",
                 PlannerTaskStatus.Delegated => "n",
+                PlannerTaskStatus.Deferred => "è",
               _ => "Error"    
             };
     
@@ -63,6 +64,7 @@ namespace Planner.WpfViewModels.TaskList
             {
                 PlannerTaskStatus.Incomplete =>Wingdings,
                 PlannerTaskStatus.Pending =>Wingdings,
+                PlannerTaskStatus.Deferred=>Wingdings,
                 _ => Marlett
             };
 
@@ -71,29 +73,5 @@ namespace Planner.WpfViewModels.TaskList
 
         [AutoNotify] private ITaskPopUpContent popUpContent = new NullContext();
         [AutoNotify] private bool popupOpen;
-        public class NullContext: ITaskPopUpContent
-        {}
-    }
-
-    public interface ITaskPopUpContent
-    {
-    }
-
-    public class DelegatedContext : ITaskPopUpContent
-    {
-        public string Prompt { get; }
-        private PlannerTaskViewModel model;
-
-        public DelegatedContext(PlannerTaskViewModel model, string prompt)
-        {
-            Prompt = prompt;
-            this.model = model;
-        }
-
-        public string EditText
-        {
-            get => model.PlannerTask.StatusDetail;
-            set => model.PlannerTask.StatusDetail = value;
-        }
     }
 }
