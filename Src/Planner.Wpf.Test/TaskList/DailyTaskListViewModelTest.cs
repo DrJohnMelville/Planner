@@ -5,6 +5,7 @@ using System.Windows.Input;
 using Melville.TestHelpers.InpcTesting;
 using Moq;
 using NodaTime;
+using Planner.Models.Repositories;
 using Planner.Models.Tasks;
 using Planner.WpfViewModels.TaskList;
 using Xunit;

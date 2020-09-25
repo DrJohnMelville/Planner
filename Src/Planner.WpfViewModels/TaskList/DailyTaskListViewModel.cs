@@ -4,18 +4,12 @@ using System.Windows.Data;
 using System.Windows.Input;
 using Melville.INPC;
 using Melville.MVVM.AdvancedLists.PersistentLinq;
-using Melville.MVVM.Wpf.Bindings;
 using NodaTime;
+using Planner.Models.Repositories;
 using Planner.Models.Tasks;
 
 namespace Planner.WpfViewModels.TaskList
 {
-    public interface IPlannerTaskRepository
-    {
-        next step is a wrapper to make the repository persist Planner Task Lists
-        PlannerTask CreateTask(string title, LocalDate date);
-        PlannerTaskList TasksForDate(LocalDate date);
-    }
     public partial class DailyTaskListViewModel
     {
         private readonly PlannerTaskList sourceList;

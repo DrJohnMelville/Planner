@@ -5,7 +5,8 @@ using Melville.MVVM.Wpf.RootWindows;
 using Melville.MVVM.Wpf.ViewFrames;
 using Melville.WpfAppFramework.StartupBases;
 using NodaTime;
-using Planner.Models.Tasks;
+using Planner.Models.Repositories;
+using Planner.Repository;
 using Planner.WpfViewModels.PlannerPages;
 using Planner.WpfViewModels.TaskList;
 
@@ -42,24 +43,6 @@ namespace Planner.Wpf.AppRoot
                 .And<Window>()
                 .To<RootNavigationWindow>()
                 .AsSingleton();
-        }
-    }
-    
-    public class TemporaryPTF : IPlannerTaskRepository
-    {
-        public PlannerTask CreateTask(string title, LocalDate date)
-        {
-            return new PlannerTask() {Name = title};
-        }
-
-        public PlannerTaskList TasksForDate(LocalDate date)
-        {
-            var src = new PlannerTaskList();
-            src.Add(new PlannerTask() {Name = "Task1"});
-            src.Add(new PlannerTask() {Name = "Task2"});
-            src.Add(new PlannerTask() {Name = "Task3"});
-            src.Add(new PlannerTask() {Name = "Task4"});
-            return src;
         }
     }
 }

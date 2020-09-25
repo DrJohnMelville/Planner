@@ -22,6 +22,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Planner.Models\Planner.Models.csproj" />
+      <ProjectReference Include="..\Planner.Repository\Planner.Repository.csproj" />
       <ProjectReference Include="..\Planner.WpfViewModels\Planner.WpfViewModels.csproj" />
     </ItemGroup>
 
