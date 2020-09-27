@@ -28,6 +28,8 @@ namespace Planner.Wpf.AppRoot
             
             //Temporary binding until dailyPlannerPage is implemented
             service.Bind<IPlannerTaskRepository>().To<TemporaryPTF>();
+            service.Bind<IPlannerTaskRepository>().To<CachedTaskRepository>()
+                .BlockSelfInjection().AsSingleton();
         }
 
         private static void RegisterNodaTimeClock(IBindableIocService service)

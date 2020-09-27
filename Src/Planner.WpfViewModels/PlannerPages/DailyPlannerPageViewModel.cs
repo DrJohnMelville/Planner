@@ -15,6 +15,11 @@ namespace Planner.WpfViewModels.PlannerPages
         [AutoNotify] private LocalDate currentDate;
         [AutoNotify] private DailyTaskListViewModel todayTaskList;
 
+        partial void WhenCurrentDateChanges(LocalDate oldValue, LocalDate newValue)
+        {
+            TodayTaskList = taskListFactory(newValue);
+        }
+
         public DailyPlannerPageViewModel(IClock clock, Func<LocalDate, DailyTaskListViewModel> taskListFactory)
         {
             this.clock = clock;
@@ -22,5 +27,8 @@ namespace Planner.WpfViewModels.PlannerPages
             currentDate = clock.CurrentDate();
             todayTaskList = taskListFactory(currentDate);
         }
+
+        public void ForwardOneDay() => CurrentDate = CurrentDate.PlusDays(1);
+        public void BackOneDay() => CurrentDate = CurrentDate.PlusDays(-1);
     }
 }

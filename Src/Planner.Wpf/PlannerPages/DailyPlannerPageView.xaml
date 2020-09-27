@@ -7,11 +7,20 @@
              xmlns:plannerPages="clr-namespace:Planner.WpfViewModels.PlannerPages;assembly=Planner.WpfViewModels"
              xmlns:easyGrids="clr-namespace:Melville.WpfControls.EasyGrids;assembly=Melville.WpfControls"
              xmlns:viewFrames="clr-namespace:Melville.MVVM.Wpf.ViewFrames;assembly=Melville.MVVM.Wpf"
+             xmlns:eventBindings="clr-namespace:Melville.MVVM.Wpf.EventBindings;assembly=Melville.MVVM.Wpf"
              d:DataContext="{d:DesignData {x:Type plannerPages:DailyPlannerPageViewModel}}"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
-    <easyGrids:EasyGrid easyGrids:GridOperations.ColsAndRows="*/auto,*">
+    <easyGrids:EasyGrid easyGrids:GridOperations.ColsAndRows="auto,*,auto/auto,*">
+        <easyGrids:EasyGrid.Resources>
+            <Style x:Key="{x:Type Button}">
+                <Setter Property="TextBlock.FontFamily" Value="Marlett"/>
+                <Setter Property="TextBlock.FontSize" Value="20"></Setter>
+            </Style>
+        </easyGrids:EasyGrid.Resources>
+        <Button Click="{eventBindings:EventBinding  BackOneDay}">3</Button>
         <TextBlock FontSize="25" Text= "{Binding CurrentDate, StringFormat=D}"/>
-        <viewFrames:ViewFrame Content="{Binding TodayTaskList}"/>
+        <Button Click="{eventBindings:EventBinding  ForwardOneDay}">4</Button>
+        <viewFrames:ViewFrame Grid.ColumnSpan="3" Content="{Binding TodayTaskList}"/>
     </easyGrids:EasyGrid>
 </UserControl>
