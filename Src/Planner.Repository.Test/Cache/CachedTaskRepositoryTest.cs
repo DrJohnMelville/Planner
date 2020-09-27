@@ -1,6 +1,5 @@
 ﻿using System;
 using NodaTime;
-using Planner.Models.Tasks;
 using Xunit;
 
 namespace Planner.Repository.Test.Cache
@@ -39,16 +38,18 @@ namespace Planner.Repository.Test.Cache
         [Fact]
         public void AbandonTaskUponGC()
         {
-            var list = sut.TasksForDate(baseDate);
-            sut.CreateTask("Foo", baseDate);
-            Assert.Equal(5, list.Count);
-            list = new PlannerTaskList();
-            list.Add(new PlannerTask());
+            CreateItemInSeparateMethod();
             GC.Collect(2, GCCollectionMode.Forced, true, true);
             GC.WaitForPendingFinalizers();
             GC.Collect(2, GCCollectionMode.Forced, true, true);
-            list = sut.TasksForDate(baseDate);
-            Assert.Equal(4, list.Count);
+            Assert.Equal(4, sut.TasksForDate(baseDate).Count);
+        }
+
+        private void CreateItemInSeparateMethod()
+        {
+            var list = sut.TasksForDate(baseDate);
+            sut.CreateTask("Foo", baseDate);
+            Assert.Equal(5, list.Count);
         }
     }
 }
