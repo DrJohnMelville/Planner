@@ -48,5 +48,14 @@ namespace Planner.Wpf.Test.PlannerPages
             repo.VerifyNoOtherCalls();
             
         }
+        [Fact]
+        public void ArbitraryDate()
+        {
+            sut.CurrentDate = new LocalDate(1975,07,28);
+            repo.Verify(i=>i.TasksForDate(new LocalDate(1969,12,31)), Times.Once);
+            repo.Verify(i=>i.TasksForDate(new LocalDate(1975, 07, 28)), Times.Once);
+            repo.VerifyNoOtherCalls();
+            
+        }
     }
 }

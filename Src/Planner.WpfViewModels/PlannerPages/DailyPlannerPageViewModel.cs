@@ -14,7 +14,8 @@ namespace Planner.WpfViewModels.PlannerPages
 
         [AutoNotify] private LocalDate currentDate;
         [AutoNotify] private DailyTaskListViewModel todayTaskList;
-
+        [AutoNotify] private bool popupOpen;
+        
         partial void WhenCurrentDateChanges(LocalDate oldValue, LocalDate newValue)
         {
             TodayTaskList = taskListFactory(newValue);

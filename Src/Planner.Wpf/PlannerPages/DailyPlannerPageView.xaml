@@ -8,19 +8,40 @@
              xmlns:easyGrids="clr-namespace:Melville.WpfControls.EasyGrids;assembly=Melville.WpfControls"
              xmlns:viewFrames="clr-namespace:Melville.MVVM.Wpf.ViewFrames;assembly=Melville.MVVM.Wpf"
              xmlns:eventBindings="clr-namespace:Melville.MVVM.Wpf.EventBindings;assembly=Melville.MVVM.Wpf"
+             xmlns:taskList="clr-namespace:Planner.Wpf.TaskList"
+             xmlns:taskList1="clr-namespace:Planner.WpfViewModels.TaskList;assembly=Planner.WpfViewModels"
              d:DataContext="{d:DesignData {x:Type plannerPages:DailyPlannerPageViewModel}}"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <easyGrids:EasyGrid easyGrids:GridOperations.ColsAndRows="auto,*,auto/auto,*">
         <easyGrids:EasyGrid.Resources>
-            <Style x:Key="{x:Type Button}">
+            <Style x:Key="BigButton">
                 <Setter Property="TextBlock.FontFamily" Value="Marlett"/>
                 <Setter Property="TextBlock.FontSize" Value="20"></Setter>
             </Style>
         </easyGrids:EasyGrid.Resources>
-        <Button Click="{eventBindings:EventBinding  BackOneDay}">3</Button>
-        <TextBlock FontSize="25" Text= "{Binding CurrentDate, StringFormat=D}"/>
-        <Button Click="{eventBindings:EventBinding  ForwardOneDay}">4</Button>
+        <Button Click="{eventBindings:EventBinding BackOneDay}"
+                Style="{StaticResource BigButton}">3</Button>
+        <ToggleButton Margin="5 0" IsChecked="{Binding PopupOpen}" x:Name="BigDate">
+            <ToggleButton.Template>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <TextBlock Text="{Binding CurrentDate, StringFormat=D}"
+                               FontSize="25"/>
+                </ControlTemplate>
+            </ToggleButton.Template>
+        </ToggleButton>
+        <Button Click="{eventBindings:EventBinding  ForwardOneDay}"
+                Style="{StaticResource BigButton}">4</Button>
         <viewFrames:ViewFrame Grid.ColumnSpan="3" Content="{Binding TodayTaskList}"/>
+       
+        <Popup IsOpen="{Binding PopupOpen}" StaysOpen="False" Placement="Bottom"
+               PlacementTarget="{Binding ElementName=BigDate}">
+            <Border BorderThickness="1" BorderBrush="Black" Background="Silver">
+                <Calendar DisplayDateStart="{Binding BeginDay, Mode=OneWay, Converter={x:Static taskList1:PickDeferDate.DateConv}}"
+                          SelectedDate="{Binding CurrentDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,
+                      Converter={x:Static taskList1:PickDeferDate.DateConv}}"
+                          taskList:CalendarHelper.SingleClickDefocus="true" />
+            </Border>
+        </Popup>
     </easyGrids:EasyGrid>
 </UserControl>
