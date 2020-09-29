@@ -14,7 +14,7 @@ namespace Planner.Wpf.Test.TaskList
 {
     public class DailyTaskListViewModelTest
     {
-        private readonly Mock<IPlannerTaskRepository> taskFactory = new Mock<IPlannerTaskRepository>();
+        private readonly Mock<ILocalPlannerTaskRepository> taskFactory = new Mock<ILocalPlannerTaskRepository>();
         
 
         private readonly DailyTaskListViewModel sut;

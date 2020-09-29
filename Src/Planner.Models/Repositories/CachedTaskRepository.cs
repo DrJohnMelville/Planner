@@ -1,27 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using NodaTime;
-using Planner.Models.Repositories;
 using Planner.Models.Tasks;
 
-namespace Planner.Repository
+namespace Planner.Models.Repositories
 {
-    public class CachedTaskRepository:IPlannerTaskRepository
+    public class CachedTaskRepository:ILocalPlannerTaskRepository
     {
         private readonly Dictionary<LocalDate, WeakReference<PlannerTaskList>> cache =
             new Dictionary<LocalDate, WeakReference<PlannerTaskList>>();
-        private readonly IPlannerTaskRepository source;
+        private readonly ILocalPlannerTaskRepository source;
 
-        public CachedTaskRepository(IPlannerTaskRepository source)
+        public CachedTaskRepository(ILocalPlannerTaskRepository source)
         {
             this.source = source;
         }
 
-        public PlannerTask CreateTask(string title, LocalDate date)
+        public PlannerTask CreateTask(string name, LocalDate date)
         {
             var list = TasksForDate(date); 
               // get the list before creating the task so we know that the new task is not in the list. 
-            var ret = source.CreateTask(title, date);
+            var ret = source.CreateTask(name, date);
             list.Add(ret);
             return ret;
         }

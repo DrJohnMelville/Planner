@@ -11,7 +11,7 @@ namespace Planner.Wpf.Test.PlannerPages
     public class DailyPlannerPageViewModelTest
     {
         private readonly Mock<IClock> clock = new Mock<IClock>();
-        private readonly Mock<IPlannerTaskRepository> repo = new Mock<IPlannerTaskRepository>();
+        private readonly Mock<ILocalPlannerTaskRepository> repo = new Mock<ILocalPlannerTaskRepository>();
         private readonly DailyPlannerPageViewModel sut;
 
         public DailyPlannerPageViewModelTest()

@@ -4,11 +4,11 @@ using Planner.Models.Tasks;
 
 namespace Planner.Repository
 {
-    public class TemporaryPTF : IPlannerTaskRepository
+    public class TemporaryPTF : ILocalPlannerTaskRepository
     {
-        public PlannerTask CreateTask(string title, LocalDate date)
+        public PlannerTask CreateTask(string name, LocalDate date)
         {
-            return new PlannerTask() {Name = title};
+            return new PlannerTask() {Name = name};
         }
 
         public PlannerTaskList TasksForDate(LocalDate date)

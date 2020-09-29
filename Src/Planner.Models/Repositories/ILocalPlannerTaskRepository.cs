@@ -3,9 +3,9 @@ using Planner.Models.Tasks;
 
 namespace Planner.Models.Repositories
 {
-    public interface IPlannerTaskRepository
+    public interface ILocalPlannerTaskRepository
     {
-        PlannerTask CreateTask(string title, LocalDate date);
+        PlannerTask CreateTask(string name, LocalDate date);
         PlannerTaskList TasksForDate(LocalDate date);
     }
 }

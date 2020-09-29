@@ -19,10 +19,10 @@ namespace Planner.WpfViewModels.TaskList
         [AutoNotify] private bool isRankingTasks;
         [AutoNotify] private string newTaskName = "";
 
-        private readonly IPlannerTaskRepository taskRepository;
+        private readonly ILocalPlannerTaskRepository taskRepository;
         private readonly Func<PlannerTask, PlannerTaskViewModel> viewModelFactory;
         private readonly LocalDate date;
-        public DailyTaskListViewModel(IPlannerTaskRepository taskRepository,
+        public DailyTaskListViewModel(ILocalPlannerTaskRepository taskRepository,
             Func<PlannerTask, PlannerTaskViewModel> viewModelFactory, LocalDate date)
         {
             this.taskRepository = taskRepository;
