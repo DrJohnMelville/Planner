@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TokenServiceClient.Website;
 
 namespace Planner.Web
 {
@@ -23,6 +26,18 @@ namespace Planner.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDataProtection()
+                .PersistKeysToFileSystem(new DirectoryInfo(".\\App_Data"))
+                .SetApplicationName("Hints")
+                .SetDefaultKeyLifetime(TimeSpan.FromDays(30));
+            
+            // services.AddDbContext<ApplicationDbContext>(options =>
+            //     options.UseSqlServer(
+            //         Configuration.GetConnectionString("DefaultConnection")));
+            
+            services.AddCapWebTokenService(
+                Configuration.GetValue<string>("TokenService:Name"),
+                Configuration.GetValue<string>("TokenService:Secret"));
             services.AddControllersWithViews();
         }
 
@@ -45,13 +60,14 @@ namespace Planner.Web
 
             app.UseRouting();
 
+            app.AddCapWebAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}").RequireAuthorization();
             });
         }
     }

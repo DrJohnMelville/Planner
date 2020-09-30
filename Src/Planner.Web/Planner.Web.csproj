@@ -1,8 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
-    </PropertyGroup>
+      <UserSecretsId>f6530645-b9ed-4844-bb96-da21bcc9d160</UserSecretsId>
+  </PropertyGroup>
 
     <ItemGroup>
       <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css" />
@@ -35,6 +36,13 @@
 
     <ItemGroup>
       <Folder Include="wwwroot\lib" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Melville.IOC" Version="0.1.26" />
+      <PackageReference Include="Melville.IOC.AspNet" Version="0.1.9" />
+      <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
+      <PackageReference Include="TokenServiceClient.Website" Version="0.1.8" />
     </ItemGroup>
 
 </Project>
