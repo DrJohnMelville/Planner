@@ -8,5 +8,8 @@
     <ItemGroup>
         <ProjectReference Include="..\Planner.Models\Planner.Models.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />
+    </ItemGroup>
 
 </Project>

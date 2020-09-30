@@ -1,0 +1,28 @@
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Planner.Repository.SqLite;
+
+namespace Planner.Repository.Test.SqLite
+{
+    public class TestDatabase
+    {
+        private readonly DbContextOptions<PlannerDataContext> option;
+        public PlannerDataContext NewContext() => new PlannerDataContext(option);
+
+        public TestDatabase()
+        {
+            var connection = new SqliteConnection("DataSource=:memory:");
+            connection.Open();
+
+            option = new DbContextOptionsBuilder<PlannerDataContext>()
+                .ReplaceService<IValueConverterSelector, LocalDateValueConverterSelector>()
+                .UseSqlite(connection).Options;
+
+            using var context = NewContext();
+
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
+        }
+    }
+}
