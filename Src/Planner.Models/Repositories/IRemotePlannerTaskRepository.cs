@@ -31,6 +31,6 @@ namespace Planner.Models.Repositories
     {
         Task AddOrUpdateTask(RemotePlannerTask task);
         Task DeleteTask(RemotePlannerTask task);
-        Task<IEnumerable<RemotePlannerTask>> TasksForDate(LocalDate date);
+        IAsyncEnumerable<RemotePlannerTask> TasksForDate(LocalDate date);
     }
 }

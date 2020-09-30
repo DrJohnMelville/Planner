@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Melville.MVVM.Time;
 using Melville.MVVM.WaitingServices;
@@ -8,6 +10,7 @@ using NodaTime;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Planner.Models.Test.Repositories
 {
@@ -54,11 +57,20 @@ namespace Planner.Models.Test.Repositories
             repo.Verify(i=>i.AddOrUpdateTask((RemotePlannerTask)task), Times.Once);
         }
 
+        private async IAsyncEnumerable<T> AsyncEnum<T>(params T[] items)
+        {
+            await Task.CompletedTask; // shut the compiler warning up
+            foreach (var item in items)
+            {
+                yield return item;
+            }
+        }
+
         [Fact]
         public void ChangingALoadedTaskCausesAnUpdate()
         {
             var task = new RemotePlannerTask(Guid.NewGuid());
-            repo.Setup(i => i.TasksForDate(date)).ReturnsAsync(new[] {task});
+            repo.Setup(i => i.TasksForDate(date)).Returns(AsyncEnum(task));
             var list = sut.TasksForDate(date);
             Assert.Single(list);
             list[0].Name = "Bar";
@@ -68,7 +80,7 @@ namespace Planner.Models.Test.Repositories
         public void RemovingTaskDeletesFromDatabase()
         {
             var task = new RemotePlannerTask(Guid.NewGuid());
-            repo.Setup(i => i.TasksForDate(date)).ReturnsAsync(new[] {task});
+            repo.Setup(i => i.TasksForDate(date)).Returns(AsyncEnum(task));
             var list = sut.TasksForDate(date);
             Assert.Single(list);
             var item = list[0];

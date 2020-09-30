@@ -71,7 +71,7 @@ namespace Planner.Models.Repositories
 
         private async void LoadTasksForDate(LocalDate date, PlannerTaskList ret)
         {
-            foreach (var task in await remote.TasksForDate(date))
+            await foreach (var task in remote.TasksForDate(date))
             {
                 RegisterPropertyChangeNotifications(task);
                 ret.Add(task);

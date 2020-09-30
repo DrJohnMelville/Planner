@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Planner.Models.Repositories;
-using Planner.Models.Tasks;
 
 namespace Planner.Repository.SqLite
 {

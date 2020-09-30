@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Planner.Models.Repositories;
-using Planner.Repository.SqLite;
 using Xunit;
 
 namespace Planner.Repository.Test.SqLite
