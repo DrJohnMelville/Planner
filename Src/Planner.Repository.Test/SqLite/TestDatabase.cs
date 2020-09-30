@@ -16,7 +16,6 @@ namespace Planner.Repository.Test.SqLite
             connection.Open();
 
             option = new DbContextOptionsBuilder<PlannerDataContext>()
-                .ReplaceService<IValueConverterSelector, LocalDateValueConverterSelector>()
                 .UseSqlite(connection).Options;
 
             using var context = NewContext();

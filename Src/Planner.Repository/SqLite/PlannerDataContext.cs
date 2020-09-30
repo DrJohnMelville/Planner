@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Planner.Models.Repositories;
 
 namespace Planner.Repository.SqLite
@@ -9,6 +10,12 @@ namespace Planner.Repository.SqLite
 
         public PlannerDataContext(DbContextOptions options) : base(options)
         {
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.ReplaceService<IValueConverterSelector, LocalDateValueConverterSelector>();
+            base.OnConfiguring(optionsBuilder);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
