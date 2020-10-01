@@ -3,11 +3,15 @@ using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
+using Planner.Models.Repositories;
+using Planner.Repository.SqLite;
 using TokenServiceClient.Website;
 
 namespace Planner.Web
@@ -28,17 +32,39 @@ namespace Planner.Web
                 .PersistKeysToFileSystem(new DirectoryInfo(".\\App_Data"))
                 .SetApplicationName("Hints")
                 .SetDefaultKeyLifetime(TimeSpan.FromDays(30));
-            
-            // services.AddDbContext<ApplicationDbContext>(options =>
-            //     options.UseSqlServer(
-            //         Configuration.GetConnectionString("DefaultConnection")));
-            
+
+            ConfigureDatabase(services);
+
             services.AddCapWebTokenService(
                 Configuration.GetValue<string>("TokenService:Name"),
                 Configuration.GetValue<string>("TokenService:Secret"));
             services.AddControllersWithViews()
                 .AddJsonOptions(o=>o.JsonSerializerOptions.ConfigureForNodaTime(
                     DateTimeZoneProviders.Tzdb));
+        }
+
+        private void ConfigureDatabase(IServiceCollection services)
+        {
+            var connection = new SqliteConnection("DataSource=:memory:");
+            connection.Open();
+
+            var option = new DbContextOptionsBuilder<PlannerDataContext>()
+                .UseSqlite(connection).Options;
+
+            using var context = new PlannerDataContext(option);
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
+
+            context.PlannerTasks.Add(new RemotePlannerTask(Guid.NewGuid())
+            {
+                Date = new LocalDate(1975, 07, 28),
+                Name = "My Birthday"
+            });
+            context.SaveChanges();
+
+            services.AddScoped(i => new PlannerDataContext(option));
+            services.AddScoped<IRemotePlannerTaskRepository, SqlPlannerTaskRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
