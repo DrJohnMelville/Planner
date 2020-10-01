@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Permissions;
 using System.Windows.Input;
 using Melville.TestHelpers.InpcTesting;
+using Melville.TestHelpers.MockConstruction;
 using Moq;
 using NodaTime;
 using Planner.Models.Repositories;
@@ -19,16 +20,16 @@ namespace Planner.Wpf.Test.TaskList
 
         private readonly DailyTaskListViewModel sut;
         private readonly PlannerTaskViewModel itemVM;
+        private readonly LocalDate date = new LocalDate(1975, 07, 28);
 
         public DailyTaskListViewModelTest()
         {
-            var localDate = new LocalDate(1975, 07, 28);
             taskFactory.Setup(i => i.CreateTask(It.IsAny<string>(), It.IsAny<LocalDate>())).Returns(
                 (string s, LocalDate ld) => new PlannerTask() {Name = s});
-            taskFactory.Setup(i => i.TasksForDate(localDate)).Returns(
+            taskFactory.Setup(i => i.TasksForDate(date)).Returns(
                 (Func<LocalDate, PlannerTaskList>)GenerateDailyTaskList);
                 sut = new DailyTaskListViewModel(taskFactory.Object, i=>new PlannerTaskViewModel(i),
-                localDate);
+                date);
             itemVM = sut.TaskItems.OfType<PlannerTaskViewModel>().First();
         }
         public PlannerTaskList GenerateDailyTaskList(LocalDate date)
@@ -138,12 +139,11 @@ namespace Planner.Wpf.Test.TaskList
         {
             Assert.Equal(4, sut.TaskItems.Count);
             sut.NewTaskKeyDown(Key.Enter);
-            Assert.Equal(4, sut.TaskItems.Count);
             sut.NewTaskName = "Foo";
             sut.NewTaskKeyDown(Key.A);
-            Assert.Equal(4, sut.TaskItems.Count);
+            taskFactory.VerifyIgnoreArgs(i=>i.CreateTask(null, date), Times.Never);
             sut.NewTaskKeyDown(Key.Enter);
-            Assert.Equal(5, sut.TaskItems.Count);
+            taskFactory.Verify(i=>i.CreateTask("Foo", date), Times.Once);
             
         }
 
@@ -152,9 +152,9 @@ namespace Planner.Wpf.Test.TaskList
         public void TryAddTask()
         {
             sut.NewTaskName = "Foo";
+            taskFactory.VerifyIgnoreArgs(i=>i.CreateTask(null, date), Times.Never);
             sut.TryAddPlannerTask();
-            Assert.Equal(5, sut.TaskItems.Count);
-            Assert.Equal("Foo", sut.TaskItems.OfType<PlannerTaskViewModel>().First().PlannerTask.Name);
+            taskFactory.Verify(i=>i.CreateTask("Foo", date), Times.Once);
             Assert.Equal("", sut.NewTaskName);
         }
 

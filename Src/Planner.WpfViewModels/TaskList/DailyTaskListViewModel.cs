@@ -80,7 +80,7 @@ namespace Planner.WpfViewModels.TaskList
             NewTaskName = "";
         }
 
-        private void AddNewTask(string name) => sourceList.Add(taskRepository.CreateTask(name, date));
+        private void AddNewTask(string name) => taskRepository.CreateTask(name, date);
 
         public void Defer0(PlannerTaskViewModel task) => Defer(0, task);
         public void Defer1(PlannerTaskViewModel task) => Defer(1, task);
