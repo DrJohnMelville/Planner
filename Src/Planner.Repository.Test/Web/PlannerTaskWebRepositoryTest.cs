@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Melville.TestHelpers.Http;
+using Melville.TestHelpers.MockConstruction;
 using Moq;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
@@ -40,6 +41,25 @@ namespace Planner.Repository.Test.Web
             Assert.Equal(2, list.Count);
             Assert.Equal("My Birthday", list[0].Name);
             Assert.Equal("Second Task", list[1].Name);
+        }
+
+        [Fact]
+        public async Task DeleteTask()
+        {
+            httpSource.Setup(i=>true, HttpMethod.Delete).ReturnsJson("");
+            var guid = Guid.NewGuid();
+            await sut.DeleteTask(new RemotePlannerTask(guid));
+            httpSource.Verify((Func<string,bool>)(i=>i.EndsWith("/Task/"+guid)), 
+                HttpMethod.Delete, Times.Once);
+        }
+
+        [Fact]
+        public async Task PutChangeMethod()
+        {
+            httpSource.Setup(i=>true, HttpMethod.Put).ReturnsJson("");
+            await sut.AddOrUpdateTask(new RemotePlannerTask());
+            httpSource.Verify((Func<string,bool>)(i=>i.EndsWith("/Task")), 
+                HttpMethod.Put, Times.Once);
         }
     }
 }

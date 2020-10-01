@@ -16,9 +16,9 @@ namespace Planner.Repository.Web
             this.webService = webService;
         }
 
-        public Task AddOrUpdateTask(RemotePlannerTask task) => throw new System.NotImplementedException();
+        public Task AddOrUpdateTask(RemotePlannerTask task) => webService.Put("/Task", task);
 
-        public Task DeleteTask(RemotePlannerTask task) => throw new System.NotImplementedException();
+        public Task DeleteTask(RemotePlannerTask task) => webService.Delete("/Task/"+task.Key);
 
         public async IAsyncEnumerable<RemotePlannerTask> TasksForDate(LocalDate date)
         {
