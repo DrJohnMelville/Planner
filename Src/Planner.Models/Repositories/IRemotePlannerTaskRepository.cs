@@ -11,12 +11,11 @@ namespace Planner.Models.Repositories
 {
     public sealed class RemotePlannerTask : PlannerTask
     {
-        private Guid key;
-        public Guid Key => key;
+        public Guid Key { get; set; }
 
         public RemotePlannerTask(Guid key)
         {
-            this.key = key;
+            Key = key;
         }
 
         public RemotePlannerTask():this(Guid.Empty)

@@ -12,10 +12,12 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.8" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
         <PackageReference Include="Moq" Version="4.14.5" />
+        <PackageReference Include="NodaTime.Serialization.SystemTextJson" Version="1.0.0" />
         <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
     </ItemGroup>
     <ItemGroup>
+        <ProjectReference Include="..\Planner.Repository.Web\Planner.Repository.Web.csproj" />
         <ProjectReference Include="..\Planner.Repository\Planner.Repository.csproj" />
     </ItemGroup>
 

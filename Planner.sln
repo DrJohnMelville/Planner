@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Web", "Src\Planner.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Web.Test", "Src\Planner.Web.Test\Planner.Web.Test.csproj", "{055C80E5-0F5B-4442-AA0F-CE7EB4B694F5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Repository.Web", "Src\Planner.Repository.Web\Planner.Repository.Web.csproj", "{B37BDBE7-C81B-448B-9EBC-207B88D8BC41}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,5 +62,9 @@ Global
 		{055C80E5-0F5B-4442-AA0F-CE7EB4B694F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{055C80E5-0F5B-4442-AA0F-CE7EB4B694F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{055C80E5-0F5B-4442-AA0F-CE7EB4B694F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B37BDBE7-C81B-448B-9EBC-207B88D8BC41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B37BDBE7-C81B-448B-9EBC-207B88D8BC41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B37BDBE7-C81B-448B-9EBC-207B88D8BC41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B37BDBE7-C81B-448B-9EBC-207B88D8BC41}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

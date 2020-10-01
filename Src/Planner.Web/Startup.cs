@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -39,8 +40,12 @@ namespace Planner.Web
                 Configuration.GetValue<string>("TokenService:Name"),
                 Configuration.GetValue<string>("TokenService:Secret"));
             services.AddControllersWithViews()
-                .AddJsonOptions(o=>o.JsonSerializerOptions.ConfigureForNodaTime(
-                    DateTimeZoneProviders.Tzdb));
+                .AddJsonOptions(ConfigureJsonSerialization);
+        }
+
+        private void ConfigureJsonSerialization(JsonOptions o)
+        {
+            o.JsonSerializerOptions.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
         }
 
         private void ConfigureDatabase(IServiceCollection services)
