@@ -15,5 +15,8 @@
     <ItemGroup>
       <ProjectReference Include="..\Planner.Wpf\Planner.Wpf.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Logins" />
+    </ItemGroup>
 
 </Project>

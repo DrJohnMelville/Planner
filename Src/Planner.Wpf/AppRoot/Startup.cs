@@ -1,12 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text.Json;
 using System.Windows;
 using Melville.IOC.IocContainers;
+using Melville.IOC.IocContainers.ActivationStrategies.TypeActivation;
 using Melville.MVVM.Wpf.RootWindows;
 using Melville.MVVM.Wpf.ViewFrames;
 using Melville.WpfAppFramework.StartupBases;
+using Microsoft.Extensions.Configuration;
 using NodaTime;
+using NodaTime.Serialization.SystemTextJson;
 using Planner.Models.Repositories;
+using Planner.Models.Tasks;
 using Planner.Repository;
+using Planner.Repository.Web;
+using Planner.WpfViewModels.Logins;
 using Planner.WpfViewModels.PlannerPages;
 using Planner.WpfViewModels.TaskList;
 
@@ -25,9 +34,26 @@ namespace Planner.Wpf.AppRoot
             service.AddLogging();
             RegisterMainWindowWithView(service);
             RegisterNodaTimeClock(service);
-            
-            //Temporary binding until dailyPlannerPage is implemented
-            service.Bind<ILocalPlannerTaskRepository>().To<TemporaryPTF>();
+            SetupConfiguration(service);
+            SetupJsonSerialization(service);
+            RegisterRepositories(service);
+        }
+
+        private void SetupJsonSerialization(IBindableIocService service)
+        {
+            var options = new JsonSerializerOptions();
+            options.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+            options.IgnoreReadOnlyProperties = true;
+            options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            service.Bind<JsonSerializerOptions>().ToConstant(options);
+        }
+
+        private static void RegisterRepositories(IBindableIocService service)
+        {
+            service.Bind<HttpClientHolder>().ToSelf().AsSingleton();
+            service.Bind<HttpClient>().ToMethod(i => i.Get<HttpClientHolder>().GetClient()).DoNotDispose();
+            service.Bind<IRemotePlannerTaskRepository>().To<PlannerTaskWebRepository>();
+            service.Bind<ILocalPlannerTaskRepository>().To<PlannerTaskLocalToRemoteRepositoryBridge>();
             service.Bind<ILocalPlannerTaskRepository>().To<CachedTaskRepository>()
                 .BlockSelfInjection().AsSingleton();
         }
@@ -40,10 +66,18 @@ namespace Planner.Wpf.AppRoot
         private static void RegisterMainWindowWithView(IBindableIocService service)
         {
             service.Bind<IViewMappingConvention>().To<MapViewsToOwnAssembly>().AsSingleton();
-            service.RegisterHomeViewModel<DailyPlannerPageViewModel>();
+            service.RegisterHomeViewModel<LoginViewModel>();
             service.Bind<IRootNavigationWindow>()
                 .And<Window>()
                 .To<RootNavigationWindow>()
+                .AsSingleton();
+        }
+        
+        private static void SetupConfiguration(IBindableIocService service)
+        {
+            service.AddConfigurationSources(i => i.AddUserSecrets<Startup>());
+            service.Bind<IList<TargetSite>>().To<List<TargetSite>>(ConstructorSelectors.DefaultConstructor)
+                .InitializeFromConfiguration("Sites")
                 .AsSingleton();
         }
     }

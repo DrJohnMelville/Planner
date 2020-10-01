@@ -6,12 +6,15 @@
         <LangVersion>preview</LangVersion>
         <UseWPF>true</UseWPF>
         <Nullable>enable</Nullable>
-    </PropertyGroup>
+      <UserSecretsId>61c8620a-93d0-499d-83e0-45328ebae465</UserSecretsId>
+  </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="Melville.MVVM.Wpf" Version="0.3.5" />
       <PackageReference Include="Melville.WpfAppFramework" Version="0.1.5" />
       <PackageReference Include="Melville.WpfControls" Version="0.2.6" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.8" />
+      <PackageReference Include="NodaTime.Serialization.SystemTextJson" Version="1.0.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -22,6 +25,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Planner.Models\Planner.Models.csproj" />
+      <ProjectReference Include="..\Planner.Repository.Web\Planner.Repository.Web.csproj" />
       <ProjectReference Include="..\Planner.Repository\Planner.Repository.csproj" />
       <ProjectReference Include="..\Planner.WpfViewModels\Planner.WpfViewModels.csproj" />
     </ItemGroup>

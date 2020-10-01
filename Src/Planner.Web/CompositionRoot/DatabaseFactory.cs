@@ -33,7 +33,7 @@ namespace Planner.Web.CompositionRoot
 
             context.PlannerTasks.Add(new RemotePlannerTask(Guid.NewGuid())
             {
-                Date = new LocalDate(1975, 07, 28),
+                Date = new LocalDate(2020, 10, 1),
                 Name = "My Birthday"
             });
             context.SaveChanges();
