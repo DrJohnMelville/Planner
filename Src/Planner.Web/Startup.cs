@@ -1,15 +1,13 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NodaTime;
+using NodaTime.Serialization.SystemTextJson;
 using TokenServiceClient.Website;
 
 namespace Planner.Web
@@ -38,7 +36,9 @@ namespace Planner.Web
             services.AddCapWebTokenService(
                 Configuration.GetValue<string>("TokenService:Name"),
                 Configuration.GetValue<string>("TokenService:Secret"));
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
+                .AddJsonOptions(o=>o.JsonSerializerOptions.ConfigureForNodaTime(
+                    DateTimeZoneProviders.Tzdb));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

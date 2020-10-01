@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <LangVersion>preview</LangVersion>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Melville.Mvvm.TestHelpers" Version="0.1.5" />
+        <PackageReference Include="Melville.TestHelpers" Version="0.3.8" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+        <PackageReference Include="Moq" Version="4.14.5" />
+        <PackageReference Include="System.Linq.Async" Version="4.1.1" />
+        <PackageReference Include="xunit" Version="2.4.1" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Planner.Models\Planner.Models.csproj" />
+      <ProjectReference Include="..\Planner.Web\Planner.Web.csproj" />
+    </ItemGroup>
+
+</Project>
