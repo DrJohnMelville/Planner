@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Melville.IOC.IocContainers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -15,7 +16,7 @@ using Planner.Models.Repositories;
 using Planner.Repository.SqLite;
 using TokenServiceClient.Website;
 
-namespace Planner.Web
+namespace Planner.Web.CompositionRoot
 {
     public class Startup
     {
@@ -23,55 +24,39 @@ namespace Planner.Web
         {
             Configuration = configuration;
         }
-
+        
+        
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            ConfigureDataProtection(services);
+            AddCapWebAuthentication(services);
+            DatabaseFactory.ConfigureDatabase(services);
+            services.AddScoped<IRemotePlannerTaskRepository, SqlPlannerTaskRepository>();
+
+            services.AddControllersWithViews().AddJsonOptions(ConfigureJsonSerialization);
+        }
+
+        private static void ConfigureDataProtection(IServiceCollection services) =>
             services.AddDataProtection()
                 .PersistKeysToFileSystem(new DirectoryInfo(".\\App_Data"))
                 .SetApplicationName("Hints")
                 .SetDefaultKeyLifetime(TimeSpan.FromDays(30));
 
-            ConfigureDatabase(services);
-
+        private void AddCapWebAuthentication(IServiceCollection services) =>
             services.AddCapWebTokenService(
                 Configuration.GetValue<string>("TokenService:Name"),
                 Configuration.GetValue<string>("TokenService:Secret"));
-            services.AddControllersWithViews()
-                .AddJsonOptions(ConfigureJsonSerialization);
-        }
 
         private void ConfigureJsonSerialization(JsonOptions o)
         {
             o.JsonSerializerOptions.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+            o.JsonSerializerOptions.IgnoreReadOnlyProperties = true;
         }
 
-        private void ConfigureDatabase(IServiceCollection services)
-        {
-            var connection = new SqliteConnection("DataSource=:memory:");
-            connection.Open();
-
-            var option = new DbContextOptionsBuilder<PlannerDataContext>()
-                .UseSqlite(connection).Options;
-
-            using var context = new PlannerDataContext(option);
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
-
-            context.PlannerTasks.Add(new RemotePlannerTask(Guid.NewGuid())
-            {
-                Date = new LocalDate(1975, 07, 28),
-                Name = "My Birthday"
-            });
-            context.SaveChanges();
-
-            services.AddScoped(i => new PlannerDataContext(option));
-            services.AddScoped<IRemotePlannerTaskRepository, SqlPlannerTaskRepository>();
-
-        }
-
+        
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
