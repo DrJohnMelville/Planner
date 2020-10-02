@@ -38,11 +38,8 @@ namespace Planner.Models.Repositories
         }
         private async void DelayedUpdate(PlannerTask plannerTask)
         {
-            var rd = (IRemoteDatum) plannerTask;
-            var updateCounter = rd.NewUpdateCount();
-            await waiter.Wait(TimeSpan.FromSeconds(2));
-            if (!rd.UnchangedSince(updateCounter)) return;
-            remote.UpdateTask(plannerTask).FireAndForget();
+            if (await ((IRemoteDatum) plannerTask).WaitForOverridingEvent(waiter, TimeSpan.FromSeconds(2)))
+                remote.UpdateTask(plannerTask).FireAndForget();
         }
 
         public PlannerTaskList TasksForDate(LocalDate date)
