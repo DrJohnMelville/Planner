@@ -1,38 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using NodaTime;
+﻿using Microsoft.AspNetCore.Mvc;
+using Planner.Models.Notes;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
 
 namespace Planner.Web.Controllers
 {
     [Route("Task")]
-    public class PlannerTaskController : Controller
+    public class PlannerTaskController : DataController<PlannerTask, IPlannerTasRemotekRepository>
     {
-        private readonly IPlannerTasRemotekRepository source;
-
-        public PlannerTaskController(IPlannerTasRemotekRepository source)
+        public PlannerTaskController(IPlannerTasRemotekRepository source) : base(source, g=>new PlannerTask(g))
         {
-            this.source = source;
         }
-
-        [Route("{date}")]
-        [HttpGet]
-        public IAsyncEnumerable<PlannerTask> TasksForDate(LocalDate date) =>
-            source.TasksForDate(date);
-
-        [Route("")]
-        [HttpPut]
-        public Task Update([FromBody] PlannerTask task) => source.Update(task);
-        [Route("")]
-        [HttpPost]
-        public Task Add([FromBody] PlannerTask task) => source.Add(task);
-
-        [Route("{key}")]
-        [HttpDelete]
-        public Task DeleteTask(Guid key) =>
-            source.Delete(new PlannerTask(key));
+    }
+    [Route("Note")]
+    public class NoteController : DataController<Note, INoteRemoteRepository>
+    {
+        public NoteController(INoteRemoteRepository source) : base(source, g=>new Note(){Key = g})
+        {
+        }
     }
 }
