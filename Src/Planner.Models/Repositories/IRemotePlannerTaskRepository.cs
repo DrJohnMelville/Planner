@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
+using Melville.INPC;
 using Melville.MVVM.Time;
 using NodaTime;
 using Planner.Models.Tasks;
@@ -29,12 +30,25 @@ namespace Planner.Models.Repositories
             return UnchangedSince(invocationCount);
         }
     }
-    
-    public interface IPlannerTaskRepository
+
+    public abstract partial class PlannerItemWithDate : PlannerItemBase
     {
-        Task AddTask(PlannerTask task);
-        Task UpdateTask(PlannerTask task);
-        Task DeleteTask(PlannerTask task);
-        IAsyncEnumerable<PlannerTask> TasksForDate(LocalDate date);
+        [AutoNotify] private LocalDate date;
+    }
+
+    public interface IRemoteRepository<T>
+    {
+        Task AddTask(T task);
+        Task UpdateTask(T task);
+        Task DeleteTask(T task);
+    }
+
+    public interface IDatedRemoteRepository<T>: IRemoteRepository<T> where T: PlannerItemWithDate
+    {
+        IAsyncEnumerable<T> TasksForDate(LocalDate date);
+        
+    }
+    public interface IPlannerTaskRemoteRepository: IDatedRemoteRepository<PlannerTask>
+    {
     }
 }

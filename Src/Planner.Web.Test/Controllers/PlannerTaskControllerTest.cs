@@ -12,7 +12,7 @@ namespace Planner.Web.Test.Controllers
 {
     public class PlannerTaskControllerTest
     {
-        private readonly Mock<IPlannerTaskRepository> repo = new Mock<IPlannerTaskRepository>();
+        private readonly Mock<IPlannerTaskRemoteRepository> repo = new Mock<IPlannerTaskRemoteRepository>();
         private readonly PlannerTaskController sut;
         private readonly LocalDate date = new LocalDate(1975, 7, 28);
 

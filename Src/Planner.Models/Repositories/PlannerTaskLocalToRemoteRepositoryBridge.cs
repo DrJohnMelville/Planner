@@ -11,10 +11,10 @@ namespace Planner.Models.Repositories
 {
     public class PlannerTaskLocalToRemoteRepositoryBridge:ILocalPlannerTaskRepository
     {
-        private readonly IPlannerTaskRepository remote;
+        private readonly IPlannerTaskRemoteRepository remote;
         private readonly IWallClock waiter;
 
-        public PlannerTaskLocalToRemoteRepositoryBridge(IPlannerTaskRepository remote, 
+        public PlannerTaskLocalToRemoteRepositoryBridge(IPlannerTaskRemoteRepository remote, 
             IWallClock waiter)
         {
             this.remote = remote;

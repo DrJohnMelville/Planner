@@ -6,7 +6,7 @@ using Planner.Models.Tasks;
 
 namespace Planner.Repository.Web
 {
-    public class PlannerTaskWebRepository: IPlannerTaskRepository
+    public class PlannerTaskWebRepository: IPlannerTaskRemoteRepository
     {
         private readonly IJsonWebService webService;
 

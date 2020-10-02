@@ -48,7 +48,7 @@ namespace Planner.Repository.Test.SqLite
             }
 
             using var ctx2 = data.NewContext();
-            var note2 = ctx2.Notes.First`();
+            var note2 = ctx2.Notes.First();
             Assert.Equal(note.Name, note2.Name);
             Assert.Equal(note.Text, note2.Text);
             

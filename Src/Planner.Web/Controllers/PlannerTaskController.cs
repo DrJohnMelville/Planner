@@ -11,9 +11,9 @@ namespace Planner.Web.Controllers
     [Route("Task")]
     public class PlannerTaskController : Controller
     {
-        private readonly IPlannerTaskRepository source;
+        private readonly IPlannerTaskRemoteRepository source;
 
-        public PlannerTaskController(IPlannerTaskRepository source)
+        public PlannerTaskController(IPlannerTaskRemoteRepository source)
         {
             this.source = source;
         }

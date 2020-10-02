@@ -15,9 +15,8 @@ namespace Planner.Models.Tasks
         Pending = 4,
         Canceled = 5
     }
-    public partial class PlannerTask: PlannerItemBase, IComparable<PlannerTask>, IComparable
+    public partial class PlannerTask: PlannerItemWithDate, IComparable<PlannerTask>, IComparable
     {
-        [AutoNotify] private LocalDate date;
         [AutoNotify] private string name = "";
         [AutoNotify] private char priority  = ' ';
         [AutoNotify] private int order;
