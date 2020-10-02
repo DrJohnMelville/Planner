@@ -8,9 +8,9 @@ namespace Planner.Repository
 {
     public class TemporaryPTF : ILocalPlannerTaskRepository
     {
-        public PlannerTask CreateTask(string name, LocalDate date)
+        public PlannerTask CreateTask( LocalDate date)
         {
-            return new PlannerTask() {Name = name};
+            return new PlannerTask();
         }
 
         public IList<PlannerTask> TasksForDate(LocalDate date)

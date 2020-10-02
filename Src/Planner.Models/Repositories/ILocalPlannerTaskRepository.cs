@@ -4,14 +4,22 @@ using Planner.Models.Tasks;
 
 namespace Planner.Models.Repositories
 {
-    // public interface ILocalRepository<T> where T: PlannerItemWithDate
-    // {
-    //     T CreateTask(string name, LocalDate date);
-    //     PlannerTaskList TasksForDate(LocalDate date);
-    // }
-    public interface ILocalPlannerTaskRepository
+    public interface ILocalRepository<T> where T: PlannerItemWithDate
     {
-        PlannerTask CreateTask(string name, LocalDate date);
-        IList<PlannerTask> TasksForDate(LocalDate date);
+         T CreateTask(LocalDate date);
+         IList<T> TasksForDate(LocalDate date);
+    }
+    public interface ILocalPlannerTaskRepository: ILocalRepository<PlannerTask>
+    {
+    }
+
+    public static class PlannerTaskLocalRepoOperations
+    {
+        public static PlannerTask CreateTask(this ILocalRepository<PlannerTask> list, string name, LocalDate date)
+        {
+            var ret = list.CreateTask(date);
+            ret.Name = name;
+            return ret;
+        }
     }
 }

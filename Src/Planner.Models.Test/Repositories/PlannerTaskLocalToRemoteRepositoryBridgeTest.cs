@@ -38,7 +38,7 @@ namespace Planner.Models.Test.Repositories
             var task = sut.CreateTask("Foo", date);
             task.Name = "Bar";
             repo.Verify(i=>i.Add((PlannerTask)task), Times.Once);
-            repo.Verify(i=>i.Update((PlannerTask)task), Times.Once);
+            repo.Verify(i=>i.Update((PlannerTask)task), Times.Exactly(2));
         }
 
         [Fact]

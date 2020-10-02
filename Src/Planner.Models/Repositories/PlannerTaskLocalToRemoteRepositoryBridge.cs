@@ -10,57 +10,57 @@ using Planner.Models.Tasks;
 
 namespace Planner.Models.Repositories
 {
-    public class PlannerTaskLocalToRemoteRepositoryBridge:ILocalPlannerTaskRepository
+    public class LocalToRemoteRepositoryBridge<T>:ILocalRepository<T> where T:PlannerItemWithDate, new()
     {
-        private readonly IPlannerTasRemoteRepository remote;
+        private readonly IDatedRemoteRepository<T> remote;
         private readonly IWallClock waiter;
 
-        public PlannerTaskLocalToRemoteRepositoryBridge(IPlannerTasRemoteRepository remote, 
+        public LocalToRemoteRepositoryBridge(IDatedRemoteRepository<T> remote, 
             IWallClock waiter)
         {
             this.remote = remote;
             this.waiter = waiter;
         }
 
-        public PlannerTask CreateTask(string name, LocalDate date)
+        public T CreateTask(LocalDate date)
         {
-            var ret = new PlannerTask(Guid.NewGuid()){Name = name, Date = date};
+            var ret = new T(){Date = date, Key = Guid.NewGuid()};
             remote.Add(ret);
             RegisterPropertyChangeNotifications(ret);
             return ret;
         }
 
-        private void RegisterPropertyChangeNotifications(PlannerTask plannerTask) => 
+        private void RegisterPropertyChangeNotifications(T plannerTask) => 
             plannerTask.PropertyChanged += DelayedUpdateEvent;
 
         private void DelayedUpdateEvent(object? sender, EventArgs _)
         {
-            if (sender is PlannerTask rpt) DelayedUpdate(rpt); 
+            if (sender is T rpt) DelayedUpdate(rpt); 
         }
-        private async void DelayedUpdate(PlannerTask plannerTask)
+        private async void DelayedUpdate(T plannerTask)
         {
             if (await ((IRemoteDatum) plannerTask).WaitForOverridingEvent(waiter, TimeSpan.FromSeconds(2)))
                 remote.Update(plannerTask).FireAndForget();
         }
 
-        public IList<PlannerTask> TasksForDate(LocalDate date)
+        public IList<T> TasksForDate(LocalDate date)
         {
-            var ret = new ThreadSafeBindableCollection<PlannerTask>();
+            var ret = new ThreadSafeBindableCollection<T>();
             RegisterItemRemovalNotification(ret);
             LoadTasksForDate(date, ret);
             return ret;
         }
 
-        private void RegisterItemRemovalNotification(ThreadSafeBindableCollection<PlannerTask> ret) => 
+        private void RegisterItemRemovalNotification(ThreadSafeBindableCollection<T> ret) => 
             ret.CollectionChanged += CollectionChanged;
 
         private void CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Remove)
-                RemoveItems(e.OldItems.OfType<PlannerTask>());
+                RemoveItems(e.OldItems.OfType<T>());
         }
 
-        private void RemoveItems(IEnumerable<PlannerTask> oldTasks)
+        private void RemoveItems(IEnumerable<T> oldTasks)
         {
             foreach (var task in oldTasks)
             {
@@ -68,13 +68,21 @@ namespace Planner.Models.Repositories
             }
         }
 
-        private async void LoadTasksForDate(LocalDate date, IList<PlannerTask> ret)
+        private async void LoadTasksForDate(LocalDate date, IList<T> ret)
         {
             await foreach (var task in remote.TasksForDate(date))
             {
                 RegisterPropertyChangeNotifications(task);
                 ret.Add(task);
             }
+        }
+    }
+    
+        public class PlannerTaskLocalToRemoteRepositoryBridge:LocalToRemoteRepositoryBridge<PlannerTask>, ILocalPlannerTaskRepository
+    {
+        public PlannerTaskLocalToRemoteRepositoryBridge(IPlannerTasRemoteRepository remote, IWallClock waiter) :
+            base(remote, waiter)
+        {
         }
     }
 }
