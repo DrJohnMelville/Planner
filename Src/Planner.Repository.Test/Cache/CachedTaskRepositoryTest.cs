@@ -1,6 +1,7 @@
 ﻿using System;
 using NodaTime;
 using Planner.Models.Repositories;
+using Planner.Models.Tasks;
 using Xunit;
 
 namespace Planner.Repository.Test.Cache
@@ -8,12 +9,12 @@ namespace Planner.Repository.Test.Cache
     public class CachedTaskRepositoryTest
     {
         private readonly TemporaryPTF source = new TemporaryPTF();
-        private readonly CachedTaskRepository sut;
+        private readonly CachedRepository<PlannerTask> sut;
         private readonly LocalDate baseDate = new LocalDate(1975,7,28);
 
         public CachedTaskRepositoryTest()
         {
-            sut = new CachedTaskRepository(source);
+            sut = new CachedRepository<PlannerTask>(source);
         }
 
         [Fact]

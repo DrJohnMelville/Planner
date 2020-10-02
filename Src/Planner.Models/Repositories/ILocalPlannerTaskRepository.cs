@@ -9,9 +9,6 @@ namespace Planner.Models.Repositories
          T CreateTask(LocalDate date);
          IList<T> TasksForDate(LocalDate date);
     }
-    public interface ILocalPlannerTaskRepository: ILocalRepository<PlannerTask>
-    {
-    }
 
     public static class PlannerTaskLocalRepoOperations
     {

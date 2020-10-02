@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Windows;
 using Melville.IOC.IocContainers;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
 using Planner.Models.Repositories;
+using Planner.Models.Tasks;
 using Planner.WpfViewModels.Logins;
 
 namespace Planner.Wpf.AppRoot
@@ -45,9 +47,9 @@ namespace Planner.Wpf.AppRoot
         private static void RegisterRepositories(IBindableIocService service)
         {
             service.Bind<IRegisterRepositorySource>().To<RegisterRepositorySource>();
-            service.Bind<ILocalPlannerTaskRepository>().To<PlannerTaskLocalToRemoteRepositoryBridge>();
-            service.Bind<ILocalPlannerTaskRepository>().To<CachedTaskRepository>()
-                .BlockSelfInjection().AsSingleton();
+            service.Bind<ILocalRepository<PlannerTask>>().To<PlannerTaskLocalToRemoteRepositoryBridge>();
+            service.BindGeneric(typeof(ILocalRepository<>), typeof(CachedRepository<>),
+                o => o.When(br => br.TypeBeingConstructed != br.DesiredType).AsSingleton());
         }
 
         private static void RegisterNodaTimeClock(IBindableIocService service)

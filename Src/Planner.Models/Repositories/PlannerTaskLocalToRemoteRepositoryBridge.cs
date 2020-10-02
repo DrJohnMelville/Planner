@@ -78,7 +78,7 @@ namespace Planner.Models.Repositories
         }
     }
     
-        public class PlannerTaskLocalToRemoteRepositoryBridge:LocalToRemoteRepositoryBridge<PlannerTask>, ILocalPlannerTaskRepository
+        public class PlannerTaskLocalToRemoteRepositoryBridge:LocalToRemoteRepositoryBridge<PlannerTask>
     {
         public PlannerTaskLocalToRemoteRepositoryBridge(IPlannerTasRemoteRepository remote, IWallClock waiter) :
             base(remote, waiter)
