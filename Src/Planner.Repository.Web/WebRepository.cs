@@ -5,7 +5,7 @@ using Planner.Models.Repositories;
 
 namespace Planner.Repository.Web
 {
-    public class WebRepository<T> where T:PlannerItemWithDate
+    public class WebRepository<T>:IDatedRemoteRepository<T> where T:PlannerItemWithDate
     {
         private readonly IJsonWebService webService;
         private readonly string prefix;

@@ -7,14 +7,13 @@ using Planner.Models.Repositories;
 
 namespace Planner.Web.Controllers
 {
-    public class DataController<TDatum, TSourceInterface> : Controller 
+    public class DataController<TDatum> : Controller 
         where TDatum: PlannerItemWithDate
-        where TSourceInterface: IDatedRemoteRepository<TDatum>
     {
-        private readonly TSourceInterface source;
+        private readonly IDatedRemoteRepository<TDatum> source;
         private readonly Func<Guid, TDatum> creator;
 
-        public DataController(TSourceInterface source, Func<Guid, TDatum> creator)
+        public DataController(IDatedRemoteRepository<TDatum> source, Func<Guid, TDatum> creator)
         {
             this.source = source;
             this.creator = creator;

@@ -17,7 +17,7 @@ namespace Planner.Repository.Test.Web
     {
         private readonly Mock<IHttpClientMock> httpSource = new Mock<IHttpClientMock>();
         private readonly IJsonWebService service;
-        private readonly PlannerTasRemoteWebRepository sut;
+        private readonly WebRepository<PlannerTask> sut;
         private readonly LocalDate date = new LocalDate(1975, 07, 28);
         public PlannerTaskWebRepositoryTest()
         {
@@ -27,7 +27,7 @@ namespace Planner.Repository.Test.Web
             var httpClient = httpSource.ToHttpClient();
            httpClient.BaseAddress = new Uri("https://Planner.DRJohnMelville.com");
             service = new JsonWebService(httpClient, seropt);
-            sut = new PlannerTasRemoteWebRepository(service);
+            sut = new WebRepository<PlannerTask>(service, "Task");
         }
 
         [Fact]

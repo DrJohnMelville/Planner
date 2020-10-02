@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
 using Planner.Models.Repositories;
+using Planner.Models.Tasks;
 using Planner.Repository.SqLite;
 using TokenServiceClient.Website;
 
@@ -31,7 +32,7 @@ namespace Planner.Web.CompositionRoot
             ConfigureDataProtection(services);
             AddCapWebAuthentication(services);
             DatabaseFactory.ConfigureDatabase(services);
-            services.AddScoped<IPlannerTasRemoteRepository, SqlPlannerTasRemoteRepository>();
+            services.AddScoped<IDatedRemoteRepository<PlannerTask>, SqlPlannerTasRemoteRepository>();
 
             services.AddControllersWithViews().AddJsonOptions(ConfigureJsonSerialization);
         }

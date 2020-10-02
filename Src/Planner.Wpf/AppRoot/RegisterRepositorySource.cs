@@ -1,5 +1,6 @@
 ﻿using System.Net.Http;
 using Melville.IOC.IocContainers;
+using Planner.Models.Notes;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
 using Planner.Repository.SqLite;
@@ -20,8 +21,12 @@ namespace Planner.Wpf.AppRoot
         public void UseWebSource(HttpClient authenticatedClient)
         {
             container.Bind<IJsonWebService>().To<JsonWebService>().WithParameters(authenticatedClient);
-            container.Bind<IDatedRemoteRepository<PlannerTask>>().To<PlannerTasRemoteWebRepository>();
+            RegisterWebRepository<PlannerTask>("/Task");
+            RegisterWebRepository<Note>("/Note");
         }
+
+        private void RegisterWebRepository<T>(string urlPrefix) where T:PlannerItemWithDate => 
+            container.Bind<IDatedRemoteRepository<T>>().To<WebRepository<T>>().WithParameters(urlPrefix);
 
         public void UseLocalTestSource()
         {
