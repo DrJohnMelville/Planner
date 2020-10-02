@@ -14,7 +14,9 @@ namespace Planner.Repository.SqLite
             new[]
             {
                 TryCreateVci<LocalDate, DateTime>(unwrappedProviderClrType, modelClrType,
-                    i => i.ToDateTimeUnspecified(), i => LocalDate.FromDateTime(i))
+                    i => i.ToDateTimeUnspecified(), i => LocalDate.FromDateTime(i)),
+                TryCreateVci<Instant, long>(unwrappedProviderClrType, modelClrType, 
+                    i=>i.ToUnixTimeMilliseconds(), i=>Instant.FromUnixTimeMilliseconds(i)),
             };
     }
 }

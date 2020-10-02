@@ -14,7 +14,7 @@ namespace Planner.Models.Repositories
         Task<bool> WaitForOverridingEvent(IWallClock waiter, TimeSpan timeout);
     }
 
-    public abstract class PlannerDataBase : IRemoteDatum
+    public abstract class PlannerItemBase : IRemoteDatum
     {
         public Guid Key { get; set; }
         

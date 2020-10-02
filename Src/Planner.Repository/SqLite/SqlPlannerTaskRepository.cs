@@ -10,6 +10,7 @@ using Planner.Models.Tasks;
 
 namespace Planner.Repository.SqLite
 {
+    
     public class SqlPlannerTaskRepository: IPlannerTaskRepository
     {
         private Func<PlannerDataContext> contextFactory;
