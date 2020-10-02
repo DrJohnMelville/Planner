@@ -19,8 +19,16 @@ namespace Planner.Repository.SqLite
 
         public async Task AddOrUpdateTask(RemotePlannerTask task)
         {
+            if (task.Key == Guid.Empty) throw new InvalidOperationException("Invalid GUID");
             using var ctx = contextFactory();
-            ctx.PlannerTasks.Update(task);
+            if (await ctx.PlannerTasks.Where(i => i.Key == task.Key).AnyAsync())
+            {
+                ctx.PlannerTasks.Update(task);
+            }
+            else
+            {
+                ctx.PlannerTasks.Add(task);
+            }// This is hacky -- I know when the adds are and I need to honor them
             await ctx.SaveChangesAsync();
         }
 

@@ -34,7 +34,17 @@ namespace Planner.Repository.Web
         public Task Put<T>(string url, T body) => client.PutAsync(url, ObjectAsJsonByteArray(body));
         
         private T ObjectFromJsonByteArray<T>(byte[] text) => JsonSerializer.Deserialize<T>(text, serializerOptions);
-        private ByteArrayContent ObjectAsJsonByteArray<T>(T body) => new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(body, serializerOptions));
+        private ByteArrayContent ObjectAsJsonByteArray<T>(T body)
+        {
+            var ret =  new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(body, serializerOptions));
+            SetToJsonContentType<T>(ret);
+            return ret;
+        }
 
+        private static void SetToJsonContentType<T>(ByteArrayContent ret)
+        {
+            ret.Headers.Remove("Content-Type");
+            ret.Headers.Add("Content-Type", "application/json");
+        }
     }
 }

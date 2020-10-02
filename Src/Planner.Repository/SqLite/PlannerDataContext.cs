@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Planner.Models.Repositories;
 
@@ -21,9 +22,9 @@ namespace Planner.Repository.SqLite
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<RemotePlannerTask>()
-                .HasKey(i => i.Key);
+            modelBuilder.Entity<RemotePlannerTask>().HasKey(i => i.Key);
             modelBuilder.Entity<RemotePlannerTask>().HasIndex(i => i.Date);
+            modelBuilder.Entity<RemotePlannerTask>().Property(i => i.Key).ValueGeneratedNever();
         }
     }
 }
