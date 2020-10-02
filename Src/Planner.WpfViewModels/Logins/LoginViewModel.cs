@@ -1,35 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Melville.INPC;
 using Melville.MVVM.WaitingServices;
 using Melville.MVVM.Wpf.DiParameterSources;
 using Melville.MVVM.Wpf.RootWindows;
 using Planner.WpfViewModels.PlannerPages;
+using TokenServiceClient.Native;
+using TokenServiceClient.Native.PersistentToken;
 
 namespace Planner.WpfViewModels.Logins
 {
+    public interface IRegisterRepositorySource
+    {
+        void UseWebSource(HttpClient authenticatedClient);
+        void UseLocalTestSource();
+    }
     public partial class LoginViewModel
     {
         public IList<TargetSite> Sites { get; }
-        [AutoNotify] private TargetSite? currentSite;
 
         public LoginViewModel(IList<TargetSite> sites)
         {
             Sites = sites;
-            currentSite = sites.FirstOrDefault();
         }
 
-        public async Task LogIn([FromServices]HttpClientHolder holder, IWaitingService wait,
-            INavigationWindow navigation, [FromServices]Func<DailyPlannerPageViewModel> factory)
+        public async Task LogIn(
+            IWaitingService wait,
+            TargetSite currentSite, 
+            [FromServices]IRegisterRepositorySource registry,
+            INavigationWindow navigation, 
+            [FromServices]Func<DailyPlannerPageViewModel> factory)
         {
-            if (CurrentSite == null) return;
             using (wait.WaitBlock("Logging In"))
             {
                 try
                 {
-                    if (!await holder.Login(CurrentSite))
+                    if (!await ConnectToWebRepository(currentSite, registry))
                     {
                         wait.ErrorMessage = "Login failed";
                         return;
@@ -41,6 +50,21 @@ namespace Planner.WpfViewModels.Logins
                     wait.ErrorMessage = e.Message;
                 }
             }
+        }
+        
+        public async Task<bool> ConnectToWebRepository(TargetSite site, IRegisterRepositorySource register)
+        {
+            var loginAttempt = CapWebTokenFactory.CreateCapWebClient(site.Name, site.Secret);
+            if (!await loginAttempt.LoginAsync()) return false;
+            register.UseWebSource(CreateDestinationClient(loginAttempt, site.Url));
+            return true;
+        }
+
+        private static HttpClient CreateDestinationClient(IPersistentAccessToken loginAttempt, string targetUrl)
+        {
+            var client = loginAttempt.AuthenticatedClient();
+            client.BaseAddress = new Uri(targetUrl);
+            return client;
         }
     }
 }

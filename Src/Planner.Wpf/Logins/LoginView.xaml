@@ -14,8 +14,14 @@
             John Melville's Personal Planner
         </TextBlock>
         <TextBlock Margin="20 0" FontStyle="Italic">“Dost thou love life? Then do not squander time; for that’s the stuff life is made of.” -- Benjamin Franklin</TextBlock>
-        <ComboBox Margin="20" ItemsSource="{Binding Sites}" SelectedItem="{Binding CurrentSite}"
-                  DisplayMemberPath="Name"/>
-        <Button Margin="20" FontSize="50" Click="{eventBindings:EventBinding LogIn}"> Log In </Button>
+        <ScrollViewer Margin="20">
+            <ItemsControl ItemsSource="{Binding Sites}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type logins:TargetSite}">
+                        <Button Margin="20" FontSize="50" Click="{eventBindings:EventBinding LogIn}" Content="{Binding Name}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
     </StackPanel>
 </UserControl>

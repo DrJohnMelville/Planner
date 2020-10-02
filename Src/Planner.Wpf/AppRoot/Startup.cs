@@ -12,12 +12,8 @@ using Microsoft.Extensions.Configuration;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
 using Planner.Models.Repositories;
-using Planner.Models.Tasks;
-using Planner.Repository;
 using Planner.Repository.Web;
 using Planner.WpfViewModels.Logins;
-using Planner.WpfViewModels.PlannerPages;
-using Planner.WpfViewModels.TaskList;
 
 namespace Planner.Wpf.AppRoot
 {
@@ -50,9 +46,7 @@ namespace Planner.Wpf.AppRoot
 
         private static void RegisterRepositories(IBindableIocService service)
         {
-            service.Bind<HttpClientHolder>().ToSelf().AsSingleton();
-            service.Bind<HttpClient>().ToMethod(i => i.Get<HttpClientHolder>().GetClient()).DoNotDispose();
-            service.Bind<IRemotePlannerTaskRepository>().To<PlannerTaskWebRepository>();
+            service.Bind<IRegisterRepositorySource>().To<RegisterRepositorySource>();
             service.Bind<ILocalPlannerTaskRepository>().To<PlannerTaskLocalToRemoteRepositoryBridge>();
             service.Bind<ILocalPlannerTaskRepository>().To<CachedTaskRepository>()
                 .BlockSelfInjection().AsSingleton();
