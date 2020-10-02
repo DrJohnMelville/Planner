@@ -4,13 +4,17 @@ using NodaTime;
 
 namespace Planner.Models.Repositories
 {
+    public interface ICachedRepositorySource<T> : ILocalRepository<T> where T:PlannerItemWithDate
+    {
+    }
+
     public class CachedRepository<T>:ILocalRepository<T> where T:PlannerItemWithDate
     {
         private readonly Dictionary<LocalDate, WeakReference<IList<T>>> cache =
             new Dictionary<LocalDate, WeakReference<IList<T>>>();
         private readonly ILocalRepository<T> source;
 
-        public CachedRepository(ILocalRepository<T> source)
+        public CachedRepository(ICachedRepositorySource<T> source)
         {
             this.source = source;
         }

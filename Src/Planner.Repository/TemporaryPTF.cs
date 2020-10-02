@@ -6,7 +6,7 @@ using Planner.Models.Tasks;
 
 namespace Planner.Repository
 {
-    public class TemporaryPTF : ILocalRepository<PlannerTask>
+    public class TemporaryPTF : ICachedRepositorySource<PlannerTask>
     {
         public PlannerTask CreateTask( LocalDate date)
         {

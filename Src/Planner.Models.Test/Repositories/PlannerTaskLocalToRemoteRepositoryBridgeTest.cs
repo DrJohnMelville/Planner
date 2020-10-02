@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Planner.Models.Test.Repositories
 {
-    public class PlannerTaskLocalToRemoteRepositoryBridgeTest
+    public class PlannerTskLocalToRemoteRepositoryBridgeTest
     {
         private readonly Mock<IPlannerTasRemoteRepository> repo = 
             new Mock<IPlannerTasRemoteRepository>();
@@ -18,11 +18,11 @@ namespace Planner.Models.Test.Repositories
         private readonly Mock<IWallClock> clock = new Mock<IWallClock>();
         private readonly LocalDate date = new LocalDate(1975,07,28);
 
-        public PlannerTaskLocalToRemoteRepositoryBridge sut;
+        public LocalToRemoteRepositoryBridge<PlannerTask> sut;
 
-        public PlannerTaskLocalToRemoteRepositoryBridgeTest()
+        public PlannerTskLocalToRemoteRepositoryBridgeTest()
         {
-            sut = new PlannerTaskLocalToRemoteRepositoryBridge(repo.Object, clock.Object);
+            sut = new LocalToRemoteRepositoryBridge<PlannerTask>(repo.Object, clock.Object);
         }
 
         [Fact]

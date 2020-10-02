@@ -10,7 +10,7 @@ using Planner.Models.Tasks;
 
 namespace Planner.Models.Repositories
 {
-    public class LocalToRemoteRepositoryBridge<T>:ILocalRepository<T> where T:PlannerItemWithDate, new()
+    public class LocalToRemoteRepositoryBridge<T>:ICachedRepositorySource<T> where T:PlannerItemWithDate, new()
     {
         private readonly IDatedRemoteRepository<T> remote;
         private readonly IWallClock waiter;
@@ -75,14 +75,6 @@ namespace Planner.Models.Repositories
                 RegisterPropertyChangeNotifications(task);
                 ret.Add(task);
             }
-        }
-    }
-    
-        public class PlannerTaskLocalToRemoteRepositoryBridge:LocalToRemoteRepositoryBridge<PlannerTask>
-    {
-        public PlannerTaskLocalToRemoteRepositoryBridge(IPlannerTasRemoteRepository remote, IWallClock waiter) :
-            base(remote, waiter)
-        {
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Windows;
+using Melville.IOC.BindingRequests;
 using Melville.IOC.IocContainers;
 using Melville.IOC.IocContainers.ActivationStrategies.TypeActivation;
 using Melville.MVVM.Wpf.RootWindows;
@@ -47,10 +48,13 @@ namespace Planner.Wpf.AppRoot
         private static void RegisterRepositories(IBindableIocService service)
         {
             service.Bind<IRegisterRepositorySource>().To<RegisterRepositorySource>();
-            service.Bind<ILocalRepository<PlannerTask>>().To<PlannerTaskLocalToRemoteRepositoryBridge>();
-            service.BindGeneric(typeof(ILocalRepository<>), typeof(CachedRepository<>),
-                o => o.When(br => br.TypeBeingConstructed != br.DesiredType).AsSingleton());
+            service.BindGeneric(typeof(ICachedRepositorySource<>),typeof(LocalToRemoteRepositoryBridge<>));
+            service.BindGeneric(typeof(ILocalRepository<>), typeof(CachedRepository<>));
         }
+
+        private static bool ConstructingCachedRepository(IBindingRequest arg) =>
+            arg.TypeBeingConstructed is {} tbc && tbc.IsGenericType &&
+            tbc.GetGenericTypeDefinition() == typeof(CachedRepository<>);
 
         private static void RegisterNodaTimeClock(IBindableIocService service)
         {
