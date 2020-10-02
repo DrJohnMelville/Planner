@@ -11,10 +11,10 @@ namespace Planner.Models.Repositories
 {
     public class PlannerTaskLocalToRemoteRepositoryBridge:ILocalPlannerTaskRepository
     {
-        private readonly IPlannerTaskRemoteRepository remote;
+        private readonly IPlannerTasRemotekRepository remote;
         private readonly IWallClock waiter;
 
-        public PlannerTaskLocalToRemoteRepositoryBridge(IPlannerTaskRemoteRepository remote, 
+        public PlannerTaskLocalToRemoteRepositoryBridge(IPlannerTasRemotekRepository remote, 
             IWallClock waiter)
         {
             this.remote = remote;
@@ -24,7 +24,7 @@ namespace Planner.Models.Repositories
         public PlannerTask CreateTask(string name, LocalDate date)
         {
             var ret = new PlannerTask(Guid.NewGuid()){Name = name, Date = date};
-            remote.AddTask(ret);
+            remote.Add(ret);
             RegisterPropertyChangeNotifications(ret);
             return ret;
         }
@@ -39,7 +39,7 @@ namespace Planner.Models.Repositories
         private async void DelayedUpdate(PlannerTask plannerTask)
         {
             if (await ((IRemoteDatum) plannerTask).WaitForOverridingEvent(waiter, TimeSpan.FromSeconds(2)))
-                remote.UpdateTask(plannerTask).FireAndForget();
+                remote.Update(plannerTask).FireAndForget();
         }
 
         public PlannerTaskList TasksForDate(LocalDate date)
@@ -63,7 +63,7 @@ namespace Planner.Models.Repositories
         {
             foreach (var task in oldTasks)
             {
-                remote.DeleteTask(task);
+                remote.Delete(task);
             }
         }
 

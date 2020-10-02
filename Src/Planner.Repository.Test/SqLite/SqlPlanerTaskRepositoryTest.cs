@@ -11,20 +11,20 @@ namespace Planner.Repository.Test.SqLite
     public class SqlPlanerTaskRepositoryTest
     {
         private readonly TestDatabase data = new TestDatabase();
-        private readonly SqlPlannerTaskRepository sut;
+        private readonly SqlPlannerTasRemotekRepository sut;
         private readonly LocalDate date1 = new LocalDate(1975,07,28);
         private readonly LocalDate date2 = new LocalDate(1974,08,18);
 
         public SqlPlanerTaskRepositoryTest()
         {
-            sut = new SqlPlannerTaskRepository(data.NewContext);
+            sut = new SqlPlannerTasRemotekRepository(data.NewContext);
         }
 
         [Fact]
         public async Task CreatingATaskAddsItToTheListForTheDay()
         {
             var pt = new PlannerTask(Guid.NewGuid()) {Name = "Foo", Date = date1};
-            await sut.AddTask(pt);
+            await sut.Add(pt);
             var list = await sut.TasksForDate(date1).ToListAsync();
             Assert.Single(list);
             Assert.Equal("Foo", list[0].Name);
@@ -33,9 +33,9 @@ namespace Planner.Repository.Test.SqLite
         public async Task ModificationsGetSaved()
         {
             var pt = new PlannerTask(Guid.NewGuid()) {Name = "Foo", Date = date1};
-            await sut.AddTask(pt);
+            await sut.Add(pt);
             pt.Name = "Bar";
-            await sut.UpdateTask(pt);
+            await sut.Update(pt);
             var list = await sut.TasksForDate(date1).ToListAsync();
             Assert.Single(list);
             Assert.Equal("Bar", list[0].Name);
@@ -44,7 +44,7 @@ namespace Planner.Repository.Test.SqLite
         public async Task TasksOnlyQueryFromTheIndicatedDate()
         {
             var pt = new PlannerTask(Guid.NewGuid()) {Name = "Foo", Date = date1};
-            await sut.AddTask(pt);
+            await sut.Add(pt);
             var list = await sut.TasksForDate(date2).ToListAsync();
             Assert.Empty(list);
         }
@@ -52,10 +52,10 @@ namespace Planner.Repository.Test.SqLite
         public async Task DeleteTask()
         {
             var pt = new PlannerTask(Guid.NewGuid()) {Name = "Foo", Date = date1};
-            await sut.AddTask(pt);
+            await sut.Add(pt);
             var list = await sut.TasksForDate(date1).ToListAsync();
             Assert.Single(list);
-            await sut.DeleteTask(pt);
+            await sut.Delete(pt);
             Assert.Empty(await sut.TasksForDate(date1).ToListAsync());
         }
     }

@@ -31,7 +31,7 @@ namespace Planner.Web.CompositionRoot
             ConfigureDataProtection(services);
             AddCapWebAuthentication(services);
             DatabaseFactory.ConfigureDatabase(services);
-            services.AddScoped<IPlannerTaskRemoteRepository, SqlPlannerTaskRepository>();
+            services.AddScoped<IPlannerTasRemotekRepository, SqlPlannerTasRemotekRepository>();
 
             services.AddControllersWithViews().AddJsonOptions(ConfigureJsonSerialization);
         }

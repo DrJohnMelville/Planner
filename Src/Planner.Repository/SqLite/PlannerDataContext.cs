@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Planner.Models.Notes;
+using Planner.Models.Repositories;
 using Planner.Models.Tasks;
 
 namespace Planner.Repository.SqLite
@@ -23,13 +25,15 @@ namespace Planner.Repository.SqLite
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<PlannerTask>().HasKey(i => i.Key);
-            modelBuilder.Entity<PlannerTask>().HasIndex(i => i.Date);
-            modelBuilder.Entity<PlannerTask>().Property(i => i.Key).ValueGeneratedNever();
+            DeclareTable(modelBuilder.Entity<PlannerTask>());
+            DeclareTable(modelBuilder.Entity<Note>());
+        }
 
-            modelBuilder.Entity<Note>().HasKey(i => i.Key);
-            modelBuilder.Entity<Note>().HasIndex(i => i.DisplaysOnDate);
-            modelBuilder.Entity<Note>().Property(i=>i.Key).ValueGeneratedNever();
+        private static void DeclareTable<T>(EntityTypeBuilder<T> entity) where T:PlannerItemWithDate
+        {
+            entity.HasKey(i => i.Key);
+            entity.HasIndex(i => i.Date);
+            entity.Property(i => i.Key).ValueGeneratedNever();
         }
     }
 }

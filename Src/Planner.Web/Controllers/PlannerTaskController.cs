@@ -11,9 +11,9 @@ namespace Planner.Web.Controllers
     [Route("Task")]
     public class PlannerTaskController : Controller
     {
-        private readonly IPlannerTaskRemoteRepository source;
+        private readonly IPlannerTasRemotekRepository source;
 
-        public PlannerTaskController(IPlannerTaskRemoteRepository source)
+        public PlannerTaskController(IPlannerTasRemotekRepository source)
         {
             this.source = source;
         }
@@ -25,14 +25,14 @@ namespace Planner.Web.Controllers
 
         [Route("")]
         [HttpPut]
-        public Task Update([FromBody] PlannerTask task) => source.UpdateTask(task);
+        public Task Update([FromBody] PlannerTask task) => source.Update(task);
         [Route("")]
         [HttpPost]
-        public Task Add([FromBody] PlannerTask task) => source.AddTask(task);
+        public Task Add([FromBody] PlannerTask task) => source.Add(task);
 
         [Route("{key}")]
         [HttpDelete]
         public Task DeleteTask(Guid key) =>
-            source.DeleteTask(new PlannerTask(key));
+            source.Delete(new PlannerTask(key));
     }
 }

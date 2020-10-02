@@ -12,7 +12,7 @@ namespace Planner.Web.Test.Controllers
 {
     public class PlannerTaskControllerTest
     {
-        private readonly Mock<IPlannerTaskRemoteRepository> repo = new Mock<IPlannerTaskRemoteRepository>();
+        private readonly Mock<IPlannerTasRemotekRepository> repo = new Mock<IPlannerTasRemotekRepository>();
         private readonly PlannerTaskController sut;
         private readonly LocalDate date = new LocalDate(1975, 7, 28);
 
@@ -43,7 +43,7 @@ namespace Planner.Web.Test.Controllers
         {
             var rpt = new PlannerTask(Guid.NewGuid());
             await sut.Update(rpt);
-            repo.Verify(i=>i.UpdateTask(rpt), Times.Once);
+            repo.Verify(i=>i.Update(rpt), Times.Once);
             repo.VerifyNoOtherCalls();
         }
         [Fact]
@@ -51,7 +51,7 @@ namespace Planner.Web.Test.Controllers
         {
             var rpt = new PlannerTask(Guid.NewGuid());
             await sut.Add(rpt);
-            repo.Verify(i=>i.AddTask(rpt), Times.Once);
+            repo.Verify(i=>i.Add(rpt), Times.Once);
             repo.VerifyNoOtherCalls();
         }
 
@@ -60,7 +60,7 @@ namespace Planner.Web.Test.Controllers
         {
             var guid = Guid.NewGuid();
             await sut.DeleteTask(guid);
-            repo.Verify(i => i.DeleteTask(It.Is<PlannerTask>(
+            repo.Verify(i => i.Delete(It.Is<PlannerTask>(
                 rpt=>rpt.Key == guid
                 )), Times.Once);
             repo.VerifyNoOtherCalls();

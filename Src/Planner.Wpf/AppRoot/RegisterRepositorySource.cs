@@ -19,13 +19,13 @@ namespace Planner.Wpf.AppRoot
         public void UseWebSource(HttpClient authenticatedClient)
         {
             container.Bind<IJsonWebService>().To<JsonWebService>().WithParameters(authenticatedClient);
-            container.Bind<IPlannerTaskRemoteRepository>().To<PlannerTaskWebRepository>();
+            container.Bind<IPlannerTasRemotekRepository>().To<PlannerTasRemotekWebRepository>();
         }
 
         public void UseLocalTestSource()
         {
             var localDb = TestDatabaseFactory.TestDatabaseCreator();
-            container.Bind<IPlannerTaskRemoteRepository>().To<SqlPlannerTaskRepository>()
+            container.Bind<IPlannerTasRemotekRepository>().To<SqlPlannerTasRemotekRepository>()
                 .WithParameters(localDb);
         }
     }

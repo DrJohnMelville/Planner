@@ -17,7 +17,7 @@ namespace Planner.Repository.Test.Web
     {
         private readonly Mock<IHttpClientMock> httpSource = new Mock<IHttpClientMock>();
         private readonly IJsonWebService service;
-        private readonly PlannerTaskWebRepository sut;
+        private readonly PlannerTasRemotekWebRepository sut;
         private readonly LocalDate date = new LocalDate(1975, 07, 28);
         public PlannerTaskWebRepositoryTest()
         {
@@ -27,7 +27,7 @@ namespace Planner.Repository.Test.Web
             var httpClient = httpSource.ToHttpClient();
            httpClient.BaseAddress = new Uri("https://Planner.DRJohnMelville.com");
             service = new JsonWebService(httpClient, seropt);
-            sut = new PlannerTaskWebRepository(service);
+            sut = new PlannerTasRemotekWebRepository(service);
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace Planner.Repository.Test.Web
         {
             httpSource.Setup(i=>true, HttpMethod.Delete).ReturnsJson("");
             var guid = Guid.NewGuid();
-            await sut.DeleteTask(new PlannerTask(guid));
+            await sut.Delete(new PlannerTask(guid));
             httpSource.Verify((Func<string,bool>)(i=>i.EndsWith("/Task/"+guid)), 
                 HttpMethod.Delete, Times.Once);
         }
@@ -56,7 +56,7 @@ namespace Planner.Repository.Test.Web
         public async Task PostAddMethod()
         {
             httpSource.Setup(i=>true, HttpMethod.Post).ReturnsJson("");
-            await sut.AddTask(new PlannerTask(Guid.NewGuid()));
+            await sut.Add(new PlannerTask(Guid.NewGuid()));
             httpSource.Verify((Func<string,bool>)(i=>i.EndsWith("/Task")), 
                 HttpMethod.Post, Times.Once);
         }
@@ -64,7 +64,7 @@ namespace Planner.Repository.Test.Web
         public async Task PutChangeMethod()
         {
             httpSource.Setup(i=>true, HttpMethod.Put).ReturnsJson("");
-            await sut.UpdateTask(new PlannerTask(Guid.NewGuid()));
+            await sut.Update(new PlannerTask(Guid.NewGuid()));
             httpSource.Verify((Func<string,bool>)(i=>i.EndsWith("/Task")), 
                 HttpMethod.Put, Times.Once);
         }
