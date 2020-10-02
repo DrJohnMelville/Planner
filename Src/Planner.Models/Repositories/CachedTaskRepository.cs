@@ -7,8 +7,8 @@ namespace Planner.Models.Repositories
 {
     public class CachedTaskRepository:ILocalPlannerTaskRepository
     {
-        private readonly Dictionary<LocalDate, WeakReference<PlannerTaskList>> cache =
-            new Dictionary<LocalDate, WeakReference<PlannerTaskList>>();
+        private readonly Dictionary<LocalDate, WeakReference<IList<PlannerTask>>> cache =
+            new Dictionary<LocalDate, WeakReference<IList<PlannerTask>>>();
         private readonly ILocalPlannerTaskRepository source;
 
         public CachedTaskRepository(ILocalPlannerTaskRepository source)
@@ -25,11 +25,11 @@ namespace Planner.Models.Repositories
             return ret;
         }
 
-        public PlannerTaskList TasksForDate(LocalDate date)
+        public IList<PlannerTask> TasksForDate(LocalDate date)
         {
             if (cache.TryGetValue(date, out var weakRef) && weakRef.TryGetTarget(out var val)) return val;
             var ret = source.TasksForDate(date);
-            cache[date] = new WeakReference<PlannerTaskList>(ret);
+            cache[date] = new WeakReference<IList<PlannerTask>>(ret);
             return ret;
         }
     }

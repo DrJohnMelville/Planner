@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using Melville.MVVM.AdvancedLists;
 using Melville.MVVM.CSharpHacks;
 using Melville.MVVM.Time;
 using NodaTime;
@@ -11,10 +12,10 @@ namespace Planner.Models.Repositories
 {
     public class PlannerTaskLocalToRemoteRepositoryBridge:ILocalPlannerTaskRepository
     {
-        private readonly IPlannerTasRemotekRepository remote;
+        private readonly IPlannerTasRemoteRepository remote;
         private readonly IWallClock waiter;
 
-        public PlannerTaskLocalToRemoteRepositoryBridge(IPlannerTasRemotekRepository remote, 
+        public PlannerTaskLocalToRemoteRepositoryBridge(IPlannerTasRemoteRepository remote, 
             IWallClock waiter)
         {
             this.remote = remote;
@@ -42,15 +43,15 @@ namespace Planner.Models.Repositories
                 remote.Update(plannerTask).FireAndForget();
         }
 
-        public PlannerTaskList TasksForDate(LocalDate date)
+        public IList<PlannerTask> TasksForDate(LocalDate date)
         {
-            var ret = new PlannerTaskList();
+            var ret = new ThreadSafeBindableCollection<PlannerTask>();
             RegisterItemRemovalNotification(ret);
             LoadTasksForDate(date, ret);
             return ret;
         }
 
-        private void RegisterItemRemovalNotification(PlannerTaskList ret) => 
+        private void RegisterItemRemovalNotification(ThreadSafeBindableCollection<PlannerTask> ret) => 
             ret.CollectionChanged += CollectionChanged;
 
         private void CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -67,7 +68,7 @@ namespace Planner.Models.Repositories
             }
         }
 
-        private async void LoadTasksForDate(LocalDate date, PlannerTaskList ret)
+        private async void LoadTasksForDate(LocalDate date, IList<PlannerTask> ret)
         {
             await foreach (var task in remote.TasksForDate(date))
             {

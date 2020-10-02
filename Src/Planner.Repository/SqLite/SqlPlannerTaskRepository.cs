@@ -5,9 +5,9 @@ using Planner.Models.Tasks;
 
 namespace Planner.Repository.SqLite
 {
-    public class SqlPlannerTasRemotekRepository: SqlRemoteRepositoryWithDate<PlannerTask>, IPlannerTasRemotekRepository
+    public class SqlPlannerTasRemoteRepository: SqlRemoteRepositoryWithDate<PlannerTask>, IPlannerTasRemoteRepository
     {
-        public SqlPlannerTasRemotekRepository(Func<PlannerDataContext> contextFactory) : base(contextFactory)
+        public SqlPlannerTasRemoteRepository(Func<PlannerDataContext> contextFactory) : base(contextFactory)
         {
         }
     }

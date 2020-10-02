@@ -12,8 +12,8 @@ namespace Planner.Models.Test.Repositories
 {
     public class PlannerTaskLocalToRemoteRepositoryBridgeTest
     {
-        private readonly Mock<IPlannerTasRemotekRepository> repo = 
-            new Mock<IPlannerTasRemotekRepository>();
+        private readonly Mock<IPlannerTasRemoteRepository> repo = 
+            new Mock<IPlannerTasRemoteRepository>();
 
         private readonly Mock<IWallClock> clock = new Mock<IWallClock>();
         private readonly LocalDate date = new LocalDate(1975,07,28);

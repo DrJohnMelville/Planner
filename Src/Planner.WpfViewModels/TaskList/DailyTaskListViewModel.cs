@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -12,7 +13,7 @@ namespace Planner.WpfViewModels.TaskList
 {
     public partial class DailyTaskListViewModel
     {
-        private readonly PlannerTaskList sourceList;
+        private readonly IList<PlannerTask> sourceList;
         public CollectionView TaskItems { get; }
         public string[] DeferToName { get; }
 

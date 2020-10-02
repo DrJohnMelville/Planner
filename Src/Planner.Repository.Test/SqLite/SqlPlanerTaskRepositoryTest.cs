@@ -11,13 +11,13 @@ namespace Planner.Repository.Test.SqLite
     public class SqlPlanerTaskRepositoryTest
     {
         private readonly TestDatabase data = new TestDatabase();
-        private readonly SqlPlannerTasRemotekRepository sut;
+        private readonly SqlPlannerTasRemoteRepository sut;
         private readonly LocalDate date1 = new LocalDate(1975,07,28);
         private readonly LocalDate date2 = new LocalDate(1974,08,18);
 
         public SqlPlanerTaskRepositoryTest()
         {
-            sut = new SqlPlannerTasRemotekRepository(data.NewContext);
+            sut = new SqlPlannerTasRemoteRepository(data.NewContext);
         }
 
         [Fact]

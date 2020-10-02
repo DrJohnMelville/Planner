@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using System.Collections.Generic;
+using Moq;
 using NodaTime;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
@@ -17,7 +18,7 @@ namespace Planner.Wpf.Test.PlannerPages
         public DailyPlannerPageViewModelTest()
         {
             repo.Setup(i => i.TasksForDate(It.IsAny<LocalDate>())).Returns(
-                (LocalDate d) => new PlannerTaskList());
+                (LocalDate d) => new List<PlannerTask>());
             sut = new DailyPlannerPageViewModel(clock.Object, 
                 d => new DailyTaskListViewModel(repo.Object, 
                     i=> new PlannerTaskViewModel(i), d));

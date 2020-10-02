@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using Melville.MVVM.AdvancedLists;
 using Melville.TestHelpers.InpcTesting;
 using Melville.TestHelpers.MockConstruction;
 using Moq;
@@ -26,14 +28,14 @@ namespace Planner.Wpf.Test.TaskList
             taskFactory.Setup(i => i.CreateTask(It.IsAny<string>(), It.IsAny<LocalDate>())).Returns(
                 (string s, LocalDate ld) => new PlannerTask() {Name = s});
             taskFactory.Setup(i => i.TasksForDate(date)).Returns(
-                (Func<LocalDate, PlannerTaskList>)GenerateDailyTaskList);
+                (Func<LocalDate, IList<PlannerTask>>)GenerateDailyTaskList);
                 sut = new DailyTaskListViewModel(taskFactory.Object, i=>new PlannerTaskViewModel(i),
                 date);
             itemVM = sut.TaskItems.OfType<PlannerTaskViewModel>().First();
         }
-        public PlannerTaskList GenerateDailyTaskList(LocalDate date)
+        public IList<PlannerTask> GenerateDailyTaskList(LocalDate date)
         {
-            var src = new PlannerTaskList();
+            var src = new ThreadSafeBindableCollection<PlannerTask>();
             src.Add(new PlannerTask() {Name = "Task1"});
             src.Add(new PlannerTask() {Name = "Task2"});
             src.Add(new PlannerTask() {Name = "Task3"});

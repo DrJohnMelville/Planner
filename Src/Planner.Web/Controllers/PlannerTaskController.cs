@@ -6,9 +6,9 @@ using Planner.Models.Tasks;
 namespace Planner.Web.Controllers
 {
     [Route("Task")]
-    public class PlannerTaskController : DataController<PlannerTask, IPlannerTasRemotekRepository>
+    public class PlannerTaskController : DataController<PlannerTask, IPlannerTasRemoteRepository>
     {
-        public PlannerTaskController(IPlannerTasRemotekRepository source) : base(source, g=>new PlannerTask(g))
+        public PlannerTaskController(IPlannerTasRemoteRepository source) : base(source, g=>new PlannerTask(g))
         {
         }
     }

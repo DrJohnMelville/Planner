@@ -3,7 +3,7 @@ using Planner.Models.Tasks;
 
 namespace Planner.Models.Repositories
 {
-    public interface IPlannerTasRemotekRepository: IDatedRemoteRepository<PlannerTask>
+    public interface IPlannerTasRemoteRepository: IDatedRemoteRepository<PlannerTask>
     {
     }
 

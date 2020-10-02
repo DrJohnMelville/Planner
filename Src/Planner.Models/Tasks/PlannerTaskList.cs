@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Melville.MVVM.AdvancedLists;
 
 namespace Planner.Models.Tasks
 {
-    public class PlannerTaskList: ThreadSafeBindableCollection<PlannerTask>
+    public static class PlannerTaskList
     {
-        public void PickPriority(PlannerTask task, char currentPriority)
+        public static void PickPriority(this IList<PlannerTask> list, PlannerTask task, char currentPriority)
         {
             switch (task.Priority, task.Order)
             {
@@ -14,7 +13,7 @@ namespace Planner.Models.Tasks
                     task.Priority = currentPriority;
                     break;
                 case (_, 0):
-                    task.Order = ComputeNextOrder(task.Priority);
+                    task.Order = list.ComputeNextOrder(task.Priority);
                     break;
                 default:
                     task.Order = 0;
@@ -22,31 +21,28 @@ namespace Planner.Models.Tasks
                     break;
             }
         }
-
-        private int ComputeNextOrder(char priority) => this.Where(i=>i.Priority == priority).Max(i => i.Order) + 1;
-
-
-        public void SetImpliedOrders()
+        private static int ComputeNextOrder(this IList<PlannerTask> list, char priority) => list.Where(i=>i.Priority == priority).Max(i => i.Order) + 1;
+        public static void SetImpliedOrders(this IList<PlannerTask> list)
         {
-            if (AnyTaskLacksAPriority()) return;
-            foreach (var task in SingleUnassignedTasksWithinTheirPriority())
+            if (list.AnyTaskLacksAPriority()) return;
+            foreach (var task in list.SingleUnassignedTasksWithinTheirPriority())
             {
-                PickPriority(task, 'A');                              
+                list.PickPriority(task, 'A');                              
             }
         }
 
-        private IEnumerable<PlannerTask> SingleUnassignedTasksWithinTheirPriority() =>
-            this
+        private static IEnumerable<PlannerTask> SingleUnassignedTasksWithinTheirPriority(this IList<PlannerTask> list) =>
+            list
                 .Where(i=>i.Order < 1)
                 .GroupBy(i=>i.Priority)
                 .Where(i=>i.Count() == 1)
                 .Select(i=>i.First());
 
-        private bool AnyTaskLacksAPriority() => this.Any(i => i.Priority == ' ');
+        private static bool AnyTaskLacksAPriority(this IList<PlannerTask> list) => list.Any(i => i.Priority == ' ');
 
-        public bool CompletelyPrioritized()
+        public static bool CompletelyPrioritized(this IList<PlannerTask> list)
         {
-            return (this.All(i => i.Prioritized));
+            return (list.All(i => i.Prioritized));
         }
     }
 }

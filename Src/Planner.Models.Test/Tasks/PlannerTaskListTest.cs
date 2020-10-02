@@ -1,4 +1,5 @@
-﻿using Planner.Models.Tasks;
+﻿using Melville.MVVM.AdvancedLists;
+using Planner.Models.Tasks;
 using Xunit;
 
 namespace Planner.Models.Test.Tasks
@@ -9,7 +10,7 @@ namespace Planner.Models.Test.Tasks
         private readonly PlannerTask taskB = new PlannerTask() {Name = "B"};
         private readonly PlannerTask taskC = new PlannerTask() {Name = "C"};
         private readonly PlannerTask taskD = new PlannerTask() {Name = "D"};
-        private readonly PlannerTaskList sut = new PlannerTaskList();
+        private readonly ThreadSafeBindableCollection<PlannerTask> sut = new ThreadSafeBindableCollection<PlannerTask>();
 
         public PlannerTaskListTest()
         {
