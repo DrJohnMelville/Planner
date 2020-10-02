@@ -54,10 +54,18 @@ namespace Planner.Repository.Test.Web
         }
 
         [Fact]
+        public async Task PostAddMethod()
+        {
+            httpSource.Setup(i=>true, HttpMethod.Post).ReturnsJson("");
+            await sut.AddTask(new RemotePlannerTask(Guid.NewGuid()));
+            httpSource.Verify((Func<string,bool>)(i=>i.EndsWith("/Task")), 
+                HttpMethod.Post, Times.Once);
+        }
+        [Fact]
         public async Task PutChangeMethod()
         {
             httpSource.Setup(i=>true, HttpMethod.Put).ReturnsJson("");
-            await sut.AddOrUpdateTask(new RemotePlannerTask());
+            await sut.UpdateTask(new RemotePlannerTask(Guid.NewGuid()));
             httpSource.Verify((Func<string,bool>)(i=>i.EndsWith("/Task")), 
                 HttpMethod.Put, Times.Once);
         }

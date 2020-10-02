@@ -24,7 +24,7 @@ namespace Planner.Models.Repositories
         public PlannerTask CreateTask(string name, LocalDate date)
         {
             var ret = new RemotePlannerTask(Guid.NewGuid()){Name = name, Date = date};
-            DelayedUpdate(ret);
+            remote.AddTask(ret);
             RegisterPropertyChangeNotifications(ret);
             return ret;
         }
@@ -41,7 +41,7 @@ namespace Planner.Models.Repositories
             var updateCounter = plannerTask.NewUpdateCount();
             await waiter.Wait(TimeSpan.FromSeconds(2));
             if (!plannerTask.UnchangedSince(updateCounter)) return;
-            remote.AddOrUpdateTask(plannerTask).FireAndForget();
+            remote.UpdateTask(plannerTask).FireAndForget();
         }
 
         public PlannerTaskList TasksForDate(LocalDate date)

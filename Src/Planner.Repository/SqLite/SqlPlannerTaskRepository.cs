@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Planner.Models.Repositories;
+using Planner.Models.Tasks;
 
 namespace Planner.Repository.SqLite
 {
@@ -17,27 +19,26 @@ namespace Planner.Repository.SqLite
             this.contextFactory = contextFactory;
         }
 
-        public async Task AddOrUpdateTask(RemotePlannerTask task)
+        private async Task HandleTask(RemotePlannerTask task, Action<DbSet<RemotePlannerTask>, RemotePlannerTask> action)
         {
-            if (task.Key == Guid.Empty) throw new InvalidOperationException("Invalid GUID");
+            VerifyProperKey(task);
             using var ctx = contextFactory();
-            if (await ctx.PlannerTasks.Where(i => i.Key == task.Key).AnyAsync())
-            {
-                ctx.PlannerTasks.Update(task);
-            }
-            else
-            {
-                ctx.PlannerTasks.Add(task);
-            }// This is hacky -- I know when the adds are and I need to honor them
+            action(ctx.PlannerTasks, task);
             await ctx.SaveChangesAsync();
         }
 
-        public async Task DeleteTask(RemotePlannerTask task)
+        public Task AddTask(RemotePlannerTask task) => HandleTask(task, (table, rt) => table.Add(rt)); 
+        public Task UpdateTask(RemotePlannerTask task) => HandleTask(task, (table, rt) => table.Update(rt)); 
+        public Task DeleteTask(RemotePlannerTask task) => HandleTask(task, (table, rt) =>
         {
-            await using var ctx = contextFactory();
-            ctx.PlannerTasks.Attach(task);
-            ctx.PlannerTasks.Remove(task);
-            await ctx.SaveChangesAsync();
+            table.Attach(task);
+            table.Remove(task);
+        });
+
+        [Conditional("DEBUG")]
+        private static void VerifyProperKey(RemotePlannerTask task)
+        {
+            if (task.Key == Guid.Empty) throw new InvalidOperationException("Invalid GUID");
         }
 
         public async IAsyncEnumerable<RemotePlannerTask> TasksForDate(LocalDate date)

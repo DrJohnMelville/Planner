@@ -32,14 +32,27 @@ namespace Planner.Web.Test.Controllers
             }.ToAsyncEnumerable());
 
             var ret = await sut.TasksForDate(date).ToListAsync();
+            Assert.Equal(2, ret.Count);
+            Assert.Equal("Foo", ret[0].Name);
+            Assert.Equal("Bar", ret[1].Name);
+            
+            
         }
 
         [Fact]
         public async Task PutTask()
         {
-            var rpt = new RemotePlannerTask();
-            await sut.AddOrUpdate(rpt);
-            repo.Verify(i=>i.AddOrUpdateTask(rpt), Times.Once);
+            var rpt = new RemotePlannerTask(Guid.NewGuid());
+            await sut.Update(rpt);
+            repo.Verify(i=>i.UpdateTask(rpt), Times.Once);
+            repo.VerifyNoOtherCalls();
+        }
+        [Fact]
+        public async Task PostTask()
+        {
+            var rpt = new RemotePlannerTask(Guid.NewGuid());
+            await sut.Add(rpt);
+            repo.Verify(i=>i.AddTask(rpt), Times.Once);
             repo.VerifyNoOtherCalls();
         }
 

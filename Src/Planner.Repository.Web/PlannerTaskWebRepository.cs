@@ -14,8 +14,8 @@ namespace Planner.Repository.Web
             this.webService = webService;
         }
 
-        public Task AddOrUpdateTask(RemotePlannerTask task) => webService.Put("/Task", task);
-
+        public Task AddTask(RemotePlannerTask task) => webService.Post("/Task", task);
+        public Task UpdateTask(RemotePlannerTask task) => webService.Put("/Task", task);
         public Task DeleteTask(RemotePlannerTask task) => webService.Delete("/Task/"+task.Key);
 
         public async IAsyncEnumerable<RemotePlannerTask> TasksForDate(LocalDate date)

@@ -33,7 +33,7 @@ namespace Planner.Models.Test.Repositories
         public void CreateTaskUpdatesRemoteRepository()
         {
             var task = sut.CreateTask("Foo", date);
-            repo.Verify(i=>i.AddOrUpdateTask((RemotePlannerTask)task), Times.Once);
+            repo.Verify(i=>i.AddTask((RemotePlannerTask)task), Times.Once);
         }
 
         [Fact]
@@ -41,7 +41,8 @@ namespace Planner.Models.Test.Repositories
         {
             var task = sut.CreateTask("Foo", date);
             task.Name = "Bar";
-            repo.Verify(i=>i.AddOrUpdateTask((RemotePlannerTask)task), Times.Exactly(2));
+            repo.Verify(i=>i.AddTask((RemotePlannerTask)task), Times.Once);
+            repo.Verify(i=>i.UpdateTask((RemotePlannerTask)task), Times.Once);
         }
 
         [Fact]
@@ -54,7 +55,8 @@ namespace Planner.Models.Test.Repositories
             task.Priority = 'A';
             task.Order = 1;
             tcs.SetResult(1);
-            repo.Verify(i=>i.AddOrUpdateTask((RemotePlannerTask)task), Times.Once);
+            repo.Verify(i=>i.AddTask((RemotePlannerTask)task), Times.Once);
+            repo.Verify(i=>i.UpdateTask((RemotePlannerTask)task), Times.Once);
         }
 
         private async IAsyncEnumerable<T> AsyncEnum<T>(params T[] items)
@@ -74,7 +76,7 @@ namespace Planner.Models.Test.Repositories
             var list = sut.TasksForDate(date);
             Assert.Single(list);
             list[0].Name = "Bar";
-            repo.Verify(i=>i.AddOrUpdateTask((RemotePlannerTask)list[0]), Times.Once);
+            repo.Verify(i=>i.UpdateTask((RemotePlannerTask)list[0]), Times.Once);
         }
         [Fact]
         public void RemovingTaskDeletesFromDatabase()

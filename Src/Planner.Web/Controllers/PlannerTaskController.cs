@@ -24,8 +24,10 @@ namespace Planner.Web.Controllers
 
         [Route("")]
         [HttpPut]
-        public Task AddOrUpdate([FromBody] RemotePlannerTask task) =>
-            source.AddOrUpdateTask(task);
+        public Task Update([FromBody] RemotePlannerTask task) => source.UpdateTask(task);
+        [Route("")]
+        [HttpPost]
+        public Task Add([FromBody] RemotePlannerTask task) => source.AddTask(task);
 
         [Route("{key}")]
         [HttpDelete]

@@ -10,6 +10,7 @@ namespace Planner.Repository.Web
         public Task<T> Get<T>(string url);
         public Task Delete(string url);
         public Task Put<T>(string url, T body);
+        public Task Post<T>(string url, T body);
     }
     public class JsonWebService: IJsonWebService
     {
@@ -32,6 +33,7 @@ namespace Planner.Repository.Web
 
         public Task Delete(string url) => client.DeleteAsync(url);
         public Task Put<T>(string url, T body) => client.PutAsync(url, ObjectAsJsonByteArray(body));
+        public Task Post<T>(string url, T body) => client.PostAsync(url, ObjectAsJsonByteArray(body));
         
         private T ObjectFromJsonByteArray<T>(byte[] text) => JsonSerializer.Deserialize<T>(text, serializerOptions);
         private ByteArrayContent ObjectAsJsonByteArray<T>(T body)

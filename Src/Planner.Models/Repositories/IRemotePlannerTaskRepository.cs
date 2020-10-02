@@ -28,7 +28,8 @@ namespace Planner.Models.Repositories
     }
     public interface IRemotePlannerTaskRepository
     {
-        Task AddOrUpdateTask(RemotePlannerTask task);
+        Task AddTask(RemotePlannerTask task);
+        Task UpdateTask(RemotePlannerTask task);
         Task DeleteTask(RemotePlannerTask task);
         IAsyncEnumerable<RemotePlannerTask> TasksForDate(LocalDate date);
     }
