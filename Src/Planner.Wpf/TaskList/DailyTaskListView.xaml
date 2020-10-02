@@ -203,7 +203,7 @@
             </Grid>
         </DataTemplate>
     </UserControl.Resources>
-    <Border BorderThickness="2" BorderBrush="Black" x:Name="PlannerTaskListBorder" Background="Transparent">
+    <Border BorderThickness="0" BorderBrush="Transparent" x:Name="PlannerTaskListBorder" Background="Transparent">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" SharedSizeGroup="CheckMark" />

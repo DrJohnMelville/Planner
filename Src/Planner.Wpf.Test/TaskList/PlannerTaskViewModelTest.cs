@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel.Utilities;
-using Planner.Models.Tasks;
+﻿using Planner.Models.Tasks;
 using Planner.WpfViewModels.TaskList;
 using Xunit;
 

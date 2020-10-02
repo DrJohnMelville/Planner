@@ -3,7 +3,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using NodaTime.Extensions;
-using Planner.Models.Repositories;
+using Planner.Models.Tasks;
 
 namespace Planner.Repository.SqLite
 {
@@ -27,7 +27,7 @@ namespace Planner.Repository.SqLite
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
-            context.PlannerTasks.Add(new RemotePlannerTask(Guid.NewGuid())
+            context.PlannerTasks.Add(new PlannerTask(Guid.NewGuid())
             {
                 Date = SystemClock.Instance.InTzdbSystemDefaultZone().GetCurrentDate(),
                 Name = "Sample Task"

@@ -1,13 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Planner.Models.Repositories;
+using Planner.Models.Tasks;
 
 namespace Planner.Repository.SqLite
 {
     public class PlannerDataContext:DbContext
     {
-        public DbSet<RemotePlannerTask> PlannerTasks { get; set; } = null!;
+        public DbSet<PlannerTask> PlannerTasks { get; set; } = null!;
 
         public PlannerDataContext(DbContextOptions options) : base(options)
         {
@@ -22,9 +21,9 @@ namespace Planner.Repository.SqLite
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<RemotePlannerTask>().HasKey(i => i.Key);
-            modelBuilder.Entity<RemotePlannerTask>().HasIndex(i => i.Date);
-            modelBuilder.Entity<RemotePlannerTask>().Property(i => i.Key).ValueGeneratedNever();
+            modelBuilder.Entity<PlannerTask>().HasKey(i => i.Key);
+            modelBuilder.Entity<PlannerTask>().HasIndex(i => i.Date);
+            modelBuilder.Entity<PlannerTask>().Property(i => i.Key).ValueGeneratedNever();
         }
     }
 }

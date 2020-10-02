@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Text.Json;
 using System.Windows;
 using Melville.IOC.IocContainers;
@@ -12,7 +11,6 @@ using Microsoft.Extensions.Configuration;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
 using Planner.Models.Repositories;
-using Planner.Repository.Web;
 using Planner.WpfViewModels.Logins;
 
 namespace Planner.Wpf.AppRoot

@@ -2,10 +2,11 @@
 using System.Threading.Tasks;
 using NodaTime;
 using Planner.Models.Repositories;
+using Planner.Models.Tasks;
 
 namespace Planner.Repository.Web
 {
-    public class PlannerTaskWebRepository: IRemotePlannerTaskRepository
+    public class PlannerTaskWebRepository: IPlannerTaskRepository
     {
         private readonly IJsonWebService webService;
 
@@ -14,13 +15,13 @@ namespace Planner.Repository.Web
             this.webService = webService;
         }
 
-        public Task AddTask(RemotePlannerTask task) => webService.Post("/Task", task);
-        public Task UpdateTask(RemotePlannerTask task) => webService.Put("/Task", task);
-        public Task DeleteTask(RemotePlannerTask task) => webService.Delete("/Task/"+task.Key);
+        public Task AddTask(PlannerTask task) => webService.Post("/Task", task);
+        public Task UpdateTask(PlannerTask task) => webService.Put("/Task", task);
+        public Task DeleteTask(PlannerTask task) => webService.Delete("/Task/"+task.Key);
 
-        public async IAsyncEnumerable<RemotePlannerTask> TasksForDate(LocalDate date)
+        public async IAsyncEnumerable<PlannerTask> TasksForDate(LocalDate date)
         {
-            foreach (var task in await webService.Get<RemotePlannerTask[]>($"/Task/{date:yyyy-MM-dd}"))
+            foreach (var task in await webService.Get<PlannerTask[]>($"/Task/{date:yyyy-MM-dd}"))
             {
                 yield return task;
             }

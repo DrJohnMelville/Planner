@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Security.Permissions;
 using System.Windows.Input;
 using Melville.TestHelpers.InpcTesting;
 using Melville.TestHelpers.MockConstruction;

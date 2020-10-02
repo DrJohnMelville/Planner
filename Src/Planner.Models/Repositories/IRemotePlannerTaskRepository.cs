@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection.Emit;
-using System.Reflection.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
 using NodaTime;
@@ -9,28 +7,25 @@ using Planner.Models.Tasks;
 
 namespace Planner.Models.Repositories
 {
-    public sealed class RemotePlannerTask : PlannerTask
+    public interface IRemoteDatum
+    {
+        int NewUpdateCount();
+        bool UnchangedSince(int lastUpdateCount);
+    }
+
+    public abstract class PlannerDataBase : IRemoteDatum
     {
         public Guid Key { get; set; }
-
-        public RemotePlannerTask(Guid key)
-        {
-            Key = key;
-        }
-
-        public RemotePlannerTask():this(Guid.Empty)
-        {
-        }
-
         private volatile int updateCount = int.MinValue;
-        public int NewUpdateCount() => Interlocked.Increment(ref updateCount);
-        public bool UnchangedSince(int lastUpdateCount) => updateCount == lastUpdateCount;
+        int IRemoteDatum.NewUpdateCount() => Interlocked.Increment(ref updateCount);
+        bool IRemoteDatum.UnchangedSince(int lastUpdateCount) => updateCount == lastUpdateCount;
     }
-    public interface IRemotePlannerTaskRepository
+    
+    public interface IPlannerTaskRepository
     {
-        Task AddTask(RemotePlannerTask task);
-        Task UpdateTask(RemotePlannerTask task);
-        Task DeleteTask(RemotePlannerTask task);
-        IAsyncEnumerable<RemotePlannerTask> TasksForDate(LocalDate date);
+        Task AddTask(PlannerTask task);
+        Task UpdateTask(PlannerTask task);
+        Task DeleteTask(PlannerTask task);
+        IAsyncEnumerable<PlannerTask> TasksForDate(LocalDate date);
     }
 }

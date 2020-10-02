@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using NodaTime;
-using Planner.Models.Repositories;
+using Planner.Models.Tasks;
 using Planner.Repository.SqLite;
 using Xunit;
 
@@ -24,7 +23,7 @@ namespace Planner.Repository.Test.SqLite
         [Fact]
         public async Task CreatingATaskAddsItToTheListForTheDay()
         {
-            var pt = new RemotePlannerTask(Guid.NewGuid()) {Name = "Foo", Date = date1};
+            var pt = new PlannerTask(Guid.NewGuid()) {Name = "Foo", Date = date1};
             await sut.AddTask(pt);
             var list = await sut.TasksForDate(date1).ToListAsync();
             Assert.Single(list);
@@ -33,7 +32,7 @@ namespace Planner.Repository.Test.SqLite
         [Fact]
         public async Task ModificationsGetSaved()
         {
-            var pt = new RemotePlannerTask(Guid.NewGuid()) {Name = "Foo", Date = date1};
+            var pt = new PlannerTask(Guid.NewGuid()) {Name = "Foo", Date = date1};
             await sut.AddTask(pt);
             pt.Name = "Bar";
             await sut.UpdateTask(pt);
@@ -44,7 +43,7 @@ namespace Planner.Repository.Test.SqLite
         [Fact]
         public async Task TasksOnlyQueryFromTheIndicatedDate()
         {
-            var pt = new RemotePlannerTask(Guid.NewGuid()) {Name = "Foo", Date = date1};
+            var pt = new PlannerTask(Guid.NewGuid()) {Name = "Foo", Date = date1};
             await sut.AddTask(pt);
             var list = await sut.TasksForDate(date2).ToListAsync();
             Assert.Empty(list);
@@ -52,7 +51,7 @@ namespace Planner.Repository.Test.SqLite
         [Fact]
         public async Task DeleteTask()
         {
-            var pt = new RemotePlannerTask(Guid.NewGuid()) {Name = "Foo", Date = date1};
+            var pt = new PlannerTask(Guid.NewGuid()) {Name = "Foo", Date = date1};
             await sut.AddTask(pt);
             var list = await sut.TasksForDate(date1).ToListAsync();
             Assert.Single(list);

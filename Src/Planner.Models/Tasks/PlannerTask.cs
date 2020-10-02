@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Text.Json.Serialization;
 using Melville.INPC;
 using NodaTime;
+using Planner.Models.Repositories;
 
 
 namespace Planner.Models.Tasks
@@ -15,7 +15,7 @@ namespace Planner.Models.Tasks
         Pending = 4,
         Canceled = 5
     }
-    public partial class PlannerTask: IComparable<PlannerTask>, IComparable
+    public partial class PlannerTask: PlannerDataBase, IComparable<PlannerTask>, IComparable
     {
         [AutoNotify] private LocalDate date;
         [AutoNotify] private string name = "";
@@ -26,8 +26,12 @@ namespace Planner.Models.Tasks
         [AutoNotify] public string PriorityDisplay => $"{Priority}{DisplayedOrder(Order)}";
         [AutoNotify] public bool Prioritized => Priority != ' ' && Order > 0;
 
-        private string DisplayedOrder(int o) => o > 0 ? o.ToString() : "";
+        public PlannerTask():this (Guid.Empty) { }
 
+        public PlannerTask(Guid key) => Key = key;
+
+        private string DisplayedOrder(int o) => o > 0 ? o.ToString() : "";
+        
         public int CompareTo(PlannerTask? other)
         {
             if (ReferenceEquals(this, other)) return 0;

@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using System.Threading.Tasks;
 using Melville.MVVM.AdvancedLists;
 
 namespace Planner.Models.Tasks

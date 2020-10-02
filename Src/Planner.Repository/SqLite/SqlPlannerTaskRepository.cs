@@ -10,7 +10,7 @@ using Planner.Models.Tasks;
 
 namespace Planner.Repository.SqLite
 {
-    public class SqlPlannerTaskRepository: IRemotePlannerTaskRepository
+    public class SqlPlannerTaskRepository: IPlannerTaskRepository
     {
         private Func<PlannerDataContext> contextFactory;
 
@@ -19,7 +19,7 @@ namespace Planner.Repository.SqLite
             this.contextFactory = contextFactory;
         }
 
-        private async Task HandleTask(RemotePlannerTask task, Action<DbSet<RemotePlannerTask>, RemotePlannerTask> action)
+        private async Task HandleTask(PlannerTask task, Action<DbSet<PlannerTask>, PlannerTask> action)
         {
             VerifyProperKey(task);
             using var ctx = contextFactory();
@@ -27,21 +27,21 @@ namespace Planner.Repository.SqLite
             await ctx.SaveChangesAsync();
         }
 
-        public Task AddTask(RemotePlannerTask task) => HandleTask(task, (table, rt) => table.Add(rt)); 
-        public Task UpdateTask(RemotePlannerTask task) => HandleTask(task, (table, rt) => table.Update(rt)); 
-        public Task DeleteTask(RemotePlannerTask task) => HandleTask(task, (table, rt) =>
+        public Task AddTask(PlannerTask task) => HandleTask(task, (table, rt) => table.Add(rt)); 
+        public Task UpdateTask(PlannerTask task) => HandleTask(task, (table, rt) => table.Update(rt)); 
+        public Task DeleteTask(PlannerTask task) => HandleTask(task, (table, rt) =>
         {
             table.Attach(task);
             table.Remove(task);
         });
 
         [Conditional("DEBUG")]
-        private static void VerifyProperKey(RemotePlannerTask task)
+        private static void VerifyProperKey(PlannerTask task)
         {
             if (task.Key == Guid.Empty) throw new InvalidOperationException("Invalid GUID");
         }
 
-        public async IAsyncEnumerable<RemotePlannerTask> TasksForDate(LocalDate date)
+        public async IAsyncEnumerable<PlannerTask> TasksForDate(LocalDate date)
         {
             await using var ctx = contextFactory();
             // enumerate to make sure that the implicit dispose block is correct
@@ -51,7 +51,7 @@ namespace Planner.Repository.SqLite
             }
         }
 
-        private static IAsyncEnumerable<RemotePlannerTask> PlannerTaskByDateQuery(
+        private static IAsyncEnumerable<PlannerTask> PlannerTaskByDateQuery(
             PlannerDataContext ctx, LocalDate date) =>
             ctx.PlannerTasks
                 .AsNoTracking()

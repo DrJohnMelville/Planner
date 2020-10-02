@@ -32,7 +32,15 @@
         </ToggleButton>
         <Button Click="{eventBindings:EventBinding  ForwardOneDay}"
                 Style="{StaticResource BigButton}">4</Button>
-        <viewFrames:ViewFrame Grid.ColumnSpan="3" Content="{Binding TodayTaskList}"/>
+        <easyGrids:EasyGrid Grid.ColumnSpan="3" easyGrids:GridOperations.ColsAndRows="*,*/*,*">
+            <viewFrames:ViewFrame Content="{Binding TodayTaskList}" Margin="0 0 5 5"/>
+            <TextBlock Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">Journal</TextBlock>
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 5 0">Appointments</TextBlock>
+            <GridSplitter easyGrids:EasyGrid.ForceColumn="0" easyGrids:EasyGrid.ForceRow="0" Grid.RowSpan="2" 
+                          HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="5"></GridSplitter>
+            <GridSplitter easyGrids:EasyGrid.ForceColumn="0" easyGrids:EasyGrid.ForceRow="0"
+                          HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="5"></GridSplitter>
+        </easyGrids:EasyGrid>
        
         <Popup IsOpen="{Binding PopupOpen}" StaysOpen="False" Placement="Bottom"
                PlacementTarget="{Binding ElementName=BigDate}">

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
-using Planner.Models.Repositories;
+using Planner.Models.Tasks;
 using Xunit;
 
 namespace Planner.Repository.Test.SqLite
@@ -15,7 +15,7 @@ namespace Planner.Repository.Test.SqLite
         {
             await using (var ctx = data.NewContext())
             {
-                var pt = new RemotePlannerTask(Guid.Empty)
+                var pt = new PlannerTask(Guid.Empty)
                 {
                     Name = "Foo",
                     Priority = 'C',

@@ -1,9 +1,4 @@
-﻿using System;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using NodaTime;
-using Planner.Models.Repositories;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Planner.Repository.SqLite;
 
 namespace Planner.Web.CompositionRoot

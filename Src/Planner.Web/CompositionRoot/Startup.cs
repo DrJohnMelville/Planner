@@ -1,12 +1,9 @@
 using System;
 using System.IO;
-using Melville.IOC.IocContainers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -34,7 +31,7 @@ namespace Planner.Web.CompositionRoot
             ConfigureDataProtection(services);
             AddCapWebAuthentication(services);
             DatabaseFactory.ConfigureDatabase(services);
-            services.AddScoped<IRemotePlannerTaskRepository, SqlPlannerTaskRepository>();
+            services.AddScoped<IPlannerTaskRepository, SqlPlannerTaskRepository>();
 
             services.AddControllersWithViews().AddJsonOptions(ConfigureJsonSerialization);
         }

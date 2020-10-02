@@ -3,11 +3,10 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Melville.TestHelpers.Http;
-using Melville.TestHelpers.MockConstruction;
 using Moq;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
-using Planner.Models.Repositories;
+using Planner.Models.Tasks;
 using Planner.Repository.Test.SqLite;
 using Planner.Repository.Web;
 using Xunit;
@@ -48,7 +47,7 @@ namespace Planner.Repository.Test.Web
         {
             httpSource.Setup(i=>true, HttpMethod.Delete).ReturnsJson("");
             var guid = Guid.NewGuid();
-            await sut.DeleteTask(new RemotePlannerTask(guid));
+            await sut.DeleteTask(new PlannerTask(guid));
             httpSource.Verify((Func<string,bool>)(i=>i.EndsWith("/Task/"+guid)), 
                 HttpMethod.Delete, Times.Once);
         }
@@ -57,7 +56,7 @@ namespace Planner.Repository.Test.Web
         public async Task PostAddMethod()
         {
             httpSource.Setup(i=>true, HttpMethod.Post).ReturnsJson("");
-            await sut.AddTask(new RemotePlannerTask(Guid.NewGuid()));
+            await sut.AddTask(new PlannerTask(Guid.NewGuid()));
             httpSource.Verify((Func<string,bool>)(i=>i.EndsWith("/Task")), 
                 HttpMethod.Post, Times.Once);
         }
@@ -65,7 +64,7 @@ namespace Planner.Repository.Test.Web
         public async Task PutChangeMethod()
         {
             httpSource.Setup(i=>true, HttpMethod.Put).ReturnsJson("");
-            await sut.UpdateTask(new RemotePlannerTask(Guid.NewGuid()));
+            await sut.UpdateTask(new PlannerTask(Guid.NewGuid()));
             httpSource.Verify((Func<string,bool>)(i=>i.EndsWith("/Task")), 
                 HttpMethod.Put, Times.Once);
         }

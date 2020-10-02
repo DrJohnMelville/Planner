@@ -1,5 +1,3 @@
-using System;
-
 namespace Planner.Web.Models
 {
     public class ErrorViewModel

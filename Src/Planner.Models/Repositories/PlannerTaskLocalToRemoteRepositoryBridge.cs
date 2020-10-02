@@ -11,10 +11,10 @@ namespace Planner.Models.Repositories
 {
     public class PlannerTaskLocalToRemoteRepositoryBridge:ILocalPlannerTaskRepository
     {
-        private readonly IRemotePlannerTaskRepository remote;
+        private readonly IPlannerTaskRepository remote;
         private readonly IWallClock waiter;
 
-        public PlannerTaskLocalToRemoteRepositoryBridge(IRemotePlannerTaskRepository remote, 
+        public PlannerTaskLocalToRemoteRepositoryBridge(IPlannerTaskRepository remote, 
             IWallClock waiter)
         {
             this.remote = remote;
@@ -23,24 +23,25 @@ namespace Planner.Models.Repositories
 
         public PlannerTask CreateTask(string name, LocalDate date)
         {
-            var ret = new RemotePlannerTask(Guid.NewGuid()){Name = name, Date = date};
+            var ret = new PlannerTask(Guid.NewGuid()){Name = name, Date = date};
             remote.AddTask(ret);
             RegisterPropertyChangeNotifications(ret);
             return ret;
         }
 
-        private void RegisterPropertyChangeNotifications(RemotePlannerTask plannerTask) => 
+        private void RegisterPropertyChangeNotifications(PlannerTask plannerTask) => 
             plannerTask.PropertyChanged += DelayedUpdateEvent;
 
         private void DelayedUpdateEvent(object? sender, EventArgs _)
         {
-            if (sender is RemotePlannerTask rpt) DelayedUpdate(rpt); 
+            if (sender is PlannerTask rpt) DelayedUpdate(rpt); 
         }
-        private async void DelayedUpdate(RemotePlannerTask plannerTask)
+        private async void DelayedUpdate(PlannerTask plannerTask)
         {
-            var updateCounter = plannerTask.NewUpdateCount();
+            var rd = (IRemoteDatum) plannerTask;
+            var updateCounter = rd.NewUpdateCount();
             await waiter.Wait(TimeSpan.FromSeconds(2));
-            if (!plannerTask.UnchangedSince(updateCounter)) return;
+            if (!rd.UnchangedSince(updateCounter)) return;
             remote.UpdateTask(plannerTask).FireAndForget();
         }
 
@@ -58,10 +59,10 @@ namespace Planner.Models.Repositories
         private void CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Remove)
-                RemoveItems(e.OldItems.OfType<RemotePlannerTask>());
+                RemoveItems(e.OldItems.OfType<PlannerTask>());
         }
 
-        private void RemoveItems(IEnumerable<RemotePlannerTask> oldTasks)
+        private void RemoveItems(IEnumerable<PlannerTask> oldTasks)
         {
             foreach (var task in oldTasks)
             {
