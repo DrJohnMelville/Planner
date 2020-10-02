@@ -27,6 +27,14 @@ namespace Planner.WpfViewModels.Logins
             Sites = sites;
         }
 
+        public async Task FakeDb(
+            [FromServices] IRegisterRepositorySource registry,
+            INavigationWindow navigation,
+            [FromServices] Func<DailyPlannerPageViewModel> factory)
+        {
+          registry.UseLocalTestSource();
+          navigation.NavigateTo(factory());
+        }
         public async Task LogIn(
             IWaitingService wait,
             TargetSite currentSite, 

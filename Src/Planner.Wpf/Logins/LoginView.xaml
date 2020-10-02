@@ -14,14 +14,17 @@
             John Melville's Personal Planner
         </TextBlock>
         <TextBlock Margin="20 0" FontStyle="Italic">“Dost thou love life? Then do not squander time; for that’s the stuff life is made of.” -- Benjamin Franklin</TextBlock>
-        <ScrollViewer Margin="20">
-            <ItemsControl ItemsSource="{Binding Sites}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type logins:TargetSite}">
-                        <Button Margin="20" FontSize="50" Click="{eventBindings:EventBinding LogIn}" Content="{Binding Name}"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+        <ScrollViewer Margin="20" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <Button Margin="20" FontSize="50" Click="{eventBindings:EventBinding FakeDb}" Content="Local Fake"/>
+                <ItemsControl ItemsSource="{Binding Sites}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type logins:TargetSite}">
+                            <Button Margin="20" FontSize="50" Click="{eventBindings:EventBinding LogIn}" Content="{Binding Name}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
         </ScrollViewer>
     </StackPanel>
 </UserControl>
