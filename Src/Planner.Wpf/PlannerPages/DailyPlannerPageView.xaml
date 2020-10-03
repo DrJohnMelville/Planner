@@ -34,7 +34,7 @@
                 Style="{StaticResource BigButton}">4</Button>
         <easyGrids:EasyGrid Grid.ColumnSpan="3" easyGrids:GridOperations.ColsAndRows="*,*/*,*">
             <viewFrames:ViewFrame Content="{Binding TodayTaskList}" Margin="0 0 5 5"/>
-            <TextBlock Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">Journal</TextBlock>
+            <viewFrames:ViewFrame Content="{Binding TodayNoteList}" Grid.RowSpan="2"/>
             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 5 0">Appointments</TextBlock>
             <GridSplitter easyGrids:EasyGrid.ForceColumn="0" easyGrids:EasyGrid.ForceRow="0" Grid.RowSpan="2" 
                           HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="5"></GridSplitter>

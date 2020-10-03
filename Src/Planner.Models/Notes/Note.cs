@@ -7,7 +7,7 @@ namespace Planner.Models.Notes
     public partial class Note: PlannerItemWithDate
     {
         [AutoNotify] private Instant timeCreated;  
-        [AutoNotify] private string name = "";
+        [AutoNotify] private string title = "";
         [AutoNotify] private string text = "";
     }
 }

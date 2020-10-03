@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
+using Planner.Models.Notes;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
 using Planner.Repository.SqLite;
@@ -32,7 +33,8 @@ namespace Planner.Web.CompositionRoot
             ConfigureDataProtection(services);
             AddCapWebAuthentication(services);
             DatabaseFactory.ConfigureDatabase(services);
-            services.AddScoped<IDatedRemoteRepository<PlannerTask>, SqlPlannerTasRemoteRepository>();
+            services.AddScoped<IDatedRemoteRepository<PlannerTask>, SqlRemoteRepositoryWithDate<PlannerTask>>();
+            services.AddScoped<IDatedRemoteRepository<Note>, SqlRemoteRepositoryWithDate<Note>>();
 
             services.AddControllersWithViews().AddJsonOptions(ConfigureJsonSerialization);
         }

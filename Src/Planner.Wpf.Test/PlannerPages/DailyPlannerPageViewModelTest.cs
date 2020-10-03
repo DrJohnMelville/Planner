@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Moq;
 using NodaTime;
+using Planner.Models.Notes;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
+using Planner.WpfViewModels.Notes;
 using Planner.WpfViewModels.PlannerPages;
 using Planner.WpfViewModels.TaskList;
 using Xunit;
@@ -12,6 +15,7 @@ namespace Planner.Wpf.Test.PlannerPages
     public class DailyPlannerPageViewModelTest
     {
         private readonly Mock<IClock> clock = new Mock<IClock>();
+        private readonly Mock<ILocalRepository<Note>> noteRepo = new Mock<ILocalRepository<Note>>();
         private readonly Mock<ILocalRepository<PlannerTask>> repo = new Mock<ILocalRepository<PlannerTask>>();
         private readonly DailyPlannerPageViewModel sut;
 
@@ -21,7 +25,8 @@ namespace Planner.Wpf.Test.PlannerPages
                 (LocalDate d) => new List<PlannerTask>());
             sut = new DailyPlannerPageViewModel(clock.Object, 
                 d => new DailyTaskListViewModel(repo.Object, 
-                    i=> new PlannerTaskViewModel(i), d));
+                    i=> new PlannerTaskViewModel(i), d),
+                d=>new DailyNotesViewModel(noteRepo.Object,d));
         }
 
         [Fact]

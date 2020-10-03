@@ -31,7 +31,9 @@ namespace Planner.Wpf.AppRoot
         public void UseLocalTestSource()
         {
             var localDb = TestDatabaseFactory.TestDatabaseCreator();
-            container.Bind<IDatedRemoteRepository<PlannerTask>>().To<SqlPlannerTasRemoteRepository>()
+            container.Bind<IDatedRemoteRepository<PlannerTask>>().To<SqlRemoteRepositoryWithDate<PlannerTask>>()
+                .WithParameters(localDb);
+            container.Bind<IDatedRemoteRepository<Note>>().To<SqlRemoteRepositoryWithDate<Note>>()
                 .WithParameters(localDb);
         }
     }

@@ -23,8 +23,10 @@ namespace Planner.WpfViewModels.TaskList
         private readonly ILocalRepository<PlannerTask> taskRepository;
         private readonly Func<PlannerTask, PlannerTaskViewModel> viewModelFactory;
         private readonly LocalDate date;
-        public DailyTaskListViewModel(ILocalRepository<PlannerTask> taskRepository,
-            Func<PlannerTask, PlannerTaskViewModel> viewModelFactory, LocalDate date)
+        public DailyTaskListViewModel(
+            ILocalRepository<PlannerTask> taskRepository,
+            Func<PlannerTask, PlannerTaskViewModel> viewModelFactory, 
+            LocalDate date)
         {
             this.taskRepository = taskRepository;
             this.viewModelFactory = viewModelFactory;

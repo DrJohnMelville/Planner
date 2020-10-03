@@ -40,7 +40,7 @@ namespace Planner.Repository.Test.SqLite
         [Fact]
         public async Task RoundTripNote()
         {
-            var note = new Note {Key = Guid.NewGuid(), Name = "Name", Text = "Text"};
+            var note = new Note {Key = Guid.NewGuid(), Title = "Name", Text = "Text"};
             using (var ctx = data.NewContext())
             {
                 ctx.Notes.Add(note);
@@ -49,7 +49,7 @@ namespace Planner.Repository.Test.SqLite
 
             using var ctx2 = data.NewContext();
             var note2 = ctx2.Notes.First();
-            Assert.Equal(note.Name, note2.Name);
+            Assert.Equal(note.Title, note2.Title);
             Assert.Equal(note.Text, note2.Text);
             
         }

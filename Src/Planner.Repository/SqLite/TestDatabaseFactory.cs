@@ -3,6 +3,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using NodaTime.Extensions;
+using Planner.Models.Notes;
 using Planner.Models.Tasks;
 
 namespace Planner.Repository.SqLite
@@ -29,10 +30,20 @@ namespace Planner.Repository.SqLite
 
             context.PlannerTasks.Add(new PlannerTask(Guid.NewGuid())
             {
-                Date = SystemClock.Instance.InTzdbSystemDefaultZone().GetCurrentDate(),
+                Date = Today(),
                 Name = "Sample Task"
+            });
+
+            context.Notes.Add(new Note()
+            {
+                Key = Guid.NewGuid(),
+                Date=Today(),
+                Title = "Some Text",
+                Text = "Try out some **markdown**."
             });
             context.SaveChanges();
         }
+
+        private static LocalDate Today() => SystemClock.Instance.InTzdbSystemDefaultZone().GetCurrentDate();
     }
 }
