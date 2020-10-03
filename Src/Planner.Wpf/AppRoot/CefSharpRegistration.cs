@@ -22,7 +22,8 @@ namespace Planner.Wpf.AppRoot
             var settings = new CefSettings();
 
             // Set BrowserSubProcessPath based on app bitness at runtime
-            settings.BrowserSubprocessPath = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
+            settings.BrowserSubprocessPath = Path.Combine(
+                AppDomain.CurrentDomain.SetupInformation.ApplicationBase??"",
                 Environment.Is64BitProcess ? "x64" : "x86",
                 "CefSharp.BrowserSubprocess.exe");
 
@@ -32,12 +33,13 @@ namespace Planner.Wpf.AppRoot
         }
 
 // Will attempt to load missing assembly from either x86 or x64 subdir
-        private static Assembly? Resolver(object sender, ResolveEventArgs args)
+        private static Assembly? Resolver(object? sender, ResolveEventArgs args)
         {
-            if (args.Name.StartsWith("CefSharp"))
+            if (args.Name?.StartsWith("CefSharp") ?? false)
             {
                 string assemblyName = args.Name.Split(new[] { ',' }, 2)[0] + ".dll";
-                string archSpecificPath = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
+                string archSpecificPath = Path.Combine(
+                    AppDomain.CurrentDomain.SetupInformation.ApplicationBase ??"",
                     Environment.Is64BitProcess ? "x64" : "x86",
                     assemblyName);
 

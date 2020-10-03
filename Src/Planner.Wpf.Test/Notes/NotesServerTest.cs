@@ -1,4 +1,6 @@
-﻿using Planner.WpfViewModels.Notes;
+﻿using Moq;
+using Planner.Models.Notes;
+using Planner.WpfViewModels.Notes;
 using Xunit;
 
 namespace Planner.Wpf.Test.Notes
@@ -9,14 +11,13 @@ namespace Planner.Wpf.Test.Notes
 
         public NotesServerTest()
         {
-            sut = new NotesServer();
+            sut = new NotesServer(Mock.Of<INoteHtmlGenerator>());
         }
 
         [Fact]
         public void CorrectUrl()
         {
-            Assert.Equal("http://localhost:72875/", sut.BaseUrl);
-            
+            Assert.Equal("http://localhost:28775/", sut.BaseUrl);
         }
     }
 }
