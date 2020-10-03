@@ -34,13 +34,16 @@ namespace Planner.Repository.SqLite
                 Name = "Sample Task"
             });
 
-            context.Notes.Add(new Note()
+            for (int i = 0; i < 5; i++)
             {
-                Key = Guid.NewGuid(),
-                Date=Today(),
-                Title = "Some Text",
-                Text = "Try out some **markdown**."
-            });
+                context.Notes.Add(new Note()
+                {
+                    Key = Guid.NewGuid(),
+                    Date=Today(),
+                    Title = "Some Text",
+                    Text = "Try out some **markdown**."
+                });
+            }
             context.SaveChanges();
         }
 

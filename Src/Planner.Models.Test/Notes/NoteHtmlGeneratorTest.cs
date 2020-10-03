@@ -20,15 +20,15 @@ namespace Planner.Models.Test.Notes
 
         public NoteHtmlGeneratorTest()
         {
-            repo.Setup(i => i.ItemsForDate(date)).Returns(notes);
-            sut = new NoteHtmlGenerator();
+            repo.Setup(i => i.CompletedItemsForDate(date)).ReturnsAsync(notes);
+            sut = new NoteHtmlGenerator(repo.Object);
         }
 
         [Fact]
         public async Task EmptyTest()
         {
             await sut.GenerateResponse("1975-7-28", output);
-            Assert.Equal("", output.ToString());
+            Assert.Equal("<html><body></body></html>", output.ToString());
             
         }
         [Fact]
@@ -36,8 +36,19 @@ namespace Planner.Models.Test.Notes
         {
             notes.Add(new Note(){Title = "Title", Text="Text"});
             await sut.GenerateResponse("1975-7-28", output);
-            Assert.Equal("", output.ToString());
-            
+            Assert.Contains("1. Title", output.ToString());
+            Assert.Contains("Text", output.ToString());
+            Assert.DoesNotContain("<hr/>", output.ToString());
+        }
+        [Fact]
+        public async Task MultTest()
+        {
+            notes.Add(new Note(){Title = "Title", Text="Text"});
+            notes.Add(new Note(){Title = "Title", Text="Text"});
+            await sut.GenerateResponse("1975-7-28", output);
+            Assert.Contains("<hr/>", output.ToString());
+            Assert.Contains("1. Title", output.ToString());
+            Assert.Contains("2. Title", output.ToString());
         }
     }
 }

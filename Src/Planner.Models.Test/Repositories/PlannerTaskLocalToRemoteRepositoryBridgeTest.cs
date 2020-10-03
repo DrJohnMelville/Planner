@@ -55,7 +55,7 @@ namespace Planner.Models.Test.Repositories
             repo.Verify(i=>i.Update((PlannerTask)task), Times.Once);
         }
 
-        private async IAsyncEnumerable<T> AsyncEnum<T>(Task? delay, params T[] items)
+        private async IAsyncEnumerable<T> AsyncEnum<T>(Task delay, params T[] items)
         {
             await (delay??Task.CompletedTask);
             foreach (var item in items)
