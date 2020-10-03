@@ -15,6 +15,7 @@ using NodaTime.Serialization.SystemTextJson;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
 using Planner.WpfViewModels.Logins;
+using Planner.WpfViewModels.Notes;
 
 namespace Planner.Wpf.AppRoot
 {
@@ -34,6 +35,12 @@ namespace Planner.Wpf.AppRoot
             SetupConfiguration(service);
             SetupJsonSerialization(service);
             RegisterRepositories(service);
+            RegisterNoteServer(service);
+        }
+
+        private void RegisterNoteServer(IBindableIocService service)
+        {
+            service.Bind<INotesServer>().To<NotesServer>().FixResult(i=>i.Launch()).AsSingleton();
         }
 
         private void SetupJsonSerialization(IBindableIocService service)
@@ -51,11 +58,7 @@ namespace Planner.Wpf.AppRoot
             service.BindGeneric(typeof(ICachedRepositorySource<>),typeof(LocalToRemoteRepositoryBridge<>));
             service.BindGeneric(typeof(ILocalRepository<>), typeof(CachedRepository<>));
         }
-
-        private static bool ConstructingCachedRepository(IBindingRequest arg) =>
-            arg.TypeBeingConstructed is {} tbc && tbc.IsGenericType &&
-            tbc.GetGenericTypeDefinition() == typeof(CachedRepository<>);
-
+        
         private static void RegisterNodaTimeClock(IBindableIocService service)
         {
             service.Bind<IClock>().ToConstant(SystemClock.Instance);

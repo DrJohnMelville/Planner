@@ -11,30 +11,28 @@ namespace Planner.WpfViewModels.PlannerPages
     {
         private readonly IClock clock;
         private readonly Func<LocalDate, DailyTaskListViewModel> taskListFactory;
-        private readonly Func<LocalDate, DailyNotesViewModel> notesFactory;
+        private readonly INotesServer noteServer;
 
         [AutoNotify] private LocalDate currentDate;
         [AutoNotify] private DailyTaskListViewModel todayTaskList;
-        [AutoNotify] private DailyNotesViewModel todayNoteList;
         [AutoNotify] private bool popupOpen;
-        
-        partial void WhenCurrentDateChanges(LocalDate oldValue, LocalDate newValue)
+        public string NotesUrl => noteServer.BaseUrl+currentDate.ToString("yyyy-M-d", null);
+
+            partial void WhenCurrentDateChanges(LocalDate oldValue, LocalDate newValue)
         {
             TodayTaskList = taskListFactory(newValue);
-            TodayNoteList = notesFactory(newValue);
+            ((IExternalNotifyPropertyChanged)this).OnPropertyChanged(nameof(NotesUrl));
         }
 
         public DailyPlannerPageViewModel(
             IClock clock, 
-            Func<LocalDate, DailyTaskListViewModel> taskListFactory, 
-            Func<LocalDate, DailyNotesViewModel> notesFactory)
+            Func<LocalDate, DailyTaskListViewModel> taskListFactory, INotesServer noteServer)
         {
             this.clock = clock;
             this.taskListFactory = taskListFactory;
-            this.notesFactory = notesFactory;
+            this.noteServer = noteServer;
             currentDate = clock.CurrentDate();
             todayTaskList = taskListFactory(currentDate);
-            todayNoteList = notesFactory(currentDate);
         }
 
         public void ForwardOneDay() => CurrentDate = CurrentDate.PlusDays(1);

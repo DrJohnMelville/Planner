@@ -10,6 +10,8 @@
              xmlns:eventBindings="clr-namespace:Melville.MVVM.Wpf.EventBindings;assembly=Melville.MVVM.Wpf"
              xmlns:taskList="clr-namespace:Planner.Wpf.TaskList"
              xmlns:taskList1="clr-namespace:Planner.WpfViewModels.TaskList;assembly=Planner.WpfViewModels"
+             xmlns:controls="clr-namespace:Microsoft.Toolkit.Wpf.UI.Controls;assembly=Microsoft.Toolkit.Wpf.UI.Controls.WebView"
+             xmlns:wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
              d:DataContext="{d:DesignData {x:Type plannerPages:DailyPlannerPageViewModel}}"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -34,7 +36,9 @@
                 Style="{StaticResource BigButton}">4</Button>
         <easyGrids:EasyGrid Grid.ColumnSpan="3" easyGrids:GridOperations.ColsAndRows="*,*/*,*">
             <viewFrames:ViewFrame Content="{Binding TodayTaskList}" Margin="0 0 5 5"/>
-            <viewFrames:ViewFrame Content="{Binding TodayNoteList}" Grid.RowSpan="2"/>
+            <Grid Grid.RowSpan="2">
+                <wpf:WebView2 Source="https://www.google.com" />
+            </Grid>
             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 5 0">Appointments</TextBlock>
             <GridSplitter easyGrids:EasyGrid.ForceColumn="0" easyGrids:EasyGrid.ForceRow="0" Grid.RowSpan="2" 
                           HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="5"></GridSplitter>

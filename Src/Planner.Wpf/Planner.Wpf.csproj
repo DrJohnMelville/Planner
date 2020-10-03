@@ -10,10 +10,13 @@
   </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="CefSharp.Wpf" Version="84.4.10" />
       <PackageReference Include="Melville.MVVM.Wpf" Version="0.3.5" />
       <PackageReference Include="Melville.WpfAppFramework" Version="0.1.5" />
       <PackageReference Include="Melville.WpfControls" Version="0.2.6" />
       <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.8" />
+      <PackageReference Include="Microsoft.Toolkit.Wpf.UI.Controls.WebView" Version="6.1.2" />
+      <PackageReference Include="Microsoft.Web.WebView2" Version="0.9.628-prerelease" />
       <PackageReference Include="NodaTime.Serialization.SystemTextJson" Version="1.0.0" />
     </ItemGroup>
 
@@ -28,6 +31,10 @@
       <ProjectReference Include="..\Planner.Repository.Web\Planner.Repository.Web.csproj" />
       <ProjectReference Include="..\Planner.Repository\Planner.Repository.csproj" />
       <ProjectReference Include="..\Planner.WpfViewModels\Planner.WpfViewModels.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Notes" />
     </ItemGroup>
 
 </Project>
