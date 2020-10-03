@@ -21,7 +21,7 @@ namespace Planner.Wpf.Test.PlannerPages
 
         public DailyPlannerPageViewModelTest()
         {
-            repo.Setup(i => i.TasksForDate(It.IsAny<LocalDate>())).Returns(
+            repo.Setup(i => i.ItemsForDate(It.IsAny<LocalDate>())).Returns(
                 (LocalDate d) => new List<PlannerTask>());
             sut = new DailyPlannerPageViewModel(clock.Object, 
                 d => new DailyTaskListViewModel(repo.Object, 
@@ -31,7 +31,7 @@ namespace Planner.Wpf.Test.PlannerPages
         [Fact]
         public void InitialDate()
         {
-            repo.Verify(i=>i.TasksForDate(new LocalDate(1969,12,31)), Times.Once);
+            repo.Verify(i=>i.ItemsForDate(new LocalDate(1969,12,31)), Times.Once);
             repo.VerifyNoOtherCalls();
         }
 
@@ -39,8 +39,8 @@ namespace Planner.Wpf.Test.PlannerPages
         public void ForwardOneDay()
         {
             sut.ForwardOneDay();
-            repo.Verify(i=>i.TasksForDate(new LocalDate(1969,12,31)), Times.Once);
-            repo.Verify(i=>i.TasksForDate(new LocalDate(1970,1,1)), Times.Once);
+            repo.Verify(i=>i.ItemsForDate(new LocalDate(1969,12,31)), Times.Once);
+            repo.Verify(i=>i.ItemsForDate(new LocalDate(1970,1,1)), Times.Once);
             repo.VerifyNoOtherCalls();
             
         }
@@ -48,8 +48,8 @@ namespace Planner.Wpf.Test.PlannerPages
         public void BackOneDay()
         {
             sut.BackOneDay();
-            repo.Verify(i=>i.TasksForDate(new LocalDate(1969,12,31)), Times.Once);
-            repo.Verify(i=>i.TasksForDate(new LocalDate(1969,12,30)), Times.Once);
+            repo.Verify(i=>i.ItemsForDate(new LocalDate(1969,12,31)), Times.Once);
+            repo.Verify(i=>i.ItemsForDate(new LocalDate(1969,12,30)), Times.Once);
             repo.VerifyNoOtherCalls();
             
         }
@@ -57,8 +57,8 @@ namespace Planner.Wpf.Test.PlannerPages
         public void ArbitraryDate()
         {
             sut.CurrentDate = new LocalDate(1975,07,28);
-            repo.Verify(i=>i.TasksForDate(new LocalDate(1969,12,31)), Times.Once);
-            repo.Verify(i=>i.TasksForDate(new LocalDate(1975, 07, 28)), Times.Once);
+            repo.Verify(i=>i.ItemsForDate(new LocalDate(1969,12,31)), Times.Once);
+            repo.Verify(i=>i.ItemsForDate(new LocalDate(1975, 07, 28)), Times.Once);
             repo.VerifyNoOtherCalls();
         }
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using NodaTime;
 using Planner.Models.Tasks;
 
@@ -7,7 +8,8 @@ namespace Planner.Models.Repositories
     public interface ILocalRepository<T> where T: PlannerItemWithDate
     {
          T CreateTask(LocalDate date);
-         IList<T> TasksForDate(LocalDate date);
+         IList<T> ItemsForDate(LocalDate date);
+         Task<IList<T>> CompletedItemsForDate(LocalDate date);
     }
 
     public static class PlannerTaskLocalRepoOperations

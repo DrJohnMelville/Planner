@@ -27,7 +27,7 @@ namespace Planner.Wpf.Test.TaskList
         {
             taskFactory.Setup(i => i.CreateTask(It.IsAny<LocalDate>())).Returns(
                 (LocalDate ld) => new PlannerTask());
-            taskFactory.Setup(i => i.TasksForDate(date)).Returns(
+            taskFactory.Setup(i => i.ItemsForDate(date)).Returns(
                 (Func<LocalDate, IList<PlannerTask>>)GenerateDailyTaskList);
                 sut = new DailyTaskListViewModel(taskFactory.Object, i=>new PlannerTaskViewModel(i),
                 date);

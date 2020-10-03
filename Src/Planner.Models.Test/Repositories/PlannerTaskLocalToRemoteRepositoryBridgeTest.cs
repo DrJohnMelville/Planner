@@ -24,7 +24,7 @@ namespace Planner.Models.Test.Repositories
         {
             sut = new LocalToRemoteRepositoryBridge<PlannerTask>(repo.Object, clock.Object);
         }
-
+        
         [Fact]
         public void CreateTaskUpdatesRemoteRepository()
         {
@@ -55,9 +55,9 @@ namespace Planner.Models.Test.Repositories
             repo.Verify(i=>i.Update((PlannerTask)task), Times.Once);
         }
 
-        private async IAsyncEnumerable<T> AsyncEnum<T>(params T[] items)
+        private async IAsyncEnumerable<T> AsyncEnum<T>(Task? delay, params T[] items)
         {
-            await Task.CompletedTask; // shut the compiler warning up
+            await (delay??Task.CompletedTask);
             foreach (var item in items)
             {
                 yield return item;
@@ -68,8 +68,8 @@ namespace Planner.Models.Test.Repositories
         public void ChangingALoadedTaskCausesAnUpdate()
         {
             var task = new PlannerTask(Guid.NewGuid());
-            repo.Setup(i => i.TasksForDate(date)).Returns(AsyncEnum(task));
-            var list = sut.TasksForDate(date);
+            repo.Setup(i => i.TasksForDate(date)).Returns(AsyncEnum(null, task));
+            var list = sut.ItemsForDate(date);
             Assert.Single(list);
             list[0].Name = "Bar";
             repo.Verify(i=>i.Update((PlannerTask)list[0]), Times.Once);
@@ -78,12 +78,25 @@ namespace Planner.Models.Test.Repositories
         public void RemovingTaskDeletesFromDatabase()
         {
             var task = new PlannerTask(Guid.NewGuid());
-            repo.Setup(i => i.TasksForDate(date)).Returns(AsyncEnum(task));
-            var list = sut.TasksForDate(date);
+            repo.Setup(i => i.TasksForDate(date)).Returns(AsyncEnum(null, task));
+            var list = sut.ItemsForDate(date);
             Assert.Single(list);
             var item = list[0];
             list.RemoveAt(0);
             repo.Verify(i=>i.Delete((PlannerTask)item), Times.Once);
         }
+        [Fact]
+        public async Task DelayedTaskLoading()
+        {
+            var tcs = new TaskCompletionSource<int>();
+            var task = new PlannerTask(Guid.NewGuid());
+            repo.Setup(i => i.TasksForDate(date)).Returns(AsyncEnum(tcs.Task, task));
+            var list = sut.ItemsForDate(date);
+            Assert.Empty(list);
+            tcs.SetResult(1);
+            await ((IListPendingCompletion<PlannerTask>) list).CompleteList();
+            Assert.Single(list);
+        }
+        
     }
 }

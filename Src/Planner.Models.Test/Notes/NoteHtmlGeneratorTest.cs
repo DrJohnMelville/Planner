@@ -20,7 +20,7 @@ namespace Planner.Models.Test.Notes
 
         public NoteHtmlGeneratorTest()
         {
-            repo.Setup(i => i.TasksForDate(date)).Returns(notes);
+            repo.Setup(i => i.ItemsForDate(date)).Returns(notes);
             sut = new NoteHtmlGenerator();
         }
 

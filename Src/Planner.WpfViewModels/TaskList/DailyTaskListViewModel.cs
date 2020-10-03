@@ -31,7 +31,7 @@ namespace Planner.WpfViewModels.TaskList
             this.taskRepository = taskRepository;
             this.viewModelFactory = viewModelFactory;
             this.date = date;
-            sourceList = taskRepository.TasksForDate(date);
+            sourceList = taskRepository.ItemsForDate(date);
             TaskItems = CreateTaskItemsCollectionView();
             DeferToName = CreateDayNames();
         }

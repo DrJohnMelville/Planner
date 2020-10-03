@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Melville.MVVM.AdvancedLists;
 using NodaTime;
 using Planner.Models.Repositories;
@@ -13,7 +14,7 @@ namespace Planner.Repository
             return new PlannerTask();
         }
 
-        public IList<PlannerTask> TasksForDate(LocalDate date)
+        public IList<PlannerTask> ItemsForDate(LocalDate date)
         {
             var src = new ThreadSafeBindableCollection<PlannerTask>();
             src.Add(new PlannerTask() {Name = "Task1"});
@@ -22,5 +23,8 @@ namespace Planner.Repository
             src.Add(new PlannerTask() {Name = "Task4"});
             return src;
         }
+
+        public Task<IList<PlannerTask>> CompletedItemsForDate(LocalDate date) => 
+          Task.FromResult(ItemsForDate(date));
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Threading.Tasks;
 using Melville.MVVM.AdvancedLists;
 using Melville.MVVM.CSharpHacks;
 using Melville.MVVM.Time;
@@ -43,13 +44,16 @@ namespace Planner.Models.Repositories
                 remote.Update(plannerTask).FireAndForget();
         }
 
-        public IList<T> TasksForDate(LocalDate date)
+        public IList<T> ItemsForDate(LocalDate date)
         {
-            var ret = new ThreadSafeBindableCollection<T>();
+            var ret = new ItemList<T>();
             RegisterItemRemovalNotification(ret);
-            LoadTasksForDate(date, ret);
+            ret.SetCompletionTask(LoadItemsForDate(date, ret));
             return ret;
         }
+
+        public Task<IList<T>> CompletedItemsForDate(LocalDate date) => 
+            ((IListPendingCompletion<T>) ItemsForDate(date)).CompleteList();
 
         private void RegisterItemRemovalNotification(ThreadSafeBindableCollection<T> ret) => 
             ret.CollectionChanged += CollectionChanged;
@@ -68,7 +72,7 @@ namespace Planner.Models.Repositories
             }
         }
 
-        private async void LoadTasksForDate(LocalDate date, IList<T> ret)
+        private async Task LoadItemsForDate(LocalDate date, IList<T> ret)
         {
             await foreach (var task in remote.TasksForDate(date))
             {
