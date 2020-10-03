@@ -21,9 +21,11 @@ namespace Planner.Wpf.AppRoot
 {
     public class Startup: StartupBase
     {
+        
         [STAThread]
         public static int Main(string[] commandLineArgs)
         {
+            CefSharpRegistration.Initialize();
             ApplicationRootImplementation.Run(new Startup());
             return 0;
         }

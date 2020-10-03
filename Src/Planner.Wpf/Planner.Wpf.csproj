@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
     <PropertyGroup>
-        <OutputType>WinExe</OutputType>
+      <CefSharpAnyCpuSupport>true</CefSharpAnyCpuSupport>
+      <OutputType>WinExe</OutputType>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <LangVersion>preview</LangVersion>
         <UseWPF>true</UseWPF>
@@ -16,7 +17,6 @@
       <PackageReference Include="Melville.WpfControls" Version="0.2.6" />
       <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.8" />
       <PackageReference Include="Microsoft.Toolkit.Wpf.UI.Controls.WebView" Version="6.1.2" />
-      <PackageReference Include="Microsoft.Web.WebView2" Version="0.9.628-prerelease" />
       <PackageReference Include="NodaTime.Serialization.SystemTextJson" Version="1.0.0" />
     </ItemGroup>
 
