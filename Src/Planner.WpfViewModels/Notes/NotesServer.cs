@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Net;
-using System.Printing;
-using System.Security.RightsManagement;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Planner.Models.HtmlGeneration;
-using Planner.Models.Notes;
 
 namespace Planner.WpfViewModels.Notes
 {

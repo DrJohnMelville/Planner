@@ -46,7 +46,7 @@ namespace Planner.Models.Test.Notes
         [Fact]
         public async Task SingleTest()
         {
-            notes.Add(new Note(){Title = "Title", Text="Text"});
+            notes.Add(new Note({Title = "Title", Text="Text"});
             await sut.GenerateResponse("1975-7-28", output);
             Assert.Contains("Title", OutputAsString);
             Assert.Contains("Text", OutputAsString);
