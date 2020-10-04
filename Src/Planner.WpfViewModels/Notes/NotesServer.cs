@@ -37,8 +37,8 @@ namespace Planner.WpfViewModels.Notes
             }
         }
 
-        private static StreamWriter CreateOutputWriter(HttpListenerContext context) => 
-            new StreamWriter(context.Response.OutputStream);
+        private static Stream CreateOutputWriter(HttpListenerContext context) => 
+            context.Response.OutputStream;
 
         private static Task<HttpListenerContext> WaitForNextRequest(HttpListener listener) => 
             listener.GetContextAsync();
