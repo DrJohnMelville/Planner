@@ -17,7 +17,7 @@ namespace Planner.Repository.SqLite
 
             var options = new DbContextOptionsBuilder<PlannerDataContext>()
                 .UseSqlite(connection).Options;
-            Func<PlannerDataContext> ret = ()=>new PlannerDataContext(options);
+            Func<PlannerDataContext> ret = () => new PlannerDataContext(options);
             SeedDatabase(ret);
             return ret;
         }
@@ -34,16 +34,13 @@ namespace Planner.Repository.SqLite
                 Name = "Sample Task"
             });
 
-            for (int i = 0; i < 5; i++)
+            context.Notes.Add(new Note()
             {
-                context.Notes.Add(new Note()
-                {
-                    Key = Guid.NewGuid(),
-                    Date=Today(),
-                    Title = "Some Text",
-                    Text = "Try out some **markdown**."
-                });
-            }
+                Key = Guid.NewGuid(),
+                Date = Today(),
+                Title = "Some Text",
+                Text = "Try out some **markdown**."
+            });
             context.SaveChanges();
         }
 

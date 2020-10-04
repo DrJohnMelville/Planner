@@ -23,9 +23,10 @@ namespace Planner.Models.Repositories
             this.waiter = waiter;
         }
 
-        public T CreateTask(LocalDate date)
+        public T CreateItem(LocalDate date, Action<T> initialize)
         {
             var ret = new T(){Date = date, Key = Guid.NewGuid()};
+            initialize(ret);
             remote.Add(ret);
             RegisterPropertyChangeNotifications(ret);
             return ret;

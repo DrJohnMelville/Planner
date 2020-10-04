@@ -70,10 +70,12 @@ namespace Planner.WpfViewModels.PlannerPages
         public void Create(LocalDate currentDate)
         {
             if (!ValidNote()) return;
-            var newNote = notes.CreateTask(currentDate);
-            newNote.Title = title;
-            newNote.Text = text;
-            newNote.TimeCreated = clock.GetCurrentInstant();
+            notes.CreateItem(currentDate, newNote =>
+            {
+                newNote.Title = title;
+                newNote.Text = text;
+                newNote.TimeCreated = clock.GetCurrentInstant();
+            });
 
             Title = "";
             Text = "";

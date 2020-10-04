@@ -80,7 +80,13 @@ namespace Planner.Wpf.Test.PlannerPages
         {
             clock.Setup(i => i.GetCurrentInstant()).Returns(Instant.MaxValue);
             var note = new Note();
-            noteRepo.Setup(i => i.CreateTask(new LocalDate(1975,07,28))).Returns(note);
+            noteRepo.Setup(i => i.CreateItem(new LocalDate(1975,07,28),
+                It.IsAny<Action<Note>>())).Returns(
+                (LocalDate date, Action<Note> action) =>
+                {
+                    action(note);
+                    return note;
+                });
             sut.CurrentDate = new LocalDate(1975,07,28);
             sut.NoteCreator.Title = "Title";
             sut.NoteCreator.Text = "Text";

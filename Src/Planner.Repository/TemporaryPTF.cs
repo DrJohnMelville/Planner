@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Melville.MVVM.AdvancedLists;
 using NodaTime;
@@ -9,9 +10,11 @@ namespace Planner.Repository
 {
     public class TemporaryPTF : ICachedRepositorySource<PlannerTask>
     {
-        public PlannerTask CreateTask( LocalDate date)
+        public PlannerTask CreateItem( LocalDate date, Action<PlannerTask> initialize)
         {
-            return new PlannerTask();
+            var ret = new PlannerTask();
+            initialize(ret);
+            return ret;
         }
 
         public IList<PlannerTask> ItemsForDate(LocalDate date)

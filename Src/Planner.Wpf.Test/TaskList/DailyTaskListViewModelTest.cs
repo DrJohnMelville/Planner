@@ -25,8 +25,14 @@ namespace Planner.Wpf.Test.TaskList
 
         public DailyTaskListViewModelTest()
         {
-            taskFactory.Setup(i => i.CreateTask(It.IsAny<LocalDate>())).Returns(
-                (LocalDate ld) => new PlannerTask());
+            taskFactory.Setup(i => i.CreateItem(It.IsAny<LocalDate>(), 
+                It.IsAny<Action<PlannerTask>>())).Returns(
+                valueFunction: (LocalDate ld, Action<PlannerTask> init) =>
+                {
+                    var ret = new PlannerTask();
+                    init(ret);
+                    return ret;
+                });
             taskFactory.Setup(i => i.ItemsForDate(date)).Returns(
                 (Func<LocalDate, IList<PlannerTask>>)GenerateDailyTaskList);
                 sut = new DailyTaskListViewModel(taskFactory.Object, i=>new PlannerTaskViewModel(i),
@@ -142,9 +148,11 @@ namespace Planner.Wpf.Test.TaskList
             sut.NewTaskKeyDown(Key.Enter);
             sut.NewTaskName = "Foo";
             sut.NewTaskKeyDown(Key.A);
-            taskFactory.VerifyIgnoreArgs(i=>i.CreateTask(date), Times.Never);
+            taskFactory.VerifyIgnoreArgs(i=>i.CreateItem(date, 
+                It.IsAny<Action<PlannerTask>>()), Times.Never);
             sut.NewTaskKeyDown(Key.Enter);
-            taskFactory.Verify(i=>i.CreateTask(date), Times.Once);
+            taskFactory.Verify(i=>i.CreateItem(date, 
+                It.IsAny<Action<PlannerTask>>()), Times.Once);
             
         }
 
@@ -153,9 +161,11 @@ namespace Planner.Wpf.Test.TaskList
         public void TryAddTask()
         {
             sut.NewTaskName = "Foo";
-            taskFactory.VerifyIgnoreArgs(i=>i.CreateTask(date), Times.Never);
+            taskFactory.VerifyIgnoreArgs(i=>i.CreateItem(date, 
+                It.IsAny<Action<PlannerTask>>()), Times.Never);
             sut.TryAddPlannerTask();
-            taskFactory.Verify(i=>i.CreateTask(date), Times.Once);
+            taskFactory.Verify(i=>i.CreateItem(date, 
+                It.IsAny<Action<PlannerTask>>()), Times.Once);
             Assert.Equal("", sut.NewTaskName);
         }
 
@@ -200,7 +210,8 @@ namespace Planner.Wpf.Test.TaskList
 
         private void VerifyTaskDeferredToDate(LocalDate targetDate, PlannerTask task)
         {
-            taskFactory.Verify(i => i.CreateTask(targetDate), Times.Once);
+            taskFactory.Verify(i => i.CreateItem(targetDate, 
+                It.IsAny<Action<PlannerTask>>()), Times.Once);
             Assert.Equal(PlannerTaskStatus.Deferred, task.Status);
             Assert.Equal(targetDate.ToString("D", null), task.StatusDetail);
         }

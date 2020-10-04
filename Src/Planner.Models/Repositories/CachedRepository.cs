@@ -21,11 +21,11 @@ namespace Planner.Models.Repositories
             this.source = source;
         }
 
-        public T CreateTask(LocalDate date)
+        public T CreateItem(LocalDate date, Action<T> initialize)
         {
             var list = ItemsForDate(date);
             // get the list before creating the task so we know that the new task is not in the list. 
-            var ret = source.CreateTask(date);
+            var ret = source.CreateItem(date, initialize);
             list.Add(ret);
             return ret;
         }
