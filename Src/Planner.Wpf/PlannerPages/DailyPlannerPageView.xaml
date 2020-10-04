@@ -10,6 +10,7 @@
              xmlns:taskList="clr-namespace:Planner.Wpf.TaskList"
              xmlns:taskList1="clr-namespace:Planner.WpfViewModels.TaskList;assembly=Planner.WpfViewModels"
              xmlns:wpf1="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
+             xmlns:wpfHacks="clr-namespace:Melville.MVVM.Wpf.WpfHacks;assembly=Melville.MVVM.Wpf"
              d:DataContext="{d:DesignData {x:Type plannerPages:DailyPlannerPageViewModel}}"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -34,8 +35,18 @@
                 Style="{StaticResource BigButton}">4</Button>
         <easyGrids:EasyGrid Grid.ColumnSpan="3" easyGrids:GridOperations.ColsAndRows="*,*/*,*">
             <viewFrames:ViewFrame Content="{Binding TodayTaskList}" Margin="0 0 5 5"/>
-            <Grid Grid.RowSpan="2">
-                <wpf1:ChromiumWebBrowser Address="{Binding NotesUrl, Mode=OneWay}" />
+            <Grid Grid.RowSpan="2" easyGrids:GridOperations.ColsAndRows="*/*,auto,auto">
+                <wpf1:ChromiumWebBrowser Address="{Binding NotesUrl, Mode=OneWay}"/>
+                <TextBox Grid.Row="1" Text="{Binding NoteCreator.Title, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Foreground="DarkGray" Grid.Row="1" HorizontalAlignment="Center" 
+                           IsHitTestVisible="False" 
+                         wpfHacks:VisibilityHack.CollapseUnlessWhitespace="{Binding NoteCreator.Title}">
+                    New Journal Item Title
+                </TextBlock>
+                <TextBox MinHeight="50" Grid.Row="2" AcceptsReturn="True"
+                         Text="{Binding NoteCreator.Text}"
+                         wpfHacks:VisibilityHack.CollapseIfWhitespace="{Binding NoteCreator.Title}"
+                         LostFocus="{eventBindings:EventBinding CreateNoteOnDay}"/>
             </Grid>
             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 5 0">Appointments</TextBlock>
             <GridSplitter easyGrids:EasyGrid.ForceColumn="0" easyGrids:EasyGrid.ForceRow="0" Grid.RowSpan="2" 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Mime;
 using Moq;
 using NodaTime;
 using Planner.Models.Notes;
@@ -16,6 +17,7 @@ namespace Planner.Wpf.Test.PlannerPages
     {
         private readonly Mock<IClock> clock = new Mock<IClock>();
         private readonly Mock<INotesServer> notes = new Mock<INotesServer>();
+        private readonly Mock<ILocalRepository<Note>> noteRepo= new Mock<ILocalRepository<Note>>();
         private readonly Mock<ILocalRepository<PlannerTask>> repo = new Mock<ILocalRepository<PlannerTask>>();
         private readonly DailyPlannerPageViewModel sut;
 
@@ -25,7 +27,8 @@ namespace Planner.Wpf.Test.PlannerPages
                 (LocalDate d) => new List<PlannerTask>());
             sut = new DailyPlannerPageViewModel(clock.Object, 
                 d => new DailyTaskListViewModel(repo.Object, 
-                    i=> new PlannerTaskViewModel(i), d), notes.Object);
+                    i=> new PlannerTaskViewModel(i), d), notes.Object, 
+                         new NoteCreator(noteRepo.Object, clock.Object));
         }
 
         [Fact]
@@ -67,9 +70,45 @@ namespace Planner.Wpf.Test.PlannerPages
         {
             notes.SetupGet(i => i.BaseUrl).Returns("http://localhost:72875/");
             sut.CurrentDate = new LocalDate(1975,07,28);
-            Assert.Equal("http://localhost:72875/1975-7-28", sut.NotesUrl);
+            Assert.Equal("http://localhost:72875/0/1975-7-28", sut.NotesUrl);
             sut.ForwardOneDay();
-            Assert.Equal("http://localhost:72875/1975-7-29", sut.NotesUrl);
+            Assert.Equal("http://localhost:72875/1/1975-7-29", sut.NotesUrl);
+        }
+
+        [Fact]
+        public void CreateNewNote()
+        {
+            clock.Setup(i => i.GetCurrentInstant()).Returns(Instant.MaxValue);
+            var note = new Note();
+            noteRepo.Setup(i => i.CreateTask(new LocalDate(1975,07,28))).Returns(note);
+            sut.CurrentDate = new LocalDate(1975,07,28);
+            sut.NoteCreator.Title = "Title";
+            sut.NoteCreator.Text = "Text";
+
+            sut.CreateNoteOnDay();
+
+            Assert.Equal("Title", note.Title);
+            Assert.Equal("Text", note.Text);
+            Assert.Equal(Instant.MaxValue, note.TimeCreated);
+
+            Assert.Equal("", sut.NoteCreator.Title);
+            Assert.Equal("", sut.NoteCreator.Text);
+            
+        }
+
+        [Theory]
+        [InlineData("","")]
+        [InlineData("  ","   ")]
+        [InlineData("","  ")]
+        [InlineData("  ","")]
+        [InlineData("","klhfs")]
+        [InlineData("dwf","")]
+        public void NoTextMeansNoNoteCreated(string title, string text)
+        {
+            sut.NoteCreator.Title = title;
+            sut.NoteCreator.Text = text;
+            sut.CreateNoteOnDay();
+            noteRepo.VerifyNoOtherCalls();
         }
     }
 }

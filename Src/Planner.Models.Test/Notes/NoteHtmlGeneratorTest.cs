@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Moq;
 using NodaTime;
@@ -16,7 +17,7 @@ namespace Planner.Models.Test.Notes
         private readonly Mock<ILocalRepository<Note>> repo = new Mock<ILocalRepository<Note>>();
         private readonly List<Note> notes = new List<Note>();
         private readonly NoteHtmlGenerator sut;
-        private readonly StringWriter output = new StringWriter();
+        private readonly MemoryStream output = new MemoryStream();
         private readonly LocalDate date = new LocalDate(1975,07,28);
 
         public NoteHtmlGeneratorTest()
@@ -36,35 +37,38 @@ namespace Planner.Models.Test.Notes
         public async Task EmptyTest()
         {
             await sut.GenerateResponse("1975-7-28", output);
-            Assert.Equal("<html><head><link rel=\"stylesheet\" href=\"journal.css\"></head><body></body></html>", output.ToString());
+            Assert.Equal("<html><head><link rel=\"stylesheet\" href=\"journal.css\"></head><body></body></html>", OutputAsString);
             
         }
+
+        private string OutputAsString =>
+            Encoding.UTF8.GetString(output.ToArray());
         [Fact]
         public async Task SingleTest()
         {
             notes.Add(new Note(){Title = "Title", Text="Text"});
             await sut.GenerateResponse("1975-7-28", output);
-            Assert.Contains("1. Title", output.ToString());
-            Assert.Contains("Text", output.ToString());
-            Assert.DoesNotContain("<hr/>", output.ToString());
+            Assert.Contains("1. Title", OutputAsString);
+            Assert.Contains("Text", OutputAsString);
+            Assert.DoesNotContain("<hr/>", OutputAsString);
         }
         [Fact]
         public async Task MarkdownInText()
         {
             notes.Add(new Note(){Title = "Title", Text="**Text**"});
             await sut.GenerateResponse("1975-7-28", output);
-            Assert.Contains("1. Title", output.ToString());
-            Assert.Contains("<strong>Text</strong>", output.ToString());
-            Assert.DoesNotContain("<hr/>", output.ToString());
+            Assert.Contains("1. Title", OutputAsString);
+            Assert.Contains("<strong>Text</strong>", OutputAsString);
+            Assert.DoesNotContain("<hr/>", OutputAsString);
         }
         [Fact]
         public async Task MarkdownInTitle()
         {
             notes.Add(new Note(){Title = "**Title**", Text="Text"});
             await sut.GenerateResponse("1975-7-28", output);
-            Assert.Contains("1. <strong>Title</strong>", output.ToString());
-            Assert.Contains("Text<", output.ToString());
-            Assert.DoesNotContain("<hr/>", output.ToString());
+            Assert.Contains("1. <strong>Title</strong>", OutputAsString);
+            Assert.Contains("Text<", OutputAsString);
+            Assert.DoesNotContain("<hr/>", OutputAsString);
         }
         [Fact]
         public async Task MultTest()
@@ -72,9 +76,9 @@ namespace Planner.Models.Test.Notes
             notes.Add(new Note(){Title = "Title", Text="Text"});
             notes.Add(new Note(){Title = "Title", Text="Text"});
             await sut.GenerateResponse("1975-7-28", output);
-            Assert.Contains("<hr/>", output.ToString());
-            Assert.Contains("1. Title", output.ToString());
-            Assert.Contains("2. Title", output.ToString());
+            Assert.Contains("<hr/>", OutputAsString);
+            Assert.Contains("1. Title", OutputAsString);
+            Assert.Contains("2. Title", OutputAsString);
         }
     }
 }
