@@ -48,7 +48,16 @@ namespace Planner.Models.Test.Notes
         {
             notes.Add(new Note(){Title = "Title", Text="Text"});
             await sut.GenerateResponse("1975-7-28", output);
-            Assert.Contains("1. Title", OutputAsString);
+            Assert.Contains("Title", OutputAsString);
+            Assert.Contains("Text", OutputAsString);
+            Assert.DoesNotContain("<hr/>", OutputAsString);
+        }
+        [Fact]
+        public async Task TitleIsAnchor()
+        {
+            notes.Add(new Note(){Title = "Title", Text="Text"});
+            await sut.GenerateResponse("1975-7-28", output);
+            Assert.Contains("1. <a href=", OutputAsString);
             Assert.Contains("Text", OutputAsString);
             Assert.DoesNotContain("<hr/>", OutputAsString);
         }
@@ -57,7 +66,7 @@ namespace Planner.Models.Test.Notes
         {
             notes.Add(new Note(){Title = "Title", Text="**Text**"});
             await sut.GenerateResponse("1975-7-28", output);
-            Assert.Contains("1. Title", OutputAsString);
+            Assert.Contains("Title", OutputAsString);
             Assert.Contains("<strong>Text</strong>", OutputAsString);
             Assert.DoesNotContain("<hr/>", OutputAsString);
         }
@@ -66,7 +75,7 @@ namespace Planner.Models.Test.Notes
         {
             notes.Add(new Note(){Title = "**Title**", Text="Text"});
             await sut.GenerateResponse("1975-7-28", output);
-            Assert.Contains("1. <strong>Title</strong>", OutputAsString);
+            Assert.Contains("<strong>Title</strong>", OutputAsString);
             Assert.Contains("Text<", OutputAsString);
             Assert.DoesNotContain("<hr/>", OutputAsString);
         }
@@ -77,8 +86,8 @@ namespace Planner.Models.Test.Notes
             notes.Add(new Note(){Title = "Title", Text="Text"});
             await sut.GenerateResponse("1975-7-28", output);
             Assert.Contains("<hr/>", OutputAsString);
-            Assert.Contains("1. Title", OutputAsString);
-            Assert.Contains("2. Title", OutputAsString);
+            Assert.Contains("1. <a href", OutputAsString);
+            Assert.Contains("2. <a href", OutputAsString);
         }
     }
 }

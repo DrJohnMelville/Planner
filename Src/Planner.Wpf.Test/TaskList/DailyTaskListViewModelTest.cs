@@ -17,8 +17,6 @@ namespace Planner.Wpf.Test.TaskList
     public class DailyTaskListViewModelTest
     {
         private readonly Mock<ILocalRepository<PlannerTask>> taskFactory = new Mock<ILocalRepository<PlannerTask>>();
-        
-
         private readonly DailyTaskListViewModel sut;
         private readonly PlannerTaskViewModel itemVM;
         private readonly LocalDate date = new LocalDate(1975, 07, 28);
