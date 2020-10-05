@@ -33,8 +33,4 @@
       <ProjectReference Include="..\Planner.WpfViewModels\Planner.WpfViewModels.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Notes" />
-    </ItemGroup>
-
 </Project>

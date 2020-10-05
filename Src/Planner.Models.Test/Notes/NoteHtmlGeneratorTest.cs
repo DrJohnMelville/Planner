@@ -25,7 +25,7 @@ namespace Planner.Models.Test.Notes
         {
             repo.Setup(i => i.CompletedItemsForDate(date)).ReturnsAsync(notes);
             sut = new NoteHtmlGenerator(repo.Object, 
-                i=> new JournalItemRenderer(i, new MarkdownTranslator()), Mock.Of<IStaticFiles>());
+                i=> new JournalItemRenderer(i, new MarkdownTranslator()), new StaticFiles());
         }
 
         [Fact]
@@ -94,15 +94,19 @@ namespace Planner.Models.Test.Notes
         [Fact]
         public async Task SendNoteEditRequest()
         {
+            var guid = Guid.NewGuid();
+            var note = new Note() {Key = guid};
+            notes.Add(note);
+            
             var fired = 0;
             sut.NoteEditRequested += (s, e) =>
             {
                 fired++;
-                Assert.Equal(Guid.Empty, e.NoteKey);
-                Assert.Equal(LocalDate.MaxIsoValue, e.Date);
+                Assert.Equal(guid, e.NoteKey);
+                Assert.Equal(date, e.Date);
             };
 
-            await sut.GenerateResponse($"{Guid.Empty}/{LocalDate.MaxIsoValue:yyyy-M-d}", output);
+            await sut.GenerateResponse($"{guid}/{date:yyyy-M-d}", output);
             Assert.Equal(1, fired);
             
         }

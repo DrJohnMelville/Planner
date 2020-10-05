@@ -55,42 +55,53 @@ namespace Planner.Models.HtmlGeneration
             ret = LocalDate.MinIsoValue;
             return false;
         }
-        
-        public Task GenerateResponse(string url, Stream destination) => 
-            staticFiles.TryGetValue(url, out var bytes) ?
-                destination.WriteAsync(bytes, 0, bytes.Length) : 
-                GenerateTextResponses(url, destination);
 
-        private async Task GenerateTextResponses(string url, Stream destinatiom)
+        public async Task GenerateResponse(string url, Stream destination)
         {
-            await using var writer = new StreamWriter(destinatiom);
-            if (TryParseLocalDate(url, out var date))
-            {
-                RenderItemsAsJournal(writer, await noteRepo.CompletedItemsForDate(date));
-                return;
-            }
+            await using var writer = new StreamWriter(destination);
+            await (StaticFiles(url, destination) ??
+                   DailyJournalPage(url, writer) ??
+                   EditRequestPage(url, writer) ??
+                   DefaultText(writer));
+        }
 
-            CheckForEditRequest(url);
-            writer.Write("<html><body></body></html>");
+        private Task? StaticFiles(string url, Stream destination)
+        {
+            return staticFiles.TryGetValue(url, out var bytes) ? 
+                destination.WriteAsync(bytes, 0, bytes.Length) 
+                : null;
+
         }
         
-        private void RenderItemsAsJournal(StreamWriter writer, IList<Note> items) =>
-            rendererFactory(writer).WriteJournalList(
-                items);
+        private Task? DailyJournalPage(string url, TextWriter destnation) => 
+            TryParseLocalDate(url, out var date) ? RenderJournalPage(destnation, date) : null;
 
-        public event EventHandler<NoteEditRequestEventArgs>? NoteEditRequested;
-        //00000000-0000-0000-0000-000000000000/9999-1-1
-        private readonly static Regex EditRequestFinder = new Regex(
-            @"([0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})/(\d{4}-\d{1,2}-\d{1,2})");
-        private void CheckForEditRequest(string url)
+        private async Task RenderJournalPage(TextWriter writer, LocalDate date) =>
+            rendererFactory(writer).WriteJournalList(
+                await noteRepo.CompletedItemsForDate(date));
+
+        private Task? EditRequestPage(string url, TextWriter destination)
         {
             var match = EditRequestFinder.Match(url);
             if (!(match.Success &&
                   Guid.TryParse(match.Groups[1].Value, out var guid) &&
-                  DateTime.TryParse(match.Groups[2].Value, out var dateTime))) return;
+                  DateTime.TryParse(match.Groups[2].Value, out var dateTime))) return null;
             
             NoteEditRequested?.Invoke(this,
                 new NoteEditRequestEventArgs(LocalDate.FromDateTime(dateTime), guid));
+            return Task.CompletedTask;
         }
+
+        private async Task EditRequestPage(LocalDate date, Guid noteKey, TextWriter destination)
+        {
+            
+        }
+        
+        private Task DefaultText(TextWriter writer) =>writer.WriteAsync("<html><body></body></html>");
+        
+        public event EventHandler<NoteEditRequestEventArgs>? NoteEditRequested;
+        //pattern for url is 00000000-0000-0000-0000-000000000000/9999-1-1
+        private readonly static Regex EditRequestFinder = new Regex(
+            @"([0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})/(\d{4}-\d{1,2}-\d{1,2})");
     }
 }
