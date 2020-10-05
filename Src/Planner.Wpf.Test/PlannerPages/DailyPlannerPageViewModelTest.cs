@@ -132,7 +132,8 @@ namespace Planner.Wpf.Test.PlannerPages
             if (attached) sut.NavigatedTo();
             if (detached) sut.NavigatedAwayFrom();
             notes.Raise(i=>i.NoteEditRequested -= null, 
-                new NoteEditRequestEventArgs(LocalDate.MaxIsoValue, Guid.Empty));
+                new NoteEditRequestEventArgs(
+                    new List<Note>(), new Note()));
             navigation.Verify(i=>i.NavigateTo(It.IsAny<NoteEditorViewModel>()), Times.Exactly(calls));
         }
     }

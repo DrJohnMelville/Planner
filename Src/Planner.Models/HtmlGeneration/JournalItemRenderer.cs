@@ -17,16 +17,20 @@ namespace Planner.Models.HtmlGeneration
             this.markdown = markdown;
         }
 
-        public void WriteJournalList(IList<Note> notes)
+        public void WriteJournalList(IList<Note> notes, Note? desiredNote = null)
         {
             WritePrologue();
             int position = 1;
             foreach (var note in notes.OrderBy(i => i.TimeCreated))
             {
-                GenerateNote(note, position++);
+                if (ShouldRenderThisNote(desiredNote, note)) GenerateNote(note, position);
+                position++;
             }
             WriteEpilogue();
         }
+
+        private static bool ShouldRenderThisNote(Note? desiredNote, Note note) => 
+            desiredNote == null || note == desiredNote;
 
         private void WritePrologue() => destination.Write("<html><head><link rel=\"stylesheet\" href=\"journal.css\"></head><body>");
 

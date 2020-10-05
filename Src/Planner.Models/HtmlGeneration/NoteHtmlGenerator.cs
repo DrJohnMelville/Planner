@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -14,13 +15,13 @@ namespace Planner.Models.HtmlGeneration
     
     public class NoteEditRequestEventArgs : EventArgs
     {
-        public LocalDate Date { get; }
-        public Guid NoteKey { get; }
+        public IList<Note> DailyList { get; }
+        public Note Note { get; }
 
-        public NoteEditRequestEventArgs(LocalDate date, Guid noteKey)
+        public NoteEditRequestEventArgs(IList<Note> dailyList, Note note)
         {
-            Date = date;
-            NoteKey = noteKey;
+            DailyList = dailyList;
+            Note = note;
         }
     }
 
@@ -83,18 +84,21 @@ namespace Planner.Models.HtmlGeneration
         private Task? EditRequestPage(string url, TextWriter destination)
         {
             var match = EditRequestFinder.Match(url);
-            if (!(match.Success &&
-                  Guid.TryParse(match.Groups[1].Value, out var guid) &&
-                  DateTime.TryParse(match.Groups[2].Value, out var dateTime))) return null;
-            
-            NoteEditRequested?.Invoke(this,
-                new NoteEditRequestEventArgs(LocalDate.FromDateTime(dateTime), guid));
-            return Task.CompletedTask;
+            return match.Success &&
+                   Guid.TryParse(match.Groups[1].Value, out var guid) &&
+                   TryParseLocalDate(match.Groups[2].Value, out var dateTime)
+                ? EditRequestPage(dateTime, guid, destination)
+                : null;
         }
 
         private async Task EditRequestPage(LocalDate date, Guid noteKey, TextWriter destination)
         {
+            var list = await noteRepo.CompletedItemsForDate(date);
+            var item = list.FirstOrDefault(i => i.Key == noteKey);
+            if (item == null) return;
             
+            NoteEditRequested?.Invoke(this,  new NoteEditRequestEventArgs(list, item));
+            rendererFactory(destination).WriteJournalList(list, item);
         }
         
         private Task DefaultText(TextWriter writer) =>writer.WriteAsync("<html><body></body></html>");

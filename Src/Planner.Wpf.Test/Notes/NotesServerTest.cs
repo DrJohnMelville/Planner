@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Moq;
 using NodaTime;
 using Planner.Models.HtmlGeneration;
@@ -41,6 +42,7 @@ namespace Planner.Wpf.Test.Notes
 
         private void RaiseEditNoteRequest() =>
             generator.Raise(i => i.NoteEditRequested -= null,
-                new NoteEditRequestEventArgs(LocalDate.MinIsoValue, Guid.Empty));
+                new NoteEditRequestEventArgs(new List<Note>(),
+                    new Note()));
     }
 }

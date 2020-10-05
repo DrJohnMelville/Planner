@@ -102,8 +102,8 @@ namespace Planner.Models.Test.Notes
             sut.NoteEditRequested += (s, e) =>
             {
                 fired++;
-                Assert.Equal(guid, e.NoteKey);
-                Assert.Equal(date, e.Date);
+                Assert.Equal(note, e.Note);
+                Assert.Equal(notes, e.DailyList);
             };
 
             await sut.GenerateResponse($"{guid}/{date:yyyy-M-d}", output);
