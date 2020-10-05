@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,7 +47,7 @@ namespace Planner.Models.Test.Notes
         [Fact]
         public async Task SingleTest()
         {
-            notes.Add(new Note({Title = "Title", Text="Text"});
+            notes.Add(new Note{Title = "Title", Text="Text"});
             await sut.GenerateResponse("1975-7-28", output);
             Assert.Contains("Title", OutputAsString);
             Assert.Contains("Text", OutputAsString);
@@ -57,7 +58,7 @@ namespace Planner.Models.Test.Notes
         {
             notes.Add(new Note(){Title = "Title", Text="Text"});
             await sut.GenerateResponse("1975-7-28", output);
-            Assert.Contains("1. <a href=", OutputAsString);
+            Assert.Contains("1.</a>", OutputAsString);
             Assert.Contains("Text", OutputAsString);
             Assert.DoesNotContain("<hr/>", OutputAsString);
         }
@@ -86,8 +87,24 @@ namespace Planner.Models.Test.Notes
             notes.Add(new Note(){Title = "Title", Text="Text"});
             await sut.GenerateResponse("1975-7-28", output);
             Assert.Contains("<hr/>", OutputAsString);
-            Assert.Contains("1. <a href", OutputAsString);
-            Assert.Contains("2. <a href", OutputAsString);
+            Assert.Contains("1.</a>", OutputAsString);
+            Assert.Contains("2.</a>", OutputAsString);
+        }
+
+        [Fact]
+        public async Task SendNoteEditRequest()
+        {
+            var fired = 0;
+            sut.NoteEditRequested += (s, e) =>
+            {
+                fired++;
+                Assert.Equal(Guid.Empty, e.NoteKey);
+                Assert.Equal(LocalDate.MaxIsoValue, e.Date);
+            };
+
+            await sut.GenerateResponse($"{Guid.Empty}/{LocalDate.MaxIsoValue:yyyy-M-d}", output);
+            Assert.Equal(1, fired);
+            
         }
     }
 }

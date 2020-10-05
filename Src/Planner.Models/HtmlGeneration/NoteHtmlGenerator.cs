@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NodaTime;
 using Planner.Models.Markdown;
@@ -10,9 +11,23 @@ using Planner.Models.Repositories;
 
 namespace Planner.Models.HtmlGeneration
 {
+    
+    public class NoteEditRequestEventArgs : EventArgs
+    {
+        public LocalDate Date { get; }
+        public Guid NoteKey { get; }
+
+        public NoteEditRequestEventArgs(LocalDate date, Guid noteKey)
+        {
+            Date = date;
+            NoteKey = noteKey;
+        }
+    }
+
     public interface INoteHtmlGenerator
     {
         Task GenerateResponse(string url, Stream destination);
+        event EventHandler<NoteEditRequestEventArgs>? NoteEditRequested;
     }
     public class NoteHtmlGenerator : INoteHtmlGenerator
     {
@@ -50,13 +65,32 @@ namespace Planner.Models.HtmlGeneration
         {
             await using var writer = new StreamWriter(destinatiom);
             if (TryParseLocalDate(url, out var date))
+            {
                 RenderItemsAsJournal(writer, await noteRepo.CompletedItemsForDate(date));
-            else
-                writer.Write("<html><body></body></html>");
-        }
+                return;
+            }
 
+            CheckForEditRequest(url);
+            writer.Write("<html><body></body></html>");
+        }
+        
         private void RenderItemsAsJournal(StreamWriter writer, IList<Note> items) =>
             rendererFactory(writer).WriteJournalList(
                 items);
+
+        public event EventHandler<NoteEditRequestEventArgs>? NoteEditRequested;
+        //00000000-0000-0000-0000-000000000000/9999-1-1
+        private readonly static Regex EditRequestFinder = new Regex(
+            @"([0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})/(\d{4}-\d{1,2}-\d{1,2})");
+        private void CheckForEditRequest(string url)
+        {
+            var match = EditRequestFinder.Match(url);
+            if (!(match.Success &&
+                  Guid.TryParse(match.Groups[1].Value, out var guid) &&
+                  DateTime.TryParse(match.Groups[2].Value, out var dateTime))) return;
+            
+            NoteEditRequested?.Invoke(this,
+                new NoteEditRequestEventArgs(LocalDate.FromDateTime(dateTime), guid));
+        }
     }
 }

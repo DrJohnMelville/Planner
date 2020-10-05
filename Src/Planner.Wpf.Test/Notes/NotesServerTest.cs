@@ -1,4 +1,6 @@
-﻿using Moq;
+﻿using System;
+using Moq;
+using NodaTime;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Notes;
 using Planner.WpfViewModels.Notes;
@@ -8,11 +10,12 @@ namespace Planner.Wpf.Test.Notes
 {
     public class NotesServerTest
     {
+        private readonly Mock<INoteHtmlGenerator> generator = new Mock<INoteHtmlGenerator>();
         public readonly NotesServer sut;
 
         public NotesServerTest()
         {
-            sut = new NotesServer(Mock.Of<INoteHtmlGenerator>());
+            sut = new NotesServer(generator.Object);
         }
 
         [Fact]
@@ -20,5 +23,24 @@ namespace Planner.Wpf.Test.Notes
         {
             Assert.Equal("http://localhost:28775/", sut.BaseUrl);
         }
+
+        [Fact]
+        public void NoteEditRequestredForwards()
+        {
+            var fired = 0;
+            RaiseEditNoteRequest();
+            Assert.Equal(0, fired);
+            void updateNote(object s, NoteEditRequestEventArgs e) => fired++;
+            sut.NoteEditRequested += updateNote;
+            RaiseEditNoteRequest();
+            Assert.Equal(1, fired);
+            sut.NoteEditRequested -= updateNote;
+            RaiseEditNoteRequest();
+            Assert.Equal(1, fired);
+        }
+
+        private void RaiseEditNoteRequest() =>
+            generator.Raise(i => i.NoteEditRequested -= null,
+                new NoteEditRequestEventArgs(LocalDate.MinIsoValue, Guid.Empty));
     }
 }

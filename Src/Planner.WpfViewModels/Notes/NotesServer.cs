@@ -1,7 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using NodaTime;
 using Planner.Models.HtmlGeneration;
 
 namespace Planner.WpfViewModels.Notes
@@ -9,6 +11,7 @@ namespace Planner.WpfViewModels.Notes
     public interface INotesServer
     {
         string BaseUrl { get; }
+        event EventHandler<NoteEditRequestEventArgs>? NoteEditRequested;
         void Launch();
     }
     public class NotesServer: INotesServer
@@ -20,7 +23,7 @@ namespace Planner.WpfViewModels.Notes
             this.generator = generator;
             extractQuery = new Regex($"{Regex.Escape(BaseUrl)}\\d+/(.*)");
         }
-
+        
         public string BaseUrl => "http://localhost:28775/";
         
         public async void Launch()
@@ -55,6 +58,12 @@ namespace Planner.WpfViewModels.Notes
             var uriString = context.Request.Url.OriginalString;
             var match = extractQuery.Match(uriString);
             return match.Success?match.Groups[1].Value:uriString;
+        }
+
+        public event EventHandler<NoteEditRequestEventArgs>? NoteEditRequested
+        {
+            add => generator.NoteEditRequested += value;
+            remove => generator.NoteEditRequested -= value;
         }
     }
 }

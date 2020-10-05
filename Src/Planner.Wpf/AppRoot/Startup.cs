@@ -70,6 +70,7 @@ namespace Planner.Wpf.AppRoot
         {
             service.Bind<IViewMappingConvention>().To<MapViewsToOwnAssembly>().AsSingleton();
             service.RegisterHomeViewModel<LoginViewModel>();
+            service.Bind<INavigationWindow>().To<NavigationWindow>().AsSingleton();
             service.Bind<IRootNavigationWindow>()
                 .And<Window>()
                 .To<RootNavigationWindow>()

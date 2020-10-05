@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Mime;
+using System.Threading.Tasks;
+using Melville.MVVM.Wpf.RootWindows;
 using Moq;
 using NodaTime;
+using Planner.Models.HtmlGeneration;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
@@ -16,6 +19,7 @@ namespace Planner.Wpf.Test.PlannerPages
     public class DailyPlannerPageViewModelTest
     {
         private readonly Mock<IClock> clock = new Mock<IClock>();
+        private readonly Mock<INavigationWindow> navigation = new Mock<INavigationWindow>();
         private readonly Mock<INotesServer> notes = new Mock<INotesServer>();
         private readonly Mock<ILocalRepository<Note>> noteRepo= new Mock<ILocalRepository<Note>>();
         private readonly Mock<ILocalRepository<PlannerTask>> repo = new Mock<ILocalRepository<PlannerTask>>();
@@ -28,7 +32,9 @@ namespace Planner.Wpf.Test.PlannerPages
             sut = new DailyPlannerPageViewModel(clock.Object, 
                 d => new DailyTaskListViewModel(repo.Object, 
                     i=> new PlannerTaskViewModel(i), d), notes.Object, 
-                         new NoteCreator(noteRepo.Object, clock.Object));
+                         new NoteCreator(noteRepo.Object, clock.Object),
+                        navigation.Object, i=> new NoteEditorViewModel(i)
+                );
         }
 
         [Fact]
@@ -115,6 +121,19 @@ namespace Planner.Wpf.Test.PlannerPages
             sut.NoteCreator.Text = text;
             sut.CreateNoteOnDay();
             noteRepo.VerifyNoOtherCalls();
+        }
+
+        [Theory]
+        [InlineData(false, false, 0)]
+        [InlineData(true, false, 1)]
+        [InlineData(true, true, 0)]
+        public void ReceivesNoteEditRequests(bool attached, bool detached, int calls)
+        {
+            if (attached) sut.NavigatedTo();
+            if (detached) sut.NavigatedAwayFrom();
+            notes.Raise(i=>i.NoteEditRequested -= null, 
+                new NoteEditRequestEventArgs(LocalDate.MaxIsoValue, Guid.Empty));
+            navigation.Verify(i=>i.NavigateTo(It.IsAny<NoteEditorViewModel>()), Times.Exactly(calls));
         }
     }
 }

@@ -1,25 +1,26 @@
 ﻿using System;
 using Melville.INPC;
+using Melville.MVVM.Wpf.RootWindows;
 using NodaTime;
-using Planner.Models.Notes;
-using Planner.Models.Repositories;
+using Planner.Models.HtmlGeneration;
 using Planner.Models.Time;
 using Planner.WpfViewModels.Notes;
 using Planner.WpfViewModels.TaskList;
 
 namespace Planner.WpfViewModels.PlannerPages
 {
-    public partial class DailyPlannerPageViewModel
+    public partial class DailyPlannerPageViewModel:IAcceptNavigationNotifications
     {
-        private readonly IClock clock;
         private readonly Func<LocalDate, DailyTaskListViewModel> taskListFactory;
         private readonly INotesServer noteServer;
+        private readonly INavigationWindow navigation;
+        private Func<NoteEditRequestEventArgs, NoteEditorViewModel> editorFactory;
         public NoteCreator NoteCreator { get; }
-        private int nonce = 0;
 
         [AutoNotify] private LocalDate currentDate;
         [AutoNotify] private DailyTaskListViewModel todayTaskList;
         [AutoNotify] private bool popupOpen;
+        private int nonce = 0; // makes every url unique so that the web broswer reloads
         public string NotesUrl => $"{noteServer.BaseUrl}{nonce++}/{currentDate:yyyy-M-d}";
         partial void WhenCurrentDateChanges(LocalDate oldValue, LocalDate newValue)
             {
@@ -34,12 +35,15 @@ namespace Planner.WpfViewModels.PlannerPages
             IClock clock, 
             Func<LocalDate, DailyTaskListViewModel> taskListFactory, 
             INotesServer noteServer,
-            NoteCreator noteCreator)
+            NoteCreator noteCreator, 
+            INavigationWindow navigation, 
+            Func<NoteEditRequestEventArgs, NoteEditorViewModel> editorFactory)
         {
-            this.clock = clock;
             this.taskListFactory = taskListFactory;
             this.noteServer = noteServer;
             NoteCreator = noteCreator;
+            this.navigation = navigation;
+            this.editorFactory = editorFactory;
             currentDate = clock.CurrentDate();
             todayTaskList = taskListFactory(currentDate);
         }
@@ -52,36 +56,11 @@ namespace Planner.WpfViewModels.PlannerPages
             NoteCreator.Create(CurrentDate);
             RefreshNotesUrl();
         }
-    }
 
-    public partial class NoteCreator
-    {
-        private readonly ILocalRepository<Note> notes;
-        private readonly IClock clock;
-        [AutoNotify] private string title ="";
-        [AutoNotify] private string text ="";
+        public void NavigatedTo() => noteServer.NoteEditRequested += LaunchRequest;
+        public void NavigatedAwayFrom() => noteServer.NoteEditRequested -= LaunchRequest;
 
-        public NoteCreator(ILocalRepository<Note> notes, IClock clock)
-        {
-            this.notes = notes;
-            this.clock = clock;
-        }
-
-        public void Create(LocalDate currentDate)
-        {
-            if (!ValidNote()) return;
-            notes.CreateItem(currentDate, newNote =>
-            {
-                newNote.Title = title;
-                newNote.Text = text;
-                newNote.TimeCreated = clock.GetCurrentInstant();
-            });
-
-            Title = "";
-            Text = "";
-        }
-
-        private bool ValidNote() => 
-            !(string.IsNullOrWhiteSpace(Title) || string.IsNullOrWhiteSpace(Text));
+        private void LaunchRequest(object? sender, NoteEditRequestEventArgs e) => 
+            navigation.NavigateTo(editorFactory(e));
     }
 }

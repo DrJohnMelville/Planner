@@ -39,11 +39,12 @@ namespace Planner.Models.HtmlGeneration
                 destination.Write("<hr/>");
             }
             destination.Write("<h3>");
-            destination.Write(itemNumber);
-            destination.Write(". ");
             destination.Write($"<a href=\"/{note.Key}/{note.Date:yyyy-M-d}\">");
-            destination.Write(markdown.RenderLine(note.Title));
+            destination.Write(itemNumber);
+            destination.Write(".");
             destination.Write("</a>");
+            destination.Write(" ");
+            destination.Write(markdown.RenderLine(note.Title));
             destination.Write("</h3>");
             destination.Write("<div>");
             destination.Write(markdown.Render(note.Text));
