@@ -19,13 +19,14 @@ namespace Planner.Models.Test.Notes
         private readonly List<Note> notes = new List<Note>();
         private readonly NoteHtmlGenerator sut;
         private readonly MemoryStream output = new MemoryStream();
+        private readonly Mock<INoteUrlGenerator> urlGen = new Mock<INoteUrlGenerator>();
         private readonly LocalDate date = new LocalDate(1975,07,28);
 
         public NoteHtmlGeneratorTest()
         {
             repo.Setup(i => i.CompletedItemsForDate(date)).ReturnsAsync(notes);
             sut = new NoteHtmlGenerator(repo.Object, 
-                i=> new JournalItemRenderer(i, new MarkdownTranslator()), new StaticFiles());
+                i=> new JournalItemRenderer(i, new MarkdownTranslator(), urlGen.Object), new StaticFiles());
         }
 
         [Fact]
@@ -106,7 +107,7 @@ namespace Planner.Models.Test.Notes
                 Assert.Equal(notes, e.DailyList);
             };
 
-            await sut.GenerateResponse($"{guid}/{date:yyyy-M-d}", output);
+            await sut.GenerateResponse($"{date:yyyy-M-d}/{guid}", output);
             Assert.Equal(1, fired);
             
         }

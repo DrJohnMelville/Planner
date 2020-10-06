@@ -2,17 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NodaTime;
-using Planner.Models.Markdown;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
 
 namespace Planner.Models.HtmlGeneration
 {
-    
     public class NoteEditRequestEventArgs : EventArgs
     {
         public IList<Note> DailyList { get; }
@@ -85,8 +82,8 @@ namespace Planner.Models.HtmlGeneration
         {
             var match = EditRequestFinder.Match(url);
             return match.Success &&
-                   Guid.TryParse(match.Groups[1].Value, out var guid) &&
-                   TryParseLocalDate(match.Groups[2].Value, out var dateTime)
+                   Guid.TryParse(match.Groups[2].Value, out var guid) &&
+                   TryParseLocalDate(match.Groups[1].Value, out var dateTime)
                 ? EditRequestPage(dateTime, guid, destination)
                 : null;
         }
@@ -104,8 +101,8 @@ namespace Planner.Models.HtmlGeneration
         private Task DefaultText(TextWriter writer) =>writer.WriteAsync("<html><body></body></html>");
         
         public event EventHandler<NoteEditRequestEventArgs>? NoteEditRequested;
-        //pattern for url is 00000000-0000-0000-0000-000000000000/9999-1-1
+        //pattern for url is 9999-1-1/00000000-0000-0000-0000-000000000000
         private readonly static Regex EditRequestFinder = new Regex(
-            @"([0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})/(\d{4}-\d{1,2}-\d{1,2})");
+            @"(\d{4}-\d{1,2}-\d{1,2})/([0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})");
     }
 }

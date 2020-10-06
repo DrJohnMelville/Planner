@@ -23,7 +23,9 @@ namespace Planner.Wpf.Test.PlannerPages
         private readonly Mock<INotesServer> notes = new Mock<INotesServer>();
         private readonly Mock<ILocalRepository<Note>> noteRepo= new Mock<ILocalRepository<Note>>();
         private readonly Mock<ILocalRepository<PlannerTask>> repo = new Mock<ILocalRepository<PlannerTask>>();
+        private readonly Mock<INoteUrlGenerator> urlGen = new Mock<INoteUrlGenerator>();
         private readonly DailyPlannerPageViewModel sut;
+        
 
         public DailyPlannerPageViewModelTest()
         {
@@ -33,7 +35,8 @@ namespace Planner.Wpf.Test.PlannerPages
                 d => new DailyTaskListViewModel(repo.Object, 
                     i=> new PlannerTaskViewModel(i), d), notes.Object, 
                          new NoteCreator(noteRepo.Object, clock.Object),
-                        navigation.Object, i=> new NoteEditorViewModel(i)
+                        navigation.Object, i=> new NoteEditorViewModel(i, urlGen.Object),
+                urlGen.Object
                 );
         }
 
@@ -74,11 +77,12 @@ namespace Planner.Wpf.Test.PlannerPages
         [Fact]
         public void NotesUrl()
         {
-            notes.SetupGet(i => i.BaseUrl).Returns("http://localhost:72875/");
+            urlGen.Setup(i => i.DailyUrl(new LocalDate(1975, 07, 28))).Returns("Url1");
+            urlGen.Setup(i => i.DailyUrl(new LocalDate(1975, 07, 29))).Returns("Url2");
             sut.CurrentDate = new LocalDate(1975,07,28);
-            Assert.Equal("http://localhost:72875/0/1975-7-28", sut.NotesUrl);
+            Assert.Equal("Url1", sut.NotesUrl);
             sut.ForwardOneDay();
-            Assert.Equal("http://localhost:72875/1/1975-7-29", sut.NotesUrl);
+            Assert.Equal("Url2", sut.NotesUrl);
         }
 
         [Fact]

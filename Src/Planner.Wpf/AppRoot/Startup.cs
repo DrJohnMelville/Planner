@@ -12,6 +12,7 @@ using Melville.WpfAppFramework.StartupBases;
 using Microsoft.Extensions.Configuration;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
+using Planner.Models.HtmlGeneration;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
 using Planner.WpfViewModels.Logins;

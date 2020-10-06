@@ -4,9 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Planner.Wpf.Notes"
+             xmlns:easyGrids="clr-namespace:Melville.WpfControls.EasyGrids;assembly=Melville.WpfControls"
+             xmlns:notes="clr-namespace:Planner.WpfViewModels.Notes;assembly=Planner.WpfViewModels"
+             xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
              mc:Ignorable="d"
+             d:DataContext="{d:DesignData {x:Type notes:NoteEditorViewModel}}"
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        <TextBlock>Note EDitor</TextBlock>
+    <Grid easyGrids:GridOperations.ColsAndRows="*,*/auto,*,auto">
+        <TextBox FontSize="18" FontWeight="Bold" Text="{Binding Note.Title, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="1" AcceptsReturn="True" Text="{Binding Note.Text, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock Grid.Row="2" Text="{Binding DisplayCreationDate}"></TextBlock>
+        <wpf:ChromiumWebBrowser Address="{Binding NoteUrl, Mode=OneWay}"
+                                Grid.Column="1" Grid.RowSpan="2"/>
     </Grid>
 </UserControl>

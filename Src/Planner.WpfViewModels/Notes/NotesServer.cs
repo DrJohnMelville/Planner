@@ -8,12 +8,6 @@ using Planner.Models.HtmlGeneration;
 
 namespace Planner.WpfViewModels.Notes
 {
-    public interface INotesServer
-    {
-        string BaseUrl { get; }
-        event EventHandler<NoteEditRequestEventArgs>? NoteEditRequested;
-        void Launch();
-    }
     public class NotesServer: INotesServer
     {
         private readonly INoteHtmlGenerator generator;

@@ -10,11 +10,13 @@ namespace Planner.Models.HtmlGeneration
     {
         private readonly TextWriter destination;
         private readonly IMarkdownTranslator markdown;
+        private readonly INoteUrlGenerator urlGenerator;
 
-        public JournalItemRenderer(TextWriter destination, IMarkdownTranslator markdown)
+        public JournalItemRenderer(TextWriter destination, IMarkdownTranslator markdown, INoteUrlGenerator urlGenerator)
         {
             this.destination = destination;
             this.markdown = markdown;
+            this.urlGenerator = urlGenerator;
         }
 
         public void WriteJournalList(IList<Note> notes, Note? desiredNote = null)
@@ -23,10 +25,19 @@ namespace Planner.Models.HtmlGeneration
             int position = 1;
             foreach (var note in notes.OrderBy(i => i.TimeCreated))
             {
+                TryRenderHorizontalRule(desiredNote, position);
                 if (ShouldRenderThisNote(desiredNote, note)) GenerateNote(note, position);
                 position++;
             }
             WriteEpilogue();
+        }
+
+        private void TryRenderHorizontalRule(Note? desiredNote, int position)
+        {
+            if (position > 1 && desiredNote == null)
+            {
+                destination.Write("<hr/>");
+            }
         }
 
         private static bool ShouldRenderThisNote(Note? desiredNote, Note note) => 
@@ -38,12 +49,8 @@ namespace Planner.Models.HtmlGeneration
 
         private void GenerateNote(Note note, int itemNumber)
         {
-            if (itemNumber > 1)
-            {
-                destination.Write("<hr/>");
-            }
             destination.Write("<h3>");
-            destination.Write($"<a href=\"/{note.Key}/{note.Date:yyyy-M-d}\">");
+            destination.Write($"<a href=\"{urlGenerator.EditNoteUrl(note)}\">");
             destination.Write(itemNumber);
             destination.Write(".");
             destination.Write("</a>");

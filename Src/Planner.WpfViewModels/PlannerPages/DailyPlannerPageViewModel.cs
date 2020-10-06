@@ -15,17 +15,16 @@ namespace Planner.WpfViewModels.PlannerPages
         private readonly INotesServer noteServer;
         private readonly INavigationWindow navigation;
         private Func<NoteEditRequestEventArgs, NoteEditorViewModel> editorFactory;
+        private readonly INoteUrlGenerator urlGen;
         public NoteCreator NoteCreator { get; }
 
         [AutoNotify] private LocalDate currentDate;
         [AutoNotify] private DailyTaskListViewModel todayTaskList;
         [AutoNotify] private bool popupOpen;
-        private int nonce = 0; // makes every url unique so that the web broswer reloads
-        public string NotesUrl => $"{noteServer.BaseUrl}{nonce++}/{currentDate:yyyy-M-d}";
+        [AutoNotify] public string NotesUrl => urlGen.DailyUrl(CurrentDate);
         partial void WhenCurrentDateChanges(LocalDate oldValue, LocalDate newValue)
             {
                 TodayTaskList = taskListFactory(newValue);
-                RefreshNotesUrl();
             }
 
             private void RefreshNotesUrl() => 
@@ -37,13 +36,14 @@ namespace Planner.WpfViewModels.PlannerPages
             INotesServer noteServer,
             NoteCreator noteCreator, 
             INavigationWindow navigation, 
-            Func<NoteEditRequestEventArgs, NoteEditorViewModel> editorFactory)
+            Func<NoteEditRequestEventArgs, NoteEditorViewModel> editorFactory, INoteUrlGenerator urlGen)
         {
             this.taskListFactory = taskListFactory;
             this.noteServer = noteServer;
             NoteCreator = noteCreator;
             this.navigation = navigation;
             this.editorFactory = editorFactory;
+            this.urlGen = urlGen;
             currentDate = clock.CurrentDate();
             todayTaskList = taskListFactory(currentDate);
         }
