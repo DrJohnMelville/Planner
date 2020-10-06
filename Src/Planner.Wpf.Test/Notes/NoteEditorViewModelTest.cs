@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Melville.MVVM.Wpf.RootWindows;
 using Moq;
 using NodaTime;
 using NodaTime.TimeZones;
@@ -16,6 +17,7 @@ namespace Planner.Wpf.Test.Notes
         private readonly Mock<INotesServer> noteServer = new Mock<INotesServer>();
         private readonly Note note;
         private readonly IList<Note> notes = new List<Note>();
+        private readonly Mock<INavigationWindow> navWin = new Mock<INavigationWindow>();
         private readonly NoteEditorViewModel sut;
 
         private readonly ZonedDateTime creationTime = new LocalDateTime(1975, 07, 28, 0, 0, 0)
@@ -34,7 +36,7 @@ namespace Planner.Wpf.Test.Notes
             };
             notes.Add(note);
             sut = new NoteEditorViewModel(new NoteEditRequestEventArgs(notes, note),
-                new NoteUrlGenerator(noteServer.Object));
+                new NoteUrlGenerator(noteServer.Object), navWin.Object, i=>null);
         }
 
         [Fact]
@@ -66,7 +68,14 @@ namespace Planner.Wpf.Test.Notes
             Assert.Equal(1, changes);
             note.Text = "Bar";
             Assert.Equal(2, changes);
-            
+        }
+
+        [Fact]
+        public void OKTest()
+        {
+            sut.NavigateToPlannerPage();
+            navWin.Verify(i=>i.NavigateTo(null), Times.Once);
+            navWin.VerifyNoOtherCalls();
         }
     }
 }

@@ -35,7 +35,8 @@ namespace Planner.Wpf.Test.PlannerPages
                 d => new DailyTaskListViewModel(repo.Object, 
                     i=> new PlannerTaskViewModel(i), d), notes.Object, 
                          new NoteCreator(noteRepo.Object, clock.Object),
-                        navigation.Object, i=> new NoteEditorViewModel(i, urlGen.Object),
+                        navigation.Object, i=> new NoteEditorViewModel(i, urlGen.Object,
+                    Mock.Of<INavigationWindow>(), i=> null),
                 urlGen.Object
                 );
         }

@@ -7,14 +7,18 @@
              xmlns:easyGrids="clr-namespace:Melville.WpfControls.EasyGrids;assembly=Melville.WpfControls"
              xmlns:notes="clr-namespace:Planner.WpfViewModels.Notes;assembly=Planner.WpfViewModels"
              xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
+             xmlns:eventBindings="clr-namespace:Melville.MVVM.Wpf.EventBindings;assembly=Melville.MVVM.Wpf"
              mc:Ignorable="d"
              d:DataContext="{d:DesignData {x:Type notes:NoteEditorViewModel}}"
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid easyGrids:GridOperations.ColsAndRows="*,*/auto,*,auto">
+    <Grid easyGrids:GridOperations.ColsAndRows="*,*/auto,*,auto" Margin="10">
         <TextBox FontSize="18" FontWeight="Bold" Text="{Binding Note.Title, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBox Grid.Row="1" AcceptsReturn="True" Text="{Binding Note.Text, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Grid.Row="2" Text="{Binding DisplayCreationDate}"></TextBlock>
         <wpf:ChromiumWebBrowser Address="{Binding NoteUrl, Mode=OneWay}"
-                                Grid.Column="1" Grid.RowSpan="2"/>
+                                Grid.Column="1" Grid.RowSpan="2" IsTabStop="False"/>
+        <StackPanel Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right">
+            <Button Click="{eventBindings:EventBinding NavigateToPlannerPage}" MinWidth="60">Ok</Button>
+        </StackPanel>
     </Grid>
 </UserControl>
