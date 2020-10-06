@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Mime;
 using System.Reflection.Metadata;
 using System.Transactions;
 using Melville.INPC;
@@ -19,6 +20,8 @@ namespace Planner.WpfViewModels.Notes
         private INoteUrlGenerator urlGen;
         private INavigationWindow navigator;
         private Func<LocalDate, DailyPlannerPageViewModel> plannerPageFactory;
+        private readonly Action cancelOperation;
+        
         public NoteEditorViewModel(
             NoteEditRequestEventArgs request, 
             INoteUrlGenerator urlGen, 
@@ -30,9 +33,18 @@ namespace Planner.WpfViewModels.Notes
             this.plannerPageFactory = plannerPageFactory;
             Note = request.Note;
             notesForDay = request.DailyList;
-            Note.PropertyChanged += (s, e) =>
-                ((IExternalNotifyPropertyChanged) this).OnPropertyChanged(nameof(NoteUrl));
+            cancelOperation = CreateCancelOperation(Note.Title, Note.Text);
+            Note.PropertyChanged += UpdateWhenNoteChanges;
         }
+        
+        public void UpdateWhenNoteChanges(object? sender, EventArgs e)=>
+            ((IExternalNotifyPropertyChanged) this).OnPropertyChanged(nameof(NoteUrl));
+        
+        private Action CreateCancelOperation(string title, string text) => () =>
+        {
+            Note.Title = title;
+            Note.Text = text;
+        };
 
         public string DisplayCreationDate => 
             $@"Note Created: {Note.TimeCreated
@@ -41,6 +53,14 @@ namespace Planner.WpfViewModels.Notes
         public string NoteUrl => urlGen.EditNoteUrl(Note);
 
 
-        public void NavigateToPlannerPage() => navigator.NavigateTo(plannerPageFactory(Note.Date));
+        public void NavigateToPlannerPage() => LeavePage(false);
+        public void CancelEdit() => LeavePage(true);
+        private void LeavePage(bool shouldRevertNote)
+        {
+            UnhookNoteUpdates();
+            if (shouldRevertNote) cancelOperation();
+            navigator.NavigateTo(plannerPageFactory(Note.Date));
+        }
+        private void UnhookNoteUpdates() => Note.PropertyChanged -= UpdateWhenNoteChanges;
     }
 }

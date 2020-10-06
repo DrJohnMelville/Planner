@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Melville.MVVM.Wpf.RootWindows;
 using Moq;
 using NodaTime;
-using NodaTime.TimeZones;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Notes;
 using Planner.WpfViewModels.Notes;
@@ -76,6 +74,27 @@ namespace Planner.Wpf.Test.Notes
             sut.NavigateToPlannerPage();
             navWin.Verify(i=>i.NavigateTo(null), Times.Once);
             navWin.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public void CancelRevertsTitle()
+        {
+            note.Title = "Foo";
+            sut.CancelEdit();
+            navWin.Verify(i=>i.NavigateTo(null), Times.Once);
+            navWin.VerifyNoOtherCalls();
+            Assert.Equal("Title", note.Title);
+            
+        }        
+        
+        [Fact]
+        public void CancelRevertsText()
+        {
+            note.Text = "Foo";
+            sut.CancelEdit();
+            navWin.Verify(i=>i.NavigateTo(null), Times.Once);
+            navWin.VerifyNoOtherCalls();
+            Assert.Equal("**Text**", note.Text);
         }
     }
 }
