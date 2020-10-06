@@ -53,6 +53,16 @@ namespace Planner.Models.Test.Notes
             Assert.Contains("Title", OutputAsString);
             Assert.Contains("Text", OutputAsString);
             Assert.DoesNotContain("<hr/>", OutputAsString);
+            Assert.DoesNotContain("<script", OutputAsString);
+        }
+        [Fact]
+        public async Task MermaidTest()
+        {
+            notes.Add(new Note{Title = "Title", Text=@"````mermaid
+````"});
+            await sut.GenerateResponse("1975-7-28", output);
+            Assert.Contains("div class=\"mermaid\">", OutputAsString);
+            Assert.Contains("<script src=\"mermaid.js\"><script>mermaid.initialize({startOnLoad:true});</script></script>", OutputAsString);
         }
         [Fact]
         public async Task TitleIsAnchor()

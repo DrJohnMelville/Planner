@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Planner.Models.Markdown;
@@ -29,8 +30,11 @@ namespace Planner.Models.HtmlGeneration
                 if (ShouldRenderThisNote(desiredNote, note)) GenerateNote(note, position);
                 position++;
             }
-            WriteEpilogue();
+            EpilogueManager.Write(EffectiveNoteList(notes, desiredNote), destination);
         }
+
+        private static IList<Note> EffectiveNoteList(IList<Note> notes, Note? desiredNote) => 
+            desiredNote != null ?new[]{desiredNote}:notes;
 
         private void TryRenderHorizontalRule(Note? desiredNote, int position)
         {
@@ -44,9 +48,7 @@ namespace Planner.Models.HtmlGeneration
             desiredNote == null || note == desiredNote;
 
         private void WritePrologue() => destination.Write("<html><head><link rel=\"stylesheet\" href=\"journal.css\"></head><body>");
-
-        private void WriteEpilogue() => destination.Write("</body></html>");
-
+        
         private void GenerateNote(Note note, int itemNumber)
         {
             destination.Write("<h3>");
@@ -61,5 +63,26 @@ namespace Planner.Models.HtmlGeneration
             destination.Write(markdown.Render(note.Text));
             destination.Write("</div>");
         }
+    }
+
+    public static class EpilogueManager
+    {
+        private static readonly List<(Func<string, bool> Predicate, string Epilogue)> providers =
+            new List<(Func<string, bool> Predicate, string Epilogue)>
+            {
+                (s=>s.Contains("````mermaid"), 
+                    "<script src=\"https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js\"></script>"),
+                (s=>true, "</body></html>")
+            };
+        
+        public static void Write(IList<Note> effectiveNoteList, TextWriter destination)
+        {
+            foreach (var (predicate, epilogue) in providers)
+                if (ProviderApplies(predicate, effectiveNoteList))
+                    destination.WriteLine(epilogue);
+        }
+
+        private static bool ProviderApplies(Func<string, bool> predicate, IList<Note> effectiveNoteList) => 
+            effectiveNoteList.Any(i => predicate(i.Title) || predicate(i.Text));
     }
 }
