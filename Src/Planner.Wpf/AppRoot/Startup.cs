@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Windows;
+using CefSharp;
 using Melville.IOC.BindingRequests;
 using Melville.IOC.IocContainers;
 using Melville.IOC.IocContainers.ActivationStrategies.TypeActivation;
@@ -15,6 +16,7 @@ using NodaTime.Serialization.SystemTextJson;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
+using Planner.Wpf.Notes;
 using Planner.WpfViewModels.Logins;
 using Planner.WpfViewModels.Notes;
 
@@ -44,6 +46,7 @@ namespace Planner.Wpf.AppRoot
         private void RegisterNoteServer(IBindableIocService service)
         {
             service.Bind<INotesServer>().To<NotesServer>().FixResult(i=>i.Launch()).AsSingleton();
+            service.Bind<IRequestHandler>().To<WebNavigationRouter>();
         }
 
         private void SetupJsonSerialization(IBindableIocService service)

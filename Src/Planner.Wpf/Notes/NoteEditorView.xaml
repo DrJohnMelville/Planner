@@ -8,6 +8,7 @@
              xmlns:notes="clr-namespace:Planner.WpfViewModels.Notes;assembly=Planner.WpfViewModels"
              xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
              xmlns:eventBindings="clr-namespace:Melville.MVVM.Wpf.EventBindings;assembly=Melville.MVVM.Wpf"
+             xmlns:DiBindings="clr-namespace:Melville.MVVM.Wpf.DiParameterSources;assembly=Melville.MVVM.Wpf"
              mc:Ignorable="d"
              d:DataContext="{d:DesignData {x:Type notes:NoteEditorViewModel}}"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -16,6 +17,7 @@
         <TextBox Grid.Row="1" AcceptsReturn="True" Text="{Binding Note.Text, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Grid.Row="2" Text="{Binding DisplayCreationDate}"></TextBlock>
         <wpf:ChromiumWebBrowser Address="{Binding NoteUrl, Mode=OneWay}"
+                                RequestHandler="{DiBindings:DiIBinding }"
                                 Grid.Column="1" Grid.RowSpan="2" IsTabStop="False"/>
         <StackPanel Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
             <StackPanel.Resources>

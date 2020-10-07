@@ -4,6 +4,14 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <LangVersion>preview</LangVersion>
     </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <PlatformTarget>AnyCPU</PlatformTarget>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <PlatformTarget>AnyCPU</PlatformTarget>
+    </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Melville.Mvvm.TestHelpers" Version="0.1.5" />
         <PackageReference Include="Melville.TestHelpers" Version="0.3.8" />
