@@ -71,7 +71,7 @@ namespace Planner.Models.HtmlGeneration
             new List<(Func<string, bool> Predicate, string Epilogue)>
             {
                 (s=>s.Contains("````mermaid"), 
-                    "<script src=\"https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js\"></script>"),
+                    "<script src=\"https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js\"></script><script>mermaid.initialize({startOnLoad:true});</script>"),
                 (s=>true, "</body></html>")
             };
         

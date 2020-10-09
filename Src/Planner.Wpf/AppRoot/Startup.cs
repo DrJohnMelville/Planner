@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Windows;
 using CefSharp;
-using Melville.IOC.BindingRequests;
 using Melville.IOC.IocContainers;
 using Melville.IOC.IocContainers.ActivationStrategies.TypeActivation;
 using Melville.MVVM.Wpf.RootWindows;
@@ -15,7 +13,6 @@ using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Repositories;
-using Planner.Models.Tasks;
 using Planner.Wpf.Notes;
 using Planner.WpfViewModels.Logins;
 using Planner.WpfViewModels.Notes;

@@ -39,7 +39,7 @@ namespace Planner.Models.Test.Notes
         public async Task EmptyTest()
         {
             await sut.GenerateResponse("1975-7-28", output);
-            Assert.Equal("<html><head><link rel=\"stylesheet\" href=\"journal.css\"></head><body></body></html>", OutputAsString);
+            Assert.Equal("<html><head><link rel=\"stylesheet\" href=\"journal.css\"></head><body>", OutputAsString);
             
         }
 
@@ -62,7 +62,7 @@ namespace Planner.Models.Test.Notes
 ````"});
             await sut.GenerateResponse("1975-7-28", output);
             Assert.Contains("div class=\"mermaid\">", OutputAsString);
-            Assert.Contains("<script src=\"mermaid.js\"><script>mermaid.initialize({startOnLoad:true});</script></script>", OutputAsString);
+            Assert.Contains("<script src=\"https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js\"></script><script>mermaid.initialize({startOnLoad:true});</script>", OutputAsString);
         }
         [Fact]
         public async Task TitleIsAnchor()
