@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Planner.Wpf.Logins"
              xmlns:eventBindings="clr-namespace:Melville.MVVM.Wpf.EventBindings;assembly=Melville.MVVM.Wpf"
              xmlns:logins="clr-namespace:Planner.WpfViewModels.Logins;assembly=Planner.WpfViewModels"
+             xmlns:taskList="clr-namespace:Planner.Wpf.TaskList"
              mc:Ignorable="d"
              d:DataContext="{d:DesignData Type={x:Type logins:LoginViewModel}}"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -16,6 +17,10 @@
         <TextBlock Margin="20 0" FontStyle="Italic">“Dost thou love life? Then do not squander time; for that’s the stuff life is made of.” -- Benjamin Franklin</TextBlock>
         <ScrollViewer Margin="20" VerticalScrollBarVisibility="Auto">
             <StackPanel>
+                <Border BorderThickness="1" BorderBrush="Black" Background="Bisque">
+                    <taskList:RichTextBlock>
+                    </taskList:RichTextBlock>
+                </Border>
                 <Button Margin="20" FontSize="50" Click="{eventBindings:EventBinding FakeDb}" Content="Local Fake"/>
                 <ItemsControl ItemsSource="{Binding Sites}">
                     <ItemsControl.ItemTemplate>
