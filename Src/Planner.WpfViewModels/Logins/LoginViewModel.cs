@@ -26,7 +26,7 @@ namespace Planner.WpfViewModels.Logins
         }
 
         public void FakeDb(
-            [FromServices] IRegisterRepositorySource registry,
+            [FromServices] IRegisterRepositorySource registry, 
             INavigationWindow navigation,
             [FromServices] Func<DailyPlannerPageViewModel> factory)
         {
