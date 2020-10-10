@@ -8,9 +8,9 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type taskList:RichTextBlock}">
                     <Grid>
-                        <TextBox Text="Selected"/>
-                        <TextBlock Text="UnSelected" Background="White"
-                                   wpfHacks:VisibilityHack.CollapseIf="{TemplateBinding IsKeyboardFocusWithin}"
+                        <TextBox Text="{TemplateBinding Text}"/>
+                        <ContentPresenter Content="{TemplateBinding RenderedTB}"
+                                          wpfHacks:VisibilityHack.CollapseIf="{TemplateBinding IsKeyboardFocusWithin}"
                                    IsHitTestVisible="False"/>
                     </Grid>
                 </ControlTemplate>
