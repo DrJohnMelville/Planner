@@ -8,7 +8,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type taskList:RichTextBlock}">
                     <Grid>
-                        <TextBox Text="{TemplateBinding Text}"/>
+                        <TextBox Text="{Binding Text, Mode=TwoWay, RelativeSource={x:Static RelativeSource.TemplatedParent}}"/>
                         <ContentPresenter Content="{TemplateBinding RenderedTB}"
                                           wpfHacks:VisibilityHack.CollapseIf="{TemplateBinding IsKeyboardFocusWithin}"
                                    IsHitTestVisible="False"/>

@@ -6,6 +6,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Windows.Media;
+using Melville.MVVM.Wpf.EventBindings.SearchTree;
 using Planner.Models.Tasks;
 
 namespace Planner.Wpf.TaskList
@@ -63,8 +64,21 @@ namespace Planner.Wpf.TaskList
             foreach (var span in parser.Parse(source))
             {
                 var run = new Run(span.Text);
-                ac.AddChild(run);
+                // if (span.Label != TaskTextType.NoLink)
+                // {
+                //     run.Foreground = Brushes.DodgerBlue;
+                //     run.TextDecorations.Add(TextDecorations.Underline)
+                // }
+                ac.AddChild(span.Label == TaskTextType.NoLink?(Inline)run:CreateLink(run, span.Label));
             }
+            return ret;
+        }
+
+        private Hyperlink CreateLink(Run run, TaskTextType label)
+        {
+            var ret = new Hyperlink(run);
+            ret.Click += (s, e) => RunOnVisualTreeSearch.Run((DependencyObject)s, 
+                label.ToString(), new object[] {e}, out var _);
             return ret;
         }
 
