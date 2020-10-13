@@ -65,27 +65,27 @@
                     <ContextMenu>
                         <MenuItem Header="Incomplete" Click="{eventBindings:EventBinding MarkIncomplete}">
                             <MenuItem.Icon>
-                                <TextBox Text="" FontFamily="Wingdings"></TextBox>
+                                <TextBlock Text="" FontFamily="Wingdings"></TextBlock>
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Header="Done" Click="{eventBindings:EventBinding MarkDone}">
                             <MenuItem.Icon>
-                                <TextBox Text="a" FontFamily="Marlett"></TextBox>
+                                <TextBlock Text="a" FontFamily="Marlett"></TextBlock>
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Header="Canceled" Click="{eventBindings:EventBinding MarkCanceled}">
                             <MenuItem.Icon>
-                                <TextBox Text="r" FontFamily="Marlett"></TextBox>
+                                <TextBlock Text="r" FontFamily="Marlett"></TextBlock>
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Header="Pending" Click="{eventBindings:EventBinding MarkPending}">
                             <MenuItem.Icon>
-                                <TextBox Text="¡" FontFamily="Wingdings"></TextBox>
+                                <TextBlock Text="¡" FontFamily="Wingdings"></TextBlock>
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Header="Delegated" Click="{eventBindings:EventBinding MarkDelegated}">
                             <MenuItem.Icon>
-                                <TextBox Text="n" FontFamily="Marlett"></TextBox>
+                                <TextBlock Text="n" FontFamily="Marlett"></TextBlock>
                             </MenuItem.Icon>
                         </MenuItem>
                         <Separator />
@@ -126,65 +126,8 @@
                            Fill="LightGray" />
                 <Rectangle Grid.ColumnSpan="3" Height="0.5" VerticalAlignment="Bottom" HorizontalAlignment="Stretch"
                            Fill="LightGray" />
-                <TextBox Grid.Column="2" Text="{Binding PlannerTask.Name}" Margin="4 2" BorderThickness="0"
-                         Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type local:DailyTaskListView}}}">
-                    <TextBox.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Command="ApplicationCommands.Copy" />
-                            <MenuItem Command="ApplicationCommands.Cut" />
-                            <MenuItem Command="ApplicationCommands.Paste" />
-                            <Separator />
-                            <MenuItem Header="Incomplete" Click="{eventBindings:EventBinding MarkIncomplete}">
-                                <MenuItem.Icon>
-                                    <TextBox Text="" FontFamily="Wingdings"></TextBox>
-                                </MenuItem.Icon>
-                            </MenuItem>
-                            <MenuItem Header="Done" Click="{eventBindings:EventBinding MarkDone}">
-                                <MenuItem.Icon>
-                                    <TextBox Text="a" FontFamily="Marlett"></TextBox>
-                                </MenuItem.Icon>
-                            </MenuItem>
-                            <MenuItem Header="Canceled" Click="{eventBindings:EventBinding MarkCanceled}">
-                                <MenuItem.Icon>
-                                    <TextBox Text="r" FontFamily="Marlett"></TextBox>
-                                </MenuItem.Icon>
-                            </MenuItem>
-                            <MenuItem Header="Pending" Click="{eventBindings:EventBinding MarkPending}">
-                                <MenuItem.Icon>
-                                    <TextBox Text="¡" FontFamily="Wingdings"></TextBox>
-                                </MenuItem.Icon>
-                            </MenuItem>
-                            <MenuItem Header="Delegated" Click="{eventBindings:EventBinding MarkDelegated}">
-                                <MenuItem.Icon>
-                                    <TextBox Text="n" FontFamily="Marlett"></TextBox>
-                                </MenuItem.Icon>
-                            </MenuItem>
-                            <Separator />
-                            <MenuItem Header="{Binding PlacementTarget.Tag.DeferToName[0], 
-                            RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                                      Click="{eventBindings:EventBinding Defer0}" />
-                            <MenuItem Header="{Binding PlacementTarget.Tag.DeferToName[1], 
-                            RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                                      Click="{eventBindings:EventBinding Defer1}" />
-                            <MenuItem Header="{Binding PlacementTarget.Tag.DeferToName[2], 
-                            RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                                      Click="{eventBindings:EventBinding Defer2}" />
-                            <MenuItem Header="{Binding PlacementTarget.Tag.DeferToName[3], 
-                            RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                                      Click="{eventBindings:EventBinding Defer3}" />
-                            <MenuItem Header="{Binding PlacementTarget.Tag.DeferToName[4], 
-                            RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                                      Click="{eventBindings:EventBinding Defer4}" />
-                            <MenuItem Header="{Binding PlacementTarget.Tag.DeferToName[5], 
-                            RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                                      Click="{eventBindings:EventBinding Defer5}" />
-                            <MenuItem Header="{Binding PlacementTarget.Tag.DeferToName[6], 
-                            RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                                      Click="{eventBindings:EventBinding Defer6}"/>
-                            <MenuItem Header="Pick Date" Click="{eventBindings:EventBinding DeferToDate}"/>
-                        </ContextMenu>
-                    </TextBox.ContextMenu>
-                </TextBox>
+                <local:RichTextBlock Grid.Column="2" Text="{Binding PlannerTask.Name}" Margin="4 2"
+                         Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type local:DailyTaskListView}}}"/>
                 <Button Grid.Column="2" Background="Transparent" Click="{eventBindings:EventBinding ButtonA}"
                         Visibility="{bindings:MultiBind {x:Static taskList:AndVisibilityConverter.Instance},
                         {Binding DataContext.IsRankingTasks, 

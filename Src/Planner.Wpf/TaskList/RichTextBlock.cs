@@ -23,65 +23,74 @@ namespace Planner.Wpf.TaskList
         
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
             "Text", typeof(string), typeof(RichTextBlock),
-            new FrameworkPropertyMetadata(null, OnTextChanged));
-
-        private TextBlock? target;
-        private static void OnTextChanged(DependencyObject d, 
-            DependencyPropertyChangedEventArgs e)
-        {
-            ((RichTextBlock) d).OnTextChanged(e.NewValue?.ToString()??"");
-        }
-
-        public void InitializeDisplay(TextBlock target)
-        {
-            this.target = target;
-            OnTextChanged(Text);
-        }
-
-        private void OnTextChanged(string toString)
-        {
-            RichRenderer.Instance.FillTextBlock(toString, target);
-        }
-        
+            new FrameworkPropertyMetadata(null));
         public string Text
         {
             get => (string) GetValue(TextProperty);
             set => SetValue(TextProperty, value);
         }
 
+        public static readonly DependencyProperty EditingProperty = DependencyProperty.Register(
+            "Editing", typeof(bool), typeof(RichTextBlock),
+            new FrameworkPropertyMetadata(false));
 
-        public void MouseDoubleClickEvent(Grid grid)
+        public bool Editing
         {
-            var tb = (TextBox) grid.Children.OfType<TextBox>().First();
-            tb.Focus();
-            Keyboard.Focus(tb);
+            get => (bool) GetValue(EditingProperty);
+            set => SetValue(EditingProperty, value);
         }
 
+        public void LeftEdit() => Editing = false;
+        public void BeginEdit() => Editing = true;
     }
-    public class RichRenderer
+    
+    public static class RichRenderer
     {
-        public static readonly RichRenderer Instance = new RichRenderer();
         private static readonly TaskNameParser parser = new TaskNameParser();
-        public void FillTextBlock(string source, TextBlock? ret)
+        public static void FillTextBlock(string source, TextBlock ret)
         {
-            if (ret == null) return;
             ret.Inlines.Clear();
             var ac = (IAddChild) ret;
             foreach (var span in parser.Parse(source))
             {
                 var run = new Run(span.Text);
-                ac.AddChild(span.Label == TaskTextType.NoLink ? (Inline) run : CreateLink(run, span.Label));
+                ac.AddChild(span.Label == TaskTextType.NoLink ? SetupRun(run) : CreateLink(run, span.Label));
             }
         }
 
-        private Hyperlink CreateLink(Run run, TaskTextType label)
+        private static Run SetupRun(Run run)
+        {
+            run.Background = null;
+            run.Focusable = true;
+            return run;
+        }
+
+        private static Hyperlink CreateLink(Run run, TaskTextType label)
         {
             var ret = new Hyperlink(run);
-            ret.Background= Brushes.Transparent;
+            ret.Focusable = false;
             ret.IsEnabled = true;
             ret.Click += (s, e) => RunOnVisualTreeSearch.Run((DependencyObject)s, 
-                label.ToString(), new object[] {e}, out var _);
+              label.ToString()+"LinkClicked", new object[] {e}, out var _);
             return ret;
         }
+        
+        
+        public static readonly DependencyProperty RichTextProperty = DependencyProperty.RegisterAttached(
+            "RichText", typeof(string), typeof(RichRenderer),
+            new FrameworkPropertyMetadata(null, OnNewRichText));
+
+        public static string GetRichText(DependencyObject obj) => (string) obj.GetValue(RichTextProperty);
+        public static void SetRichText(DependencyObject obj, string value) => obj.SetValue(RichTextProperty, value);
+        
+
+        private static void OnNewRichText(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is TextBlock tb)
+            {
+                FillTextBlock(e.NewValue?.ToString()??"", tb);
+            }
+        }
+
     }
 }
