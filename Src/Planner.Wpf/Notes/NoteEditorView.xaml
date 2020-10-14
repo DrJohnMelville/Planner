@@ -17,7 +17,7 @@
         <TextBox Grid.Row="1" AcceptsReturn="True" Text="{Binding Note.Text, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Grid.Row="2" Text="{Binding DisplayCreationDate}"></TextBlock>
         <wpf:ChromiumWebBrowser Address="{Binding NoteUrl, Mode=OneWay}"
-                                RequestHandler="{DiBindings:DiIBinding }"
+                                RequestHandler="{DiBindings:DIBinding }"
                                 Grid.Column="1" Grid.RowSpan="2" IsTabStop="False"/>
         <StackPanel Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
             <StackPanel.Resources>
