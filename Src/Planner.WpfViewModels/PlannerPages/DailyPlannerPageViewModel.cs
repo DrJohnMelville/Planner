@@ -1,8 +1,11 @@
 ﻿using System;
+using System.IO;
+using System.Text.RegularExpressions;
 using Melville.INPC;
 using Melville.MVVM.Wpf.RootWindows;
 using NodaTime;
 using Planner.Models.HtmlGeneration;
+using Planner.Models.Tasks;
 using Planner.Models.Time;
 using Planner.WpfViewModels.Notes;
 using Planner.WpfViewModels.TaskList;
@@ -62,5 +65,23 @@ namespace Planner.WpfViewModels.PlannerPages
 
         private void LaunchRequest(object? sender, NoteEditRequestEventArgs e) => 
             navigation.NavigateTo(editorFactory(e));
+
+        public void PlannerPageLinkClicked(Segment<TaskTextType> segment) =>
+            CurrentDate = new LocalDate(GetLinkYear(segment.Match.Groups),
+                GetSegmentValue(segment, 1), GetSegmentValue(segment, 2));
+
+        private int GetLinkYear(GroupCollection matchGroups) => 
+            matchGroups.Count == 5 ? GetLinkYear(matchGroups[3].Value): currentDate.Year;
+
+        private int GetLinkYear(string yearString)
+        {
+            var rawYearIndicator = int.Parse(yearString);
+            return rawYearIndicator < 100 ? rawYearIndicator + CurrentCentury(CurrentDate) : rawYearIndicator;
+        }
+
+        private int CurrentCentury(LocalDate date) => date.Year - (date.Year % 100);
+
+        private static int GetSegmentValue(Segment<TaskTextType> segment, int index) => 
+            int.Parse(segment.Match.Groups[index].Value);
     }
 }

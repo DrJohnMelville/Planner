@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Mime;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Melville.MVVM.Wpf.RootWindows;
 using Moq;
@@ -140,6 +141,37 @@ namespace Planner.Wpf.Test.PlannerPages
                 new NoteEditRequestEventArgs(
                     new List<Note>(), new Note()));
             navigation.Verify(i=>i.NavigateTo(It.IsAny<NoteEditorViewModel>()), Times.Exactly(calls));
+        }
+        
+        [Fact]
+        public void PlannerPagerLink3()
+        {
+            sut.CurrentDate = new LocalDate(1975,07,28);
+            var match = Regex.Match("(1.2.3)", @"\((\d+)\.(\d+)\.(\d+)\)");
+            sut.PlannerPageLinkClicked(new Segment<TaskTextType>("(1.2.3)", TaskTextType.PlannerPage,
+                match));
+            Assert.Equal(sut.CurrentDate, new LocalDate(1975,1,2));
+            
+        }
+        [Fact]
+        public void PlannerPagerLink4DightYeat()
+        {
+            sut.CurrentDate = new LocalDate(1975,07,28);
+            var match = Regex.Match("(1.2.1980.3)", @"\((\d+)\.(\d+)\.(\d+)\.(\d+)\)");
+            sut.PlannerPageLinkClicked(new Segment<TaskTextType>("(1.2.1980.3)", TaskTextType.PlannerPage,
+                match));
+            Assert.Equal(sut.CurrentDate, new LocalDate(1980,1,2));
+            
+        }
+        [Fact]
+        public void PlannerPagerLink2DigitYear()
+        {
+            sut.CurrentDate = new LocalDate(1975,07,28);
+            var match = Regex.Match("(1.2.80.3)", @"\((\d+)\.(\d+)\.(\d+)\.(\d+)\)");
+            sut.PlannerPageLinkClicked(new Segment<TaskTextType>("(1.2.80.3)", TaskTextType.PlannerPage,
+                match));
+            Assert.Equal(sut.CurrentDate, new LocalDate(1980,1,2));
+            
         }
     }
 }

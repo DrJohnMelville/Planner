@@ -5,6 +5,8 @@ using System.Windows.Data;
 using System.Windows.Input;
 using Melville.INPC;
 using Melville.MVVM.AdvancedLists.PersistentLinq;
+using Melville.MVVM.RunShellCommands;
+using Melville.MVVM.Wpf.DiParameterSources;
 using NodaTime;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
@@ -115,5 +117,14 @@ namespace Planner.WpfViewModels.TaskList
                 item.PopupOpen = false;
             }
         }
+
+        public void WebLinkLinkClicked(
+            Segment<TaskTextType> segment, 
+            [FromServices] IRunShellCommand commandObject) =>
+            commandObject.ShellExecute(segment.Text, Array.Empty<string>());
+        public void FileLinkLinkClicked(
+            Segment<TaskTextType> segment, 
+            [FromServices] IRunShellCommand commandObject) =>
+            commandObject.ShellExecute(segment.Text, Array.Empty<string>());
     }
 }

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
+using Windows.ApplicationModel.Calls.Background;
 using Melville.MVVM.AdvancedLists;
+using Melville.MVVM.RunShellCommands;
 using Melville.TestHelpers.InpcTesting;
 using Melville.TestHelpers.MockConstruction;
 using Moq;
@@ -33,7 +36,7 @@ namespace Planner.Wpf.Test.TaskList
                 });
             taskFactory.Setup(i => i.ItemsForDate(date)).Returns(
                 (Func<LocalDate, IList<PlannerTask>>)GenerateDailyTaskList);
-                sut = new DailyTaskListViewModel(taskFactory.Object, i=>new PlannerTaskViewModel(i),
+            sut = new DailyTaskListViewModel(taskFactory.Object, i=>new PlannerTaskViewModel(i),
                 date);
             itemVM = sut.TaskItems.OfType<PlannerTaskViewModel>().First();
         }
@@ -234,5 +237,23 @@ namespace Planner.Wpf.Test.TaskList
             Assert.False(item.PopupOpen);
         }
 
+        [Fact]
+        public void OpenWebLink()
+        {
+            var command = new Mock<IRunShellCommand>();
+            sut.WebLinkLinkClicked(new Segment<TaskTextType>("www.google.com", TaskTextType.WebLink, null),
+                command.Object);
+            command.Verify(i=>i.ShellExecute("www.google.com", Array.Empty<string>()));
+            command.VerifyNoOtherCalls();
+        }
+        [Fact]
+        public void OpenFileLink()
+        {
+            var command = new Mock<IRunShellCommand>();
+            sut.FileLinkLinkClicked(new Segment<TaskTextType>("c:\\blah.txt", TaskTextType.FileLink, null),
+                command.Object);
+            command.Verify(i=>i.ShellExecute("c:\\blah.txt", Array.Empty<string>()));
+            command.VerifyNoOtherCalls();
+        }
     }
 }
