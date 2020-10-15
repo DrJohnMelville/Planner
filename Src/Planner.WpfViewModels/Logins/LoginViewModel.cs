@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Melville.MVVM.WaitingServices;
 using Melville.MVVM.Wpf.DiParameterSources;
 using Melville.MVVM.Wpf.RootWindows;
+using NodaTime;
+using Planner.Models.Time;
 using Planner.WpfViewModels.PlannerPages;
 using TokenServiceClient.Native;
 using TokenServiceClient.Native.PersistentToken;
@@ -27,18 +29,18 @@ namespace Planner.WpfViewModels.Logins
 
         public void FakeDb(
             [FromServices] IRegisterRepositorySource registry, 
-            INavigationWindow navigation,
-            [FromServices] Func<DailyPlannerPageViewModel> factory)
+            [FromServices] IPlannerNavigator nav,
+            [FromServices] IClock clock)
         {
           registry.UseLocalTestSource();
-          navigation.NavigateTo(factory());
+          nav.ToDate(clock.CurrentDate());
         }
         public async Task LogIn(
             IWaitingService wait,
             TargetSite currentSite, 
             [FromServices]IRegisterRepositorySource registry,
-            INavigationWindow navigation, 
-            [FromServices]Func<DailyPlannerPageViewModel> factory)
+            [FromServices] IPlannerNavigator nav,
+            [FromServices] IClock clock)
         {
             using (wait.WaitBlock("Logging In"))
             {
@@ -49,7 +51,7 @@ namespace Planner.WpfViewModels.Logins
                         wait.ErrorMessage = "Login failed";
                         return;
                     }
-                    navigation.NavigateTo(factory());
+                    nav.ToDate(clock.CurrentDate());
                 }
                 catch (Exception e)
                 {

@@ -20,7 +20,7 @@ namespace Planner.Wpf.Test.PlannerPages
     public class DailyPlannerPageViewModelTest
     {
         private readonly Mock<IClock> clock = new Mock<IClock>();
-        private readonly Mock<INavigationWindow> navigation = new Mock<INavigationWindow>();
+        private readonly Mock<IPlannerNavigator> navigation = new Mock<IPlannerNavigator>();
         private readonly Mock<INotesServer> notes = new Mock<INotesServer>();
         private readonly Mock<ILocalRepository<Note>> noteRepo= new Mock<ILocalRepository<Note>>();
         private readonly Mock<ILocalRepository<PlannerTask>> repo = new Mock<ILocalRepository<PlannerTask>>();
@@ -32,12 +32,13 @@ namespace Planner.Wpf.Test.PlannerPages
         {
             repo.Setup(i => i.ItemsForDate(It.IsAny<LocalDate>())).Returns(
                 (LocalDate d) => new List<PlannerTask>());
-            sut = new DailyPlannerPageViewModel(clock.Object, 
-                d => new DailyTaskListViewModel(repo.Object, 
-                    i=> new PlannerTaskViewModel(i), d), notes.Object, 
-                         new NoteCreator(noteRepo.Object, clock.Object),
-                        navigation.Object, i=> new NoteEditorViewModel(i, urlGen.Object,
-                    Mock.Of<INavigationWindow>(), i=> null),
+            Func<LocalDate, DailyTaskListViewModel> taskListFactory = d => new DailyTaskListViewModel(repo.Object, i=> new PlannerTaskViewModel(i), d);
+            var noteCreator = new NoteCreator(noteRepo.Object, clock.Object);
+            sut = new DailyPlannerPageViewModel(new LocalDate(), 
+                taskListFactory,
+                     notes.Object, 
+                         noteCreator,
+                        navigation.Object, 
                 urlGen.Object
                 );
         }

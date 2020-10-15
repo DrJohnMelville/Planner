@@ -14,45 +14,42 @@ namespace Planner.WpfViewModels.PlannerPages
 {
     public partial class DailyPlannerPageViewModel:IAcceptNavigationNotifications
     {
-        private readonly Func<LocalDate, DailyTaskListViewModel> taskListFactory;
         private readonly INotesServer noteServer;
-        private readonly INavigationWindow navigation;
-        private Func<NoteEditRequestEventArgs, NoteEditorViewModel> editorFactory;
+        private readonly IPlannerNavigator navigator;
         private readonly INoteUrlGenerator urlGen;
         public NoteCreator NoteCreator { get; }
 
-        [AutoNotify] private LocalDate currentDate;
-        [AutoNotify] private DailyTaskListViewModel todayTaskList;
+        private readonly LocalDate currentDate;
+        public LocalDate CurrentDate
+        {
+            get => currentDate;
+            set => navigator.ToDate(value);
+        }
+
+        public DailyTaskListViewModel TodayTaskList { get; }
         [AutoNotify] private bool popupOpen;
-        [AutoNotify] public string NotesUrl => urlGen.DailyUrl(CurrentDate);
-        partial void WhenCurrentDateChanges(LocalDate oldValue, LocalDate newValue)
-            {
-                TodayTaskList = taskListFactory(newValue);
-            }
+        public string NotesUrl => urlGen.DailyUrl(CurrentDate);
 
             private void RefreshNotesUrl() => 
                 ((IExternalNotifyPropertyChanged) this).OnPropertyChanged(nameof(NotesUrl));
 
             public DailyPlannerPageViewModel(
-            IClock clock, 
+            LocalDate currentDate,
             Func<LocalDate, DailyTaskListViewModel> taskListFactory, 
             INotesServer noteServer,
             NoteCreator noteCreator, 
-            INavigationWindow navigation, 
-            Func<NoteEditRequestEventArgs, NoteEditorViewModel> editorFactory, INoteUrlGenerator urlGen)
+            IPlannerNavigator navigator, INoteUrlGenerator urlGen)
         {
-            this.taskListFactory = taskListFactory;
             this.noteServer = noteServer;
+            this.navigator = navigator;
             NoteCreator = noteCreator;
-            this.navigation = navigation;
-            this.editorFactory = editorFactory;
             this.urlGen = urlGen;
-            currentDate = clock.CurrentDate();
-            todayTaskList = taskListFactory(currentDate);
+            this.currentDate = currentDate; 
+            TodayTaskList = taskListFactory(currentDate);
         }
 
-        public void ForwardOneDay() => CurrentDate = CurrentDate.PlusDays(1);
-        public void BackOneDay() => CurrentDate = CurrentDate.PlusDays(-1);
+        public void ForwardOneDay() => navigator.ToDate(CurrentDate.PlusDays(1));
+        public void BackOneDay() => navigator.ToDate(CurrentDate.PlusDays(-1));
 
         public void CreateNoteOnDay()
         {
@@ -63,15 +60,18 @@ namespace Planner.WpfViewModels.PlannerPages
         public void NavigatedTo() => noteServer.NoteEditRequested += LaunchRequest;
         public void NavigatedAwayFrom() => noteServer.NoteEditRequested -= LaunchRequest;
 
-        private void LaunchRequest(object? sender, NoteEditRequestEventArgs e) => 
-            navigation.NavigateTo(editorFactory(e));
+        private void LaunchRequest(object? sender, NoteEditRequestEventArgs e) =>
+            navigator.ToEditNote(e);
 
-        public void PlannerPageLinkClicked(Segment<TaskTextType> segment) =>
-            CurrentDate = new LocalDate(GetLinkYear(segment.Match.Groups),
-                GetSegmentValue(segment, 1), GetSegmentValue(segment, 2));
+        public void PlannerPageLinkClicked(Segment<TaskTextType> segment)
+        {
+            if (segment.Match == null) return;
+            navigator.ToDate(new LocalDate(GetLinkYear(segment.Match.Groups),
+                GetSegmentValue(1, segment.Match), GetSegmentValue(2, segment.Match)));
+        }
 
         private int GetLinkYear(GroupCollection matchGroups) => 
-            matchGroups.Count == 5 ? GetLinkYear(matchGroups[3].Value): currentDate.Year;
+            matchGroups.Count == 5 ? GetLinkYear(matchGroups[3].Value): CurrentDate.Year;
 
         private int GetLinkYear(string yearString)
         {
@@ -81,7 +81,7 @@ namespace Planner.WpfViewModels.PlannerPages
 
         private int CurrentCentury(LocalDate date) => date.Year - (date.Year % 100);
 
-        private static int GetSegmentValue(Segment<TaskTextType> segment, int index) => 
-            int.Parse(segment.Match.Groups[index].Value);
+        private static int GetSegmentValue(int index, Match match) => 
+            int.Parse(match.Groups[index].Value);
     }
 }

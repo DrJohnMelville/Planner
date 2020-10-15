@@ -16,6 +16,7 @@ using Planner.Models.Repositories;
 using Planner.Wpf.Notes;
 using Planner.WpfViewModels.Logins;
 using Planner.WpfViewModels.Notes;
+using Planner.WpfViewModels.PlannerPages;
 
 namespace Planner.Wpf.AppRoot
 {
@@ -69,6 +70,7 @@ namespace Planner.Wpf.AppRoot
 
         private static void RegisterMainWindowWithView(IBindableIocService service)
         {
+            service.Bind<INavigationHistory>().To<PlannerPageNavigationHistory>().AsSingleton();
             service.Bind<IViewMappingConvention>().To<MapViewsToOwnAssembly>().AsSingleton();
             service.RegisterHomeViewModel<LoginViewModel>();
             service.Bind<INavigationWindow>().To<NavigationWindow>().AsSingleton();
