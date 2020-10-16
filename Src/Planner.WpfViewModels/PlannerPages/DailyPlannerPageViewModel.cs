@@ -1,13 +1,10 @@
 ﻿using System;
-using System.IO;
 using System.Text.RegularExpressions;
 using Melville.INPC;
 using Melville.MVVM.Wpf.RootWindows;
 using NodaTime;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Tasks;
-using Planner.Models.Time;
-using Planner.WpfViewModels.Notes;
 using Planner.WpfViewModels.TaskList;
 
 namespace Planner.WpfViewModels.PlannerPages
@@ -18,20 +15,17 @@ namespace Planner.WpfViewModels.PlannerPages
         private readonly IPlannerNavigator navigator;
         private readonly INoteUrlGenerator urlGen;
         public NoteCreator NoteCreator { get; }
-
+        public DailyTaskListViewModel TodayTaskList { get; }
         private readonly LocalDate currentDate;
+
         public LocalDate CurrentDate
         {
             get => currentDate;
             set => navigator.ToDate(value);
         }
 
-        public DailyTaskListViewModel TodayTaskList { get; }
         [AutoNotify] private bool popupOpen;
         public string NotesUrl => urlGen.DailyUrl(CurrentDate);
-
-            private void RefreshNotesUrl() => 
-                ((IExternalNotifyPropertyChanged) this).OnPropertyChanged(nameof(NotesUrl));
 
             public DailyPlannerPageViewModel(
             LocalDate currentDate,
@@ -54,34 +48,25 @@ namespace Planner.WpfViewModels.PlannerPages
         public void CreateNoteOnDay()
         {
             NoteCreator.Create(CurrentDate);
-            RefreshNotesUrl();
+            ReloadNotesDisplay();
         }
+        //The notes url includes a nonce so we can force updates when the data changes.
+        // all we have to do is tell wpf that the url changed and it will read a new
+        // value and refresh the webbrowser.
+        private void ReloadNotesDisplay() => 
+            ((IExternalNotifyPropertyChanged) this).OnPropertyChanged(nameof(NotesUrl));
 
-        public void NavigatedTo() => noteServer.NoteEditRequested += LaunchRequest;
-        public void NavigatedAwayFrom() => noteServer.NoteEditRequested -= LaunchRequest;
 
-        private void LaunchRequest(object? sender, NoteEditRequestEventArgs e) =>
+        public void NavigatedTo() => noteServer.NoteEditRequested += DoEditNoteRequest;
+        public void NavigatedAwayFrom() => noteServer.NoteEditRequested -= DoEditNoteRequest;
+
+        private void DoEditNoteRequest(object? sender, NoteEditRequestEventArgs e) =>
             navigator.ToEditNote(e);
 
         public void PlannerPageLinkClicked(Segment<TaskTextType> segment)
         {
             if (segment.Match == null) return;
-            navigator.ToDate(new LocalDate(GetLinkYear(segment.Match.Groups),
-                GetSegmentValue(1, segment.Match), GetSegmentValue(2, segment.Match)));
+            navigator.NavigateToDate(segment.Match.Groups, CurrentDate);
         }
-
-        private int GetLinkYear(GroupCollection matchGroups) => 
-            matchGroups.Count == 5 ? GetLinkYear(matchGroups[3].Value): CurrentDate.Year;
-
-        private int GetLinkYear(string yearString)
-        {
-            var rawYearIndicator = int.Parse(yearString);
-            return rawYearIndicator < 100 ? rawYearIndicator + CurrentCentury(CurrentDate) : rawYearIndicator;
-        }
-
-        private int CurrentCentury(LocalDate date) => date.Year - (date.Year % 100);
-
-        private static int GetSegmentValue(int index, Match match) => 
-            int.Parse(match.Groups[index].Value);
     }
 }
