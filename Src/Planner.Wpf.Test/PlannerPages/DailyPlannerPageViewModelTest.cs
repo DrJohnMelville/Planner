@@ -34,7 +34,7 @@ namespace Planner.Wpf.Test.PlannerPages
                 (LocalDate d) => new List<PlannerTask>());
             Func<LocalDate, DailyTaskListViewModel> taskListFactory = d => new DailyTaskListViewModel(repo.Object, i=> new PlannerTaskViewModel(i), d);
             var noteCreator = new NoteCreator(noteRepo.Object, clock.Object);
-            sut = new DailyPlannerPageViewModel(new LocalDate(), 
+            sut = new DailyPlannerPageViewModel(new LocalDate(1975,07,28), 
                 taskListFactory,
                      notes.Object, 
                          noteCreator,
@@ -46,7 +46,7 @@ namespace Planner.Wpf.Test.PlannerPages
         [Fact]
         public void InitialDate()
         {
-            repo.Verify(i=>i.ItemsForDate(new LocalDate(1969,12,31)), Times.Once);
+            repo.Verify(i=>i.ItemsForDate(new LocalDate(1975, 07, 28)), Times.Once);
             repo.VerifyNoOtherCalls();
         }
 
@@ -54,27 +54,21 @@ namespace Planner.Wpf.Test.PlannerPages
         public void ForwardOneDay()
         {
             sut.ForwardOneDay();
-            repo.Verify(i=>i.ItemsForDate(new LocalDate(1969,12,31)), Times.Once);
-            repo.Verify(i=>i.ItemsForDate(new LocalDate(1970,1,1)), Times.Once);
-            repo.VerifyNoOtherCalls();
-            
+            navigation.Verify(i=>i.ToDate(new LocalDate(1975,07,29)));
+
         }
         [Fact]
         public void BackOneDay()
         {
             sut.BackOneDay();
-            repo.Verify(i=>i.ItemsForDate(new LocalDate(1969,12,31)), Times.Once);
-            repo.Verify(i=>i.ItemsForDate(new LocalDate(1969,12,30)), Times.Once);
-            repo.VerifyNoOtherCalls();
-            
+            navigation.Verify(i=>i.ToDate(new LocalDate(1975,07,27)));
         }
         [Fact]
         public void ArbitraryDate()
         {
-            sut.CurrentDate = new LocalDate(1975,07,28);
-            repo.Verify(i=>i.ItemsForDate(new LocalDate(1969,12,31)), Times.Once);
-            repo.Verify(i=>i.ItemsForDate(new LocalDate(1975, 07, 28)), Times.Once);
-            repo.VerifyNoOtherCalls();
+            var date = new LocalDate(1975,01,28);
+            sut.CurrentDate = date;
+            navigation.Verify(i=>i.ToDate(date));
         }
 
         [Fact]
@@ -84,8 +78,6 @@ namespace Planner.Wpf.Test.PlannerPages
             urlGen.Setup(i => i.DailyUrl(new LocalDate(1975, 07, 29))).Returns("Url2");
             sut.CurrentDate = new LocalDate(1975,07,28);
             Assert.Equal("Url1", sut.NotesUrl);
-            sut.ForwardOneDay();
-            Assert.Equal("Url2", sut.NotesUrl);
         }
 
         [Fact]
@@ -141,7 +133,7 @@ namespace Planner.Wpf.Test.PlannerPages
             notes.Raise(i=>i.NoteEditRequested -= null, 
                 new NoteEditRequestEventArgs(
                     new List<Note>(), new Note()));
-            navigation.Verify(i=>i.NavigateTo(It.IsAny<NoteEditorViewModel>()), Times.Exactly(calls));
+            navigation.Verify(i=>i.ToEditNote(It.IsAny<NoteEditRequestEventArgs>()), Times.Exactly(calls));
         }
         
         [Fact]
@@ -151,7 +143,7 @@ namespace Planner.Wpf.Test.PlannerPages
             var match = Regex.Match("(1.2.3)", @"\((\d+)\.(\d+)\.(\d+)\)");
             sut.PlannerPageLinkClicked(new Segment<TaskTextType>("(1.2.3)", TaskTextType.PlannerPage,
                 match));
-            Assert.Equal(sut.CurrentDate, new LocalDate(1975,1,2));
+            navigation.Verify(i=>i.ToDate(new LocalDate(1975,1,2)));
             
         }
         [Fact]
@@ -161,8 +153,7 @@ namespace Planner.Wpf.Test.PlannerPages
             var match = Regex.Match("(1.2.1980.3)", @"\((\d+)\.(\d+)\.(\d+)\.(\d+)\)");
             sut.PlannerPageLinkClicked(new Segment<TaskTextType>("(1.2.1980.3)", TaskTextType.PlannerPage,
                 match));
-            Assert.Equal(sut.CurrentDate, new LocalDate(1980,1,2));
-            
+            navigation.Verify(i=>i.ToDate(new LocalDate(1980,1,2)));
         }
         [Fact]
         public void PlannerPagerLink2DigitYear()
@@ -171,8 +162,7 @@ namespace Planner.Wpf.Test.PlannerPages
             var match = Regex.Match("(1.2.80.3)", @"\((\d+)\.(\d+)\.(\d+)\.(\d+)\)");
             sut.PlannerPageLinkClicked(new Segment<TaskTextType>("(1.2.80.3)", TaskTextType.PlannerPage,
                 match));
-            Assert.Equal(sut.CurrentDate, new LocalDate(1980,1,2));
-            
+            navigation.Verify(i=>i.ToDate(new LocalDate(1980,1,2)));
         }
     }
 }
