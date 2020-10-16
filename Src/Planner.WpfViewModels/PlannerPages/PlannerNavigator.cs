@@ -28,8 +28,18 @@ namespace Planner.WpfViewModels.PlannerPages
             this.editorFactory = editorFactory;
         }
 
-        public void ToDate(LocalDate date) => win.NavigateTo(plannerPageFactory(date));
-
+        public void ToDate(LocalDate date) => InnerNavigateTo(plannerPageFactory(date));
         public void ToEditNote(NoteEditRequestEventArgs args) => win.NavigateTo(editorFactory(args));
+
+        private void InnerNavigateTo(object target)
+        {
+            // var newWin = newWindowFactory();
+            // if (newWin.DataContext is INavigationWindow newNav)
+            // {
+            //     newWin.Show();
+            //     newNav.NavigateTo(target);
+            // }
+            win.NavigateTo(target);
+        }
     }
 }

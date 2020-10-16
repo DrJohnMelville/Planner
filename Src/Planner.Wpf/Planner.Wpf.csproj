@@ -12,7 +12,7 @@
 
     <ItemGroup>
       <PackageReference Include="CefSharp.Wpf" Version="84.4.10" />
-      <PackageReference Include="Melville.WpfAppFramework" Version="0.1.10" />
+      <PackageReference Include="Melville.WpfAppFramework" Version="0.1.11" />
       <PackageReference Include="Melville.WpfControls" Version="0.2.6" />
       <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.8" />
       <PackageReference Include="Microsoft.Toolkit.Wpf.UI.Controls.WebView" Version="6.1.2" />

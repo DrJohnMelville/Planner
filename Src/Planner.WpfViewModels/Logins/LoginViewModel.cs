@@ -21,25 +21,25 @@ namespace Planner.WpfViewModels.Logins
     public partial class LoginViewModel
     {
         public IList<TargetSite> Sites { get; }
+        private readonly IPlannerNavigator navigator;
 
-        public LoginViewModel(IList<TargetSite> sites)
+        public LoginViewModel(IList<TargetSite> sites, IPlannerNavigator navigator)
         {
             Sites = sites;
+            this.navigator = navigator;
         }
 
         public void FakeDb(
             [FromServices] IRegisterRepositorySource registry, 
-            [FromServices] IPlannerNavigator nav,
             [FromServices] IClock clock)
         {
           registry.UseLocalTestSource();
-          nav.ToDate(clock.CurrentDate());
+          navigator.ToDate(clock.CurrentDate());
         }
         public async Task LogIn(
             IWaitingService wait,
             TargetSite currentSite, 
             [FromServices]IRegisterRepositorySource registry,
-            [FromServices] IPlannerNavigator nav,
             [FromServices] IClock clock)
         {
             using (wait.WaitBlock("Logging In"))
@@ -51,7 +51,7 @@ namespace Planner.WpfViewModels.Logins
                         wait.ErrorMessage = "Login failed";
                         return;
                     }
-                    nav.ToDate(clock.CurrentDate());
+                    navigator.ToDate(clock.CurrentDate());
                 }
                 catch (Exception e)
                 {

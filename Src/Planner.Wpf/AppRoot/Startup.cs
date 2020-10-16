@@ -30,6 +30,9 @@ namespace Planner.Wpf.AppRoot
             ApplicationRootImplementation.Run(new Startup());
             return 0;
         }
+
+        public override IIocService Create() => base.Create().CreateScope();
+
         protected override void RegisterWithIocContainer(IBindableIocService service)
         {
             service.AddLogging();
@@ -70,16 +73,31 @@ namespace Planner.Wpf.AppRoot
 
         private static void RegisterMainWindowWithView(IBindableIocService service)
         {
-            service.Bind<INavigationHistory>().To<PlannerPageNavigationHistory>().AsSingleton();
+            service.Bind<INavigationHistory>().To<PlannerPageNavigationHistory>().AsScoped();
             service.Bind<IViewMappingConvention>().To<MapViewsToOwnAssembly>().AsSingleton();
             service.RegisterHomeViewModel<LoginViewModel>();
-            service.Bind<INavigationWindow>().To<NavigationWindow>().AsSingleton();
+            service.Bind<INavigationWindow>().To<NavigationWindow>().AsScoped();
+            service.Bind<IPlannerNavigator>().To<PlannerNavigator>().AsScoped();
+            service.Bind<IPlannerNavigator>().To<NewWindowPlannerNavigator>()
+                .AsScoped().BlockSelfInjection();
             service.Bind<IRootNavigationWindow>()
                 .And<Window>()
                 .To<RootNavigationWindow>()
-                .AsSingleton();
+                .AsScoped();
+            service.Bind<Func<(IRootNavigationWindow, IPlannerNavigator)>>().ToMethod(ioc => () =>
+            {
+                var scope  = GetRootService(ioc).CreateScope();
+                return (scope.Get<IRootNavigationWindow>(), scope.Get<IPlannerNavigator>());
+            });
         }
-        
+
+        private static IIocService GetRootService(IIocService ioc)
+        {
+            var root = ioc;
+            while (root.ParentScope != null && root.ParentScope != root) root = root.ParentScope;
+            return root;
+        }
+
         private static void SetupConfiguration(IBindableIocService service)
         {
             service.AddConfigurationSources(i => i.AddUserSecrets<Startup>());
