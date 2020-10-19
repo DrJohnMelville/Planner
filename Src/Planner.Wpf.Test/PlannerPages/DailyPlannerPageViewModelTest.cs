@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Net.Mime;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media;
 using Melville.MVVM.Wpf.RootWindows;
 using Moq;
 using NodaTime;
@@ -11,6 +13,7 @@ using Planner.Models.Notes;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
 using Planner.WpfViewModels.Notes;
+using Planner.WpfViewModels.Notes.Pasters;
 using Planner.WpfViewModels.PlannerPages;
 using Planner.WpfViewModels.TaskList;
 using Xunit;
@@ -25,6 +28,7 @@ namespace Planner.Wpf.Test.PlannerPages
         private readonly Mock<ILocalRepository<Note>> noteRepo= new Mock<ILocalRepository<Note>>();
         private readonly Mock<ILocalRepository<PlannerTask>> repo = new Mock<ILocalRepository<PlannerTask>>();
         private readonly Mock<INoteUrlGenerator> urlGen = new Mock<INoteUrlGenerator>();
+        private readonly Mock<IMarkdownPaster> paster = new Mock<IMarkdownPaster>();
         private readonly DailyPlannerPageViewModel sut;
         
 
@@ -39,7 +43,7 @@ namespace Planner.Wpf.Test.PlannerPages
                      notes.Object, 
                          noteCreator,
                         navigation.Object, 
-                urlGen.Object
+                urlGen.Object, paster.Object
                 );
         }
 

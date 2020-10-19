@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using System.Windows.Controls;
+using System.Windows.Input;
 using Melville.INPC;
 using Melville.MVVM.Wpf.RootWindows;
 using NodaTime;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Tasks;
+using Planner.WpfViewModels.Notes.Pasters;
 using Planner.WpfViewModels.TaskList;
 
 namespace Planner.WpfViewModels.PlannerPages
@@ -14,6 +17,7 @@ namespace Planner.WpfViewModels.PlannerPages
         private readonly INotesServer noteServer;
         private readonly IPlannerNavigator navigator;
         private readonly INoteUrlGenerator urlGen;
+        private readonly IMarkdownPaster paster;
         public NoteCreator NoteCreator { get; }
         public DailyTaskListViewModel TodayTaskList { get; }
         private readonly LocalDate currentDate;
@@ -32,12 +36,15 @@ namespace Planner.WpfViewModels.PlannerPages
             Func<LocalDate, DailyTaskListViewModel> taskListFactory, 
             INotesServer noteServer,
             NoteCreator noteCreator, 
-            IPlannerNavigator navigator, INoteUrlGenerator urlGen)
+            IPlannerNavigator navigator, 
+            INoteUrlGenerator urlGen, 
+            IMarkdownPaster paster)
         {
             this.noteServer = noteServer;
             this.navigator = navigator;
             NoteCreator = noteCreator;
             this.urlGen = urlGen;
+            this.paster = paster;
             this.currentDate = currentDate; 
             TodayTaskList = taskListFactory(currentDate);
         }
@@ -55,8 +62,7 @@ namespace Planner.WpfViewModels.PlannerPages
         // value and refresh the webbrowser.
         private void ReloadNotesDisplay() => 
             ((IExternalNotifyPropertyChanged) this).OnPropertyChanged(nameof(NotesUrl));
-
-
+        
         public void NavigatedTo() => noteServer.NoteEditRequested += DoEditNoteRequest;
         public void NavigatedAwayFrom() => noteServer.NoteEditRequested -= DoEditNoteRequest;
 
@@ -68,5 +74,16 @@ namespace Planner.WpfViewModels.PlannerPages
             if (segment.Match == null) return;
             navigator.NavigateToDate(segment.Match.Groups, CurrentDate);
         }
+
+         public bool NoteEditKeyPress(TextBox ctrl, KeyEventArgs e)
+         {
+             if (!(IsPasteKeyStroke(e) && paster.GetPasteText(CurrentDate) is {} pastedText)) 
+                 return false;
+             ctrl.SelectedText = pastedText;
+             return true;
+         }
+
+         private static bool IsPasteKeyStroke(KeyEventArgs e) => 
+             e.Key == Key.V && e.KeyboardDevice.Modifiers == ModifierKeys.Control;
     }
 }

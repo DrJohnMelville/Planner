@@ -47,6 +47,7 @@
                 </TextBlock>
                 <TextBox MinHeight="50" Grid.Row="2" AcceptsReturn="True"
                          Text="{Binding NoteCreator.Text}"
+                         PreviewKeyDown = "{eventBindings:EventBinding NoteEditKeyPress}"
                          wpfHacks:VisibilityHack.CollapseIfWhitespace="{Binding NoteCreator.Title}"
                          LostFocus="{eventBindings:EventBinding CreateNoteOnDay}"/>
             </Grid>

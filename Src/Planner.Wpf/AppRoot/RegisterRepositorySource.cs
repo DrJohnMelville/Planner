@@ -1,5 +1,6 @@
 ﻿using System.Net.Http;
 using Melville.IOC.IocContainers;
+using Planner.Models.Blobs;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
@@ -35,6 +36,7 @@ namespace Planner.Wpf.AppRoot
                 .WithParameters(localDb);
             container.Bind<IDatedRemoteRepository<Note>>().To<SqlRemoteRepositoryWithDate<Note>>()
                 .WithParameters(localDb);
+            container.Bind<IDatedRemoteRepository<Blob>>().To<SqlRemoteRepositoryWithDate<Blob>>();
         }
     }
 }
