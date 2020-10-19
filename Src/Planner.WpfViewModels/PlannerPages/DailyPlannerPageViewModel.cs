@@ -80,6 +80,7 @@ namespace Planner.WpfViewModels.PlannerPages
              if (!(IsPasteKeyStroke(e) && paster.GetPasteText(CurrentDate) is {} pastedText)) 
                  return false;
              ctrl.SelectedText = pastedText;
+             (ctrl.SelectionLength, ctrl.SelectionStart) = (0, ctrl.SelectionStart + ctrl.SelectionLength);
              return true;
          }
 

@@ -6,12 +6,4 @@ namespace Planner.WpfViewModels.Notes.Pasters
     {
         string? GetPasteText(LocalDate targetDate);
     }
-
-    public class MarkdownPaster: IMarkdownPaster
-    {
-        public string GetPasteText(LocalDate targetDate)
-        {
-            return "foo";
-        }
-    }
 }

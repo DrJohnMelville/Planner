@@ -1,1 +1,10 @@
 ﻿h3 {margin: 0px}
+
+table{
+    border-collapse:collapse;
+    border:1px solid lightgray;
+}
+
+table td{
+    border:1px solid lightgray;
+}

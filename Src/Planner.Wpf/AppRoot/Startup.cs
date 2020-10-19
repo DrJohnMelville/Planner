@@ -5,6 +5,7 @@ using System.Windows;
 using CefSharp;
 using Melville.IOC.IocContainers;
 using Melville.IOC.IocContainers.ActivationStrategies.TypeActivation;
+using Melville.MVVM.Wpf.Clipboards;
 using Melville.MVVM.Wpf.RootWindows;
 using Melville.MVVM.Wpf.ViewFrames;
 using Melville.WpfAppFramework.StartupBases;
@@ -16,6 +17,7 @@ using Planner.Models.Repositories;
 using Planner.Wpf.Notes;
 using Planner.WpfViewModels.Logins;
 using Planner.WpfViewModels.Notes;
+using Planner.WpfViewModels.Notes.Pasters;
 using Planner.WpfViewModels.PlannerPages;
 
 namespace Planner.Wpf.AppRoot
@@ -42,6 +44,16 @@ namespace Planner.Wpf.AppRoot
             SetupJsonSerialization(service);
             RegisterRepositories(service);
             RegisterNoteServer(service);
+            RegisterMarkdownPasters(service);
+        }
+
+        private void RegisterMarkdownPasters(IBindableIocService service)
+        {
+            service.Bind<IReadFromClipboard>().To<ReadFromClipboard>().AsSingleton();
+            service.Bind<IMarkdownPaster>().To<CsvPaster>();
+            service.Bind<IMarkdownPaster>().To<TextMarkdownPaster>();
+            service.Bind<IMarkdownPaster>().To<CompositeMarkdownPaster>()
+                .BlockSelfInjection().AsSingleton();
         }
 
         private void RegisterNoteServer(IBindableIocService service)
