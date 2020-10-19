@@ -47,7 +47,8 @@ namespace Planner.Models.HtmlGeneration
         private static bool ShouldRenderThisNote(Note? desiredNote, Note note) => 
             desiredNote == null || note == desiredNote;
 
-        private void WritePrologue() => destination.Write("<html><head><link rel=\"stylesheet\" href=\"journal.css\"></head><body>");
+        private void WritePrologue() => destination.Write(
+            "<html><head><link rel=\"stylesheet\" href=\"/0/journal.css\"></head><body>");
         
         private void GenerateNote(Note note, int itemNumber)
         {

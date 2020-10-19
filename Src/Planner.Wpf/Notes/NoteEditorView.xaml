@@ -9,12 +9,17 @@
              xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
              xmlns:eventBindings="clr-namespace:Melville.MVVM.Wpf.EventBindings;assembly=Melville.MVVM.Wpf"
              xmlns:DiBindings="clr-namespace:Melville.MVVM.Wpf.DiParameterSources;assembly=Melville.MVVM.Wpf"
+             xmlns:pasters="clr-namespace:Planner.WpfViewModels.Notes.Pasters;assembly=Planner.WpfViewModels"
              mc:Ignorable="d"
              d:DataContext="{d:DesignData {x:Type notes:NoteEditorViewModel}}"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid easyGrids:GridOperations.ColsAndRows="*,*/auto,*,auto" Margin="10">
         <TextBox FontSize="18" FontWeight="Bold" Text="{Binding Note.Title, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Grid.Row="1" AcceptsReturn="True" Text="{Binding Note.Text, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="1" AcceptsReturn="True" 
+                 Text="{Binding Note.Text, UpdateSourceTrigger=PropertyChanged}"
+                 pasters:TextBoxPasteEnhancement.MarkdownPaster="{DiBindings:DIBinding}"
+                 pasters:TextBoxPasteEnhancement.PasterDate="{Binding Note.Date}"
+                 />
         <TextBlock Grid.Row="2" Text="{Binding DisplayCreationDate}"></TextBlock>
         <wpf:ChromiumWebBrowser Address="{Binding NoteUrl, Mode=OneWay}"
                                 RequestHandler="{DiBindings:DIBinding }"

@@ -74,17 +74,5 @@ namespace Planner.WpfViewModels.PlannerPages
             if (segment.Match == null) return;
             navigator.NavigateToDate(segment.Match.Groups, CurrentDate);
         }
-
-         public bool NoteEditKeyPress(TextBox ctrl, KeyEventArgs e)
-         {
-             if (!(IsPasteKeyStroke(e) && paster.GetPasteText(CurrentDate) is {} pastedText)) 
-                 return false;
-             ctrl.SelectedText = pastedText;
-             (ctrl.SelectionLength, ctrl.SelectionStart) = (0, ctrl.SelectionStart + ctrl.SelectionLength);
-             return true;
-         }
-
-         private static bool IsPasteKeyStroke(KeyEventArgs e) => 
-             e.Key == Key.V && e.KeyboardDevice.Modifiers == ModifierKeys.Control;
     }
 }
