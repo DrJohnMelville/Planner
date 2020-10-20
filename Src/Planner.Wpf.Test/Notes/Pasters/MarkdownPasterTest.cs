@@ -36,8 +36,8 @@ namespace Planner.Wpf.Test.Notes.Pasters
 
         private void PutTextInClipboard(TextDataFormat format, string text)
         {
-            readFromClipboard.Setup(i => i.ContainsText(It.IsAny<TextDataFormat>())).Returns(false);
-            readFromClipboard.Setup(i => i.ContainsText(format)).Returns(true);
+            readFromClipboard.Setup(i => i.ContainsText(It.IsAny<TextDataFormat>()))
+                .Returns((TextDataFormat tdf)=> tdf == format);
             readFromClipboard.Setup(i => i.GetText(format)).Returns(text);
         }
 
@@ -46,9 +46,19 @@ namespace Planner.Wpf.Test.Notes.Pasters
         [InlineData(TextDataFormat.Html, null)]
         public void ReadTextFromClipboard(TextDataFormat fmt, string result)
         {
-            PutTextInClipboard(TextDataFormat.UnicodeText, "Pasted");
+            PutTextInClipboard(fmt, "Pasted");
             var sut = new TextMarkdownPaster(readFromClipboard.Object);
-            Assert.Equal("Pasted", sut.GetPasteText(date));
+            Assert.Equal(result, sut.GetPasteText(date));
+        }
+
+        [Theory]
+        [InlineData(TextDataFormat.UnicodeText, null)]
+        [InlineData(TextDataFormat.Html, "SFAK<!--StartFragment-->Pasted<!--EndFragment-->")]
+        public void ReadHtmlFromClipboard(TextDataFormat fmt, string result)
+        {
+            PutTextInClipboard(fmt, "Pasted");
+            var sut = new HtmlMarkdownPaster(readFromClipboard.Object);
+            Assert.Equal(result, sut.GetPasteText(date));
         }
 
         [Theory]

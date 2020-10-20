@@ -51,6 +51,7 @@ namespace Planner.Wpf.AppRoot
         {
             service.Bind<IReadFromClipboard>().To<ReadFromClipboard>().AsSingleton();
             service.Bind<IMarkdownPaster>().To<CsvPaster>();
+            service.Bind<IMarkdownPaster>().To<HtmlMarkdownPaster>();
             service.Bind<IMarkdownPaster>().To<TextMarkdownPaster>();
             service.Bind<IMarkdownPaster>().To<CompositeMarkdownPaster>()
                 .BlockSelfInjection().AsSingleton();
