@@ -84,7 +84,7 @@ namespace Planner.Wpf.Test.Notes.Pasters
             PutTextInClipboard("PNG", payloed);
             var blobCreaor = new Mock<IBlobCreator>();
             var result = "![Pasted Photo](/0/7.28.1975#1)";
-            blobCreaor.Setup(i => i.HandleForNewBlob("Pasted Photo", "image/png", date, payloed))
+            blobCreaor.Setup(i => i.MarkdownForNewImage("Pasted Photo", "image/png", date, payloed))
                 .ReturnsAsync(result);
             var sut = new PngMarkdownPaster(blobCreaor.Object);
             Assert.Equal(result, await sut.GetPasteText(clip.Object, date));

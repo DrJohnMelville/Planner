@@ -28,6 +28,6 @@ namespace Planner.WpfViewModels.Notes.Pasters
         }
 
         private Task<string?> PostImageToServer(LocalDate targetDate, MemoryStream ms) => 
-            blobCreator.HandleForNewBlob("Pasted Photo", "image/png", targetDate, ms)!;
+            blobCreator.MarkdownForNewImage("Pasted Photo", "image/png", targetDate, ms)!;
     }
 }
