@@ -39,7 +39,7 @@ namespace Planner.Models.Test.Notes
         public async Task EmptyTest()
         {
             await sut.GenerateResponse("1975-7-28", output);
-            Assert.Equal("<html><head><link rel=\"stylesheet\" href=\"journal.css\"></head><body>", OutputAsString);
+            Assert.Equal("<html><head><link rel=\"stylesheet\" href=\"/0/journal.css\"></head><body>", OutputAsString);
             
         }
 

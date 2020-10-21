@@ -1,58 +1,33 @@
 ﻿using System.Collections;
-using System.Text.RegularExpressions;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
+using Markdig.Parsers;
 using Melville.MVVM.Wpf.Clipboards;
 using NodaTime;
+using Planner.Models.Blobs;
 
 namespace Planner.WpfViewModels.Notes.Pasters
 {
-    public class TextMarkdownPaster: IMarkdownPaster
+    public class PngMarkdownPaster : IMarkdownPaster
     {
-        private readonly IReadFromClipboard clipboard;
+        private readonly IBlobCreator blobCreator;
 
-        public TextMarkdownPaster(IReadFromClipboard clipboard)
+        public PngMarkdownPaster(IBlobCreator blobCreator)
         {
-            this.clipboard = clipboard;
+            this.blobCreator = blobCreator;
         }
 
-        public string? GetPasteText(LocalDate targetDate)
+        public ValueTask<string?> GetPasteText(IDataObject clipboard, LocalDate targetDate)
         {
-            if (clipboard.ContainsText(TextDataFormat.UnicodeText))
-            {
-                return clipboard.GetText(TextDataFormat.UnicodeText);
-            }
-
-            return null;
+            if (!clipboard.GetDataPresent("PNG")) return new ValueTask<string?>((string?)null);
+            return
+                clipboard.GetData("PNG") is MemoryStream ms ?
+                    new ValueTask<string?>(PostImageToServer(targetDate, ms)) :
+                    new ValueTask<string?>((string?)null);
         }
+
+        private Task<string?> PostImageToServer(LocalDate targetDate, MemoryStream ms) => 
+            blobCreator.HandleForNewBlob("Pasted Photo", "image/png", targetDate, ms)!;
     }
-    
-    public class HtmlMarkdownPaster: IMarkdownPaster
-    {
-        private readonly IReadFromClipboard clipboard;
-
-        public HtmlMarkdownPaster(IReadFromClipboard clipboard)
-        {
-            this.clipboard = clipboard;
-        }
-
-        public string? GetPasteText(LocalDate targetDate)
-        {
-            if (clipboard.ContainsText(TextDataFormat.Html))
-            {
-                return GetFragment(clipboard.GetText(TextDataFormat.Html));
-            }
-
-            return null;
-        }
-
-        private static Regex fragmentFinder = new Regex(@"<!--StartFragment-->(.*)<!--EndFragment-->",
-            RegexOptions.IgnoreCase | RegexOptions.Singleline);
-        private string GetFragment(string text)
-        {
-            var match = fragmentFinder.Match(text);
-            return match.Success ? match.Groups[1].Value : text;
-        }
-    }
-    
-    
 }

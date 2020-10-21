@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using NodaTime;
@@ -54,9 +55,9 @@ namespace Planner.WpfViewModels.Notes.Pasters
         private static bool IsPasteKeyStroke(KeyEventArgs e) => 
             e.Key == Key.V && e.KeyboardDevice.Modifiers == ModifierKeys.Control;
 
-        private static void DoPaste(TextBox ctrl)
+        private static async void DoPaste(TextBox ctrl)
         {
-            if (GetSpecialPasteString(ctrl) is {} pastedText) PasteIntoTextBox(ctrl, pastedText);
+            if (await GetSpecialPasteString(ctrl) is {} pastedText) PasteIntoTextBox(ctrl, pastedText);
         }
 
         private static void PasteIntoTextBox(TextBox ctrl, string pastedText)
@@ -65,7 +66,7 @@ namespace Planner.WpfViewModels.Notes.Pasters
             (ctrl.SelectionLength, ctrl.SelectionStart) = (0, ctrl.SelectionStart + ctrl.SelectionLength);
         }
 
-        private static string? GetSpecialPasteString(TextBox ctrl) => 
-            GetMarkdownPaster(ctrl).GetPasteText(GetPasterDate(ctrl));
+        private static ValueTask<string?> GetSpecialPasteString(TextBox ctrl) => 
+            GetMarkdownPaster(ctrl).GetPasteText(Clipboard.GetDataObject(), GetPasterDate(ctrl));
     }
 }

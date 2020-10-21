@@ -6,6 +6,7 @@ using CefSharp;
 using Melville.IOC.IocContainers;
 using Melville.IOC.IocContainers.ActivationStrategies.TypeActivation;
 using Melville.MVVM.Wpf.Clipboards;
+using Melville.MVVM.Wpf.MouseDragging;
 using Melville.MVVM.Wpf.RootWindows;
 using Melville.MVVM.Wpf.ViewFrames;
 using Melville.WpfAppFramework.StartupBases;
@@ -51,8 +52,9 @@ namespace Planner.Wpf.AppRoot
         {
             service.Bind<IReadFromClipboard>().To<ReadFromClipboard>().AsSingleton();
             service.Bind<IMarkdownPaster>().To<CsvPaster>();
+            service.Bind<IMarkdownPaster>().To<PngMarkdownPaster>();
             service.Bind<IMarkdownPaster>().To<HtmlMarkdownPaster>();
-            service.Bind<IMarkdownPaster>().To<TextMarkdownPaster>();
+            service.Bind<IMarkdownPaster>().To<StringPaster>().WithParameters(DataFormats.UnicodeText);
             service.Bind<IMarkdownPaster>().To<CompositeMarkdownPaster>()
                 .BlockSelfInjection().AsSingleton();
         }

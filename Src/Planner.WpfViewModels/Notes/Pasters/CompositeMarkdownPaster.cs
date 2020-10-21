@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
 using NodaTime;
 
 namespace Planner.WpfViewModels.Notes.Pasters
@@ -13,9 +15,14 @@ namespace Planner.WpfViewModels.Notes.Pasters
             this.pasters = pasters;
         }
 
-        public string? GetPasteText(LocalDate targetDate) =>
-            pasters
-                .Select(i => i.GetPasteText(targetDate))
-                .FirstOrDefault(i => i != null);
+        public async ValueTask<string?> GetPasteText(IDataObject clipboard, LocalDate targetDate)
+        {
+            foreach (var paster in pasters)
+            {
+                var ret = await paster.GetPasteText(clipboard, targetDate);
+                if (ret != null) return ret;
+            }
+            return null;
+        }
     }
 }

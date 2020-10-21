@@ -9,19 +9,16 @@ using NodaTime;
 
 namespace Planner.WpfViewModels.Notes.Pasters
 {
-    public class CsvPaster: IMarkdownPaster
+    public class CsvPaster: SynchronousPaster
     {
-        private readonly IReadFromClipboard rfc;
-
-        public CsvPaster(IReadFromClipboard rfc)
+        public CsvPaster() : base(DataFormats.CommaSeparatedValue)
         {
-            this.rfc = rfc;
         }
 
-        public string? GetPasteText(LocalDate targetDate) => 
-            rfc.ContainsText(TextDataFormat.CommaSeparatedValue) ? 
-                Parse(rfc.GetText(TextDataFormat.CommaSeparatedValue)) : 
-                null;
+        protected override string? ResultFromObject(object? data)
+        {
+            return Parse((data as string) ?? "");
+        }
 
         private string Parse(string source)
         {
