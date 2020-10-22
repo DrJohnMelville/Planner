@@ -38,7 +38,7 @@ namespace Planner.Models.Test.Blobs
             }
 
             var memoryStream = new MemoryStream();
-            Assert.Equal($"![Pasted Image](7.28#{priorImages+1})", 
+            Assert.Equal($"![Pasted Image](7.28_{priorImages+1})", 
                 await sut.MarkdownForNewImage("Pasted Image", "image/png", date, memoryStream));
             writer.Verify(i=>i.Write(It.Is<Blob>(b=>
                 b.Key!= Guid.Empty), memoryStream), Times.Once);

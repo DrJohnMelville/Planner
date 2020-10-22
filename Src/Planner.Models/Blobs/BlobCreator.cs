@@ -36,7 +36,7 @@ namespace Planner.Models.Blobs
             };
             blobList.Add(record);
             await contentStore.Write(record, data);
-            return $"![{fileName}]({date:M.d}#{blobList.Count})";
+            return $"![{fileName}]({date:M.d}_{blobList.Count})";
         }
     }
 }
