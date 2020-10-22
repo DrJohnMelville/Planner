@@ -1,5 +1,7 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using Melville.IOC.IocContainers;
+using Melville.MVVM.FileSystem;
 using Planner.Models.Blobs;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
@@ -31,12 +33,10 @@ namespace Planner.Wpf.AppRoot
 
         public void UseLocalTestSource()
         {
-            var localDb = TestDatabaseFactory.TestDatabaseCreator();
-            container.Bind<IDatedRemoteRepository<PlannerTask>>().To<SqlRemoteRepositoryWithDate<PlannerTask>>()
-                .WithParameters(localDb);
-            container.Bind<IDatedRemoteRepository<Note>>().To<SqlRemoteRepositoryWithDate<Note>>()
-                .WithParameters(localDb);
-            container.Bind<IDatedRemoteRepository<Blob>>().To<SqlRemoteRepositoryWithDate<Blob>>();
+            container.Bind<Func<PlannerDataContext>>().ToConstant(TestDatabaseFactory.TestDatabaseCreator());
+            container.BindGeneric(typeof(IDatedRemoteRepository<>), typeof(SqlRemoteRepositoryWithDate<>));
+            container.Bind<IDirectory>().ToConstant(new MemoryDirectory("c:\\sss")).WhenConstructingType<BlobContentStore>();
+            container.Bind<IBlobContentStore>().To<BlobContentStore>().AsSingleton();
         }
     }
 }

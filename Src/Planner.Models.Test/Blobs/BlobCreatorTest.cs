@@ -16,7 +16,7 @@ namespace Planner.Models.Test.Blobs
         private readonly Mock<ILocalRepository<Blob>> repo = new Mock<ILocalRepository<Blob>>();
         private readonly List<Blob> dailyList = new List<Blob>();
         private readonly Mock<IClock> clock = new Mock<IClock>();
-        private readonly Mock<IBlobWriter> writer = new Mock<IBlobWriter>();
+        private readonly Mock<IBlobContentStore> writer = new Mock<IBlobContentStore>();
         private readonly BlobCreator sut;
         private readonly LocalDate date = new LocalDate(1975,07,28);
 
@@ -38,7 +38,7 @@ namespace Planner.Models.Test.Blobs
             }
 
             var memoryStream = new MemoryStream();
-            Assert.Equal($"!(Pasted Image)[7.28#{priorImages+1}]", 
+            Assert.Equal($"![Pasted Image](7.28#{priorImages+1})", 
                 await sut.MarkdownForNewImage("Pasted Image", "image/png", date, memoryStream));
             writer.Verify(i=>i.Write(It.Is<Blob>(b=>
                 b.Key!= Guid.Empty), memoryStream), Times.Once);

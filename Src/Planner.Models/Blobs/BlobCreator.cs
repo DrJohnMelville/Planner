@@ -14,13 +14,13 @@ namespace Planner.Models.Blobs
     {
         private readonly ILocalRepository<Blob> blobSource;
         private readonly IClock clock;
-        private readonly IBlobWriter writer;
+        private readonly IBlobContentStore contentStore;
 
-        public BlobCreator(ILocalRepository<Blob> blobSource, IClock clock, IBlobWriter writer)
+        public BlobCreator(ILocalRepository<Blob> blobSource, IClock clock, IBlobContentStore contentStore)
         {
             this.blobSource = blobSource;
             this.clock = clock;
-            this.writer = writer;
+            this.contentStore = contentStore;
         }
 
         public async Task<string> MarkdownForNewImage(
@@ -35,8 +35,8 @@ namespace Planner.Models.Blobs
                 MimeType = mimeType
             };
             blobList.Add(record);
-            await writer.Write(record, data);
-            return $"!({fileName})[{date:M.d}#{blobList.Count}]";
+            await contentStore.Write(record, data);
+            return $"![{fileName}]({date:M.d}#{blobList.Count})";
         }
     }
 }

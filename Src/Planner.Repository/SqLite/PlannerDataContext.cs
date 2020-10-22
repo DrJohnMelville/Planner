@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Planner.Models.Blobs;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
@@ -11,6 +12,7 @@ namespace Planner.Repository.SqLite
     {
         public DbSet<PlannerTask> PlannerTasks { get; set; } = null!;
         public DbSet<Note> Notes { get; set; } = null!;
+        public DbSet<Blob> Blobs { get; set; } = null!;
 
         public PlannerDataContext(DbContextOptions options) : base(options)
         {
@@ -27,6 +29,7 @@ namespace Planner.Repository.SqLite
             base.OnModelCreating(modelBuilder);
             DeclareTable(modelBuilder.Entity<PlannerTask>());
             DeclareTable(modelBuilder.Entity<Note>());
+            DeclareTable(modelBuilder.Entity<Blob>());
         }
 
         private static void DeclareTable<T>(EntityTypeBuilder<T> entity) where T:PlannerItemWithDate
