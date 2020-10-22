@@ -78,7 +78,8 @@ namespace Planner.Wpf.AppRoot
         {
             service.Bind<IRegisterRepositorySource>().To<RegisterRepositorySource>();
             service.BindGeneric(typeof(ICachedRepositorySource<>),typeof(LocalToRemoteRepositoryBridge<>));
-            service.BindGeneric(typeof(ILocalRepository<>), typeof(CachedRepository<>));
+            service.BindGeneric(typeof(ILocalRepository<>), typeof(CachedRepository<>), 
+                i=>i.AsSingleton());
         }
         
         private static void RegisterNodaTimeClock(IBindableIocService service)

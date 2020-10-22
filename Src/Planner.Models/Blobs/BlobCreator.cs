@@ -27,14 +27,13 @@ namespace Planner.Models.Blobs
             string fileName, string mimeType, LocalDate date, Stream data)
         {
             var blobList = await blobSource.CompletedItemsForDate(date);
-            var record = new Blob()
+            var record = blobSource.CreateItem(date, i=>
             {
-                Key = Guid.NewGuid(),
-                TimeCreated = clock.GetCurrentInstant(),
-                Name = fileName,
-                MimeType = mimeType
-            };
-            blobList.Add(record);
+                i.Key = Guid.NewGuid();
+                i.TimeCreated = clock.GetCurrentInstant();
+                i.Name = fileName;
+                i.MimeType = mimeType;
+            });
             await contentStore.Write(record, data);
             return $"![{fileName}]({date:M.d}_{blobList.Count})";
         }

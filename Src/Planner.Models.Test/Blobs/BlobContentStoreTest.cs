@@ -9,12 +9,12 @@ using Xunit;
 
 namespace Planner.Models.Test.Blobs
 {
-    public class BlobWriterTest
+    public class BlobContentStoreTest
     {
         private MockDirectory dir = new MockDirectory("c:\\sss");
         private BlobContentStore sut;
 
-        public BlobWriterTest()
+        public BlobContentStoreTest()
         {
             sut = new BlobContentStore(dir);
         }

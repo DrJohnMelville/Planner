@@ -1,6 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using NodaTime;
+using Planner.Models.Repositories;
 
 namespace Planner.Models.Blobs
 {
@@ -10,9 +13,25 @@ namespace Planner.Models.Blobs
     }
     public class BlobReader: IBlobReader
     {
-        public Task<Stream> Read(LocalDate date, int ordinal)
+        private readonly ILocalRepository<Blob> repository;
+        private readonly IBlobContentStore store;
+
+        public BlobReader(ILocalRepository<Blob> repository, IBlobContentStore store)
         {
-            throw new System.NotImplementedException();
+            this.repository = repository;
+            this.store = store;
         }
+
+        public async Task<Stream> Read(LocalDate date, int ordinal)
+        {
+            var listForDate = await repository.CompletedItemsForDate(date);
+            if (IsInvalidOrdinal(ordinal, listForDate)) return EmptyStream();
+            return await store.Read(listForDate[ordinal - 1]);
+        }
+
+        private static MemoryStream EmptyStream() => new MemoryStream(Array.Empty<byte>());
+
+        private static bool IsInvalidOrdinal(int ordinal, IList<Blob> listForDate) => 
+            ordinal < 1 || ordinal > listForDate.Count;
     }
 }

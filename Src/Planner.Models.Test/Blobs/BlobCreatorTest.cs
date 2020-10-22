@@ -23,6 +23,14 @@ namespace Planner.Models.Test.Blobs
         public BlobCreatorTest()
         {
             repo.Setup(i => i.CompletedItemsForDate(date)).ReturnsAsync(dailyList);
+            repo.Setup(i => i.CreateItem(date, It.IsAny<Action<Blob>>()))
+                .Returns((LocalDate date, Action<Blob> init) =>
+                {
+                    var ret = new Blob() {Date = date};
+                    init(ret);
+                    dailyList.Add(ret);
+                    return ret;
+                });
             sut = new BlobCreator(repo.Object, clock.Object, writer.Object);
         }
 
@@ -41,7 +49,10 @@ namespace Planner.Models.Test.Blobs
             Assert.Equal($"![Pasted Image](7.28_{priorImages+1})", 
                 await sut.MarkdownForNewImage("Pasted Image", "image/png", date, memoryStream));
             writer.Verify(i=>i.Write(It.Is<Blob>(b=>
-                b.Key!= Guid.Empty), memoryStream), Times.Once);
+                b.Key!= Guid.Empty && 
+                b.Name == "Pasted Image" &&
+                b.MimeType == "image/png" &&
+                b.Date == date), memoryStream), Times.Once);
         }
     }
 }
