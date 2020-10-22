@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Moq;
 using NodaTime;
+using Planner.Models.Blobs;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Markdown;
 using Planner.Models.Notes;
@@ -20,13 +21,18 @@ namespace Planner.Models.Test.Notes
         private readonly NoteHtmlGenerator sut;
         private readonly MemoryStream output = new MemoryStream();
         private readonly Mock<INoteUrlGenerator> urlGen = new Mock<INoteUrlGenerator>();
+        private readonly Mock<IBlobReader> blobs = new Mock<IBlobReader>();
+        
+
         private readonly LocalDate date = new LocalDate(1975,07,28);
 
         public NoteHtmlGeneratorTest()
         {
             repo.Setup(i => i.CompletedItemsForDate(date)).ReturnsAsync(notes);
             sut = new NoteHtmlGenerator(repo.Object, 
-                i=> new JournalItemRenderer(i, new MarkdownTranslator(), urlGen.Object), new StaticFiles());
+                i=> new JournalItemRenderer(i, new MarkdownTranslator(), urlGen.Object), 
+                new StaticFiles(),
+                blobs.Object);
         }
 
         [Fact]
@@ -38,7 +44,7 @@ namespace Planner.Models.Test.Notes
         [Fact]
         public async Task EmptyTest()
         {
-            await sut.GenerateResponse("1975-7-28", output);
+            await sut.GenerateResponse("1975-7-28/", output);
             Assert.Equal("<html><head><link rel=\"stylesheet\" href=\"/0/journal.css\"></head><body>", OutputAsString);
             
         }
@@ -49,7 +55,7 @@ namespace Planner.Models.Test.Notes
         public async Task SingleTest()
         {
             notes.Add(new Note{Title = "Title", Text="Text"});
-            await sut.GenerateResponse("1975-7-28", output);
+            await sut.GenerateResponse("1975-7-28/", output);
             Assert.Contains("Title", OutputAsString);
             Assert.Contains("Text", OutputAsString);
             Assert.DoesNotContain("<hr/>", OutputAsString);
@@ -60,7 +66,7 @@ namespace Planner.Models.Test.Notes
         {
             notes.Add(new Note{Title = "Title", Text=@"````mermaid
 ````"});
-            await sut.GenerateResponse("1975-7-28", output);
+            await sut.GenerateResponse("1975-7-28/", output);
             Assert.Contains("div class=\"mermaid\">", OutputAsString);
             Assert.Contains("<script src=\"https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js\"></script><script>mermaid.initialize({startOnLoad:true});</script>", OutputAsString);
         }
@@ -68,7 +74,7 @@ namespace Planner.Models.Test.Notes
         public async Task TitleIsAnchor()
         {
             notes.Add(new Note(){Title = "Title", Text="Text"});
-            await sut.GenerateResponse("1975-7-28", output);
+            await sut.GenerateResponse("1975-7-28/", output);
             Assert.Contains("1.</a>", OutputAsString);
             Assert.Contains("Text", OutputAsString);
             Assert.DoesNotContain("<hr/>", OutputAsString);
@@ -77,7 +83,7 @@ namespace Planner.Models.Test.Notes
         public async Task MarkdownInText()
         {
             notes.Add(new Note(){Title = "Title", Text="**Text**"});
-            await sut.GenerateResponse("1975-7-28", output);
+            await sut.GenerateResponse("1975-7-28/", output);
             Assert.Contains("Title", OutputAsString);
             Assert.Contains("<strong>Text</strong>", OutputAsString);
             Assert.DoesNotContain("<hr/>", OutputAsString);
@@ -86,7 +92,7 @@ namespace Planner.Models.Test.Notes
         public async Task MarkdownInTitle()
         {
             notes.Add(new Note(){Title = "**Title**", Text="Text"});
-            await sut.GenerateResponse("1975-7-28", output);
+            await sut.GenerateResponse("1975-7-28/", output);
             Assert.Contains("<strong>Title</strong>", OutputAsString);
             Assert.Contains("Text<", OutputAsString);
             Assert.DoesNotContain("<hr/>", OutputAsString);
@@ -96,12 +102,12 @@ namespace Planner.Models.Test.Notes
         {
             notes.Add(new Note(){Title = "Title", Text="Text"});
             notes.Add(new Note(){Title = "Title", Text="Text"});
-            await sut.GenerateResponse("1975-7-28", output);
+            await sut.GenerateResponse("1975-7-28/", output);
             Assert.Contains("<hr/>", OutputAsString);
             Assert.Contains("1.</a>", OutputAsString);
             Assert.Contains("2.</a>", OutputAsString);
         }
-
+        
         [Fact]
         public async Task SendNoteEditRequest()
         {
@@ -121,5 +127,16 @@ namespace Planner.Models.Test.Notes
             Assert.Equal(1, fired);
             
         }
+
+        [Fact]
+        public async Task RetrieveImage()
+        {
+            blobs.Setup(i => i.Read(new LocalDate(1975, 1, 2), 3))
+                .ReturnsAsync(new MemoryStream(Encoding.UTF8.GetBytes("From Blob")));
+            await sut.GenerateResponse("1975-7-28/1.2_3", output);
+            Assert.Equal("From Blob", OutputAsString);
+            
+        }
+
     }
 }

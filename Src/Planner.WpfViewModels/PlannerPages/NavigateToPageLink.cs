@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using NodaTime;
+using Planner.Models.HtmlGeneration;
 
 namespace Planner.WpfViewModels.PlannerPages
 {
@@ -12,23 +13,8 @@ namespace Planner.WpfViewModels.PlannerPages
         public static void NavigateToDate(this IPlannerNavigator nav, GroupCollection groups,
             LocalDate today)
         {
-            nav.ToDate(new LocalDate(GetLinkYear(groups, today), GetSegmentValue(1, groups),
-                GetSegmentValue(2,groups))); 
+            nav.ToDate(ContextualDateParser.SelectedDate(groups.Count==5?groups[3].Value:"",
+                groups[1].Value, groups[2].Value, today));
         }
-
-        private static int GetLinkYear(GroupCollection groups, in LocalDate today)
-        {
-            return groups.Count == 5 ? GetLinkYear(groups[3].Value, today):today.Year;
-        }
-        private static int GetLinkYear(string yearString, LocalDate today)
-        {
-            var rawYearIndicator = int.Parse(yearString);
-            return rawYearIndicator < 100 ? rawYearIndicator + CurrentCentury(today) : rawYearIndicator;
-        }
-
-        private static int CurrentCentury(LocalDate date) => date.Year - (date.Year % 100);
-
-        private static int GetSegmentValue(int index, GroupCollection coll) => 
-            int.Parse(coll[index].Value);
     }
 }

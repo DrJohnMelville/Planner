@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NodaTime;
+using Planner.Models.Blobs;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
 
@@ -31,16 +32,19 @@ namespace Planner.Models.HtmlGeneration
     {
         private readonly ILocalRepository<Note> noteRepo;
         private readonly IStaticFiles staticFiles;
+        private readonly IBlobReader blobReader;
         public readonly Func<TextWriter, JournalItemRenderer> rendererFactory;
         
         public NoteHtmlGenerator(
             ILocalRepository<Note> noteRepo, Func<TextWriter, 
             JournalItemRenderer> rendererFactory,
-            IStaticFiles staticFiles)
+            IStaticFiles staticFiles, 
+            IBlobReader blobReader)
         {
             this.noteRepo = noteRepo;
             this.rendererFactory = rendererFactory;
             this.staticFiles = staticFiles;
+            this.blobReader = blobReader;
         }
 
         private static bool TryParseLocalDate(string s, out LocalDate ret)
@@ -58,6 +62,7 @@ namespace Planner.Models.HtmlGeneration
         {
             await using var writer = new StreamWriter(destination);
             await (StaticFiles(url, destination) ??
+                   ImageAsset(url, destination) ??
                    DailyJournalPage(url, writer) ??
                    EditRequestPage(url, writer) ??
                    DefaultText(writer));
@@ -70,9 +75,36 @@ namespace Planner.Models.HtmlGeneration
                 : null;
 
         }
-        
+
+        private static Regex imageFinder = new Regex(@"([\d-]+)\/(\d+)\.(\d+)(?:\.(\d+))?_(\d+)");
+        private Task? ImageAsset(string url, Stream destination)
+        {
+            var match = imageFinder.Match(url);
+            if (!match.Success) return null;
+            if (!TryParseLocalDate(match.Groups[1].Value, out var pageDate)) return null;
+
+            return CopyBlob(
+                ConstructDateFromMatch(pageDate, match.Groups), 
+                ExtractOrdinalFromMatch(match), destination);
+        }
+
+        private static int ExtractOrdinalFromMatch(Match match)
+        {
+            return int.Parse(match.Groups[5].Value);
+        }
+
+        private static LocalDate ConstructDateFromMatch(LocalDate pageDate, GroupCollection groups) =>
+            ContextualDateParser.SelectedDate(groups[4].Value, groups[2].Value, groups[3].Value,
+                pageDate);
+
+        private async Task CopyBlob(LocalDate date, int ordinal, Stream destination)
+        {
+            using var data = await blobReader.Read(date, ordinal);
+            await data.CopyToAsync(destination);
+        }
+
         private Task? DailyJournalPage(string url, TextWriter destnation) => 
-            TryParseLocalDate(url, out var date) ? RenderJournalPage(destnation, date) : null;
+            TryParseLocalDate(url[..^1], out var date) ? RenderJournalPage(destnation, date) : null;
 
         private async Task RenderJournalPage(TextWriter writer, LocalDate date) =>
             rendererFactory(writer).WriteJournalList(

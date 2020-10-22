@@ -27,8 +27,8 @@ namespace Planner.Models.HtmlGeneration
         }
 
         private string Prefix() => server.BaseUrl + (nonce++)+"/";
-        public string DailyUrl(LocalDate date) => Prefix() + date.ToString("yyyy-M-d", null);
+        public string DailyUrl(LocalDate date) => Prefix() + date.ToString("yyyy-M-d/", null);
 
-        public string EditNoteUrl(LocalDate date, Guid key) => DailyUrl(date)+"/"+key;
+        public string EditNoteUrl(LocalDate date, Guid key) => DailyUrl(date)+key;
     }
 }
