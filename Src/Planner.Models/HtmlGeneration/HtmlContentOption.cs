@@ -1,20 +1,19 @@
 ﻿using System.IO;
 using System.Text.RegularExpressions;
-using System.Text.Unicode;
 using System.Threading.Tasks;
 
 namespace Planner.Models.HtmlGeneration
 {
-    public interface IHtmlContentOption
+    public interface ITryNoteHtmlGenerator
     {
         Task? TryRespond(string url, Stream destination);
     }
 
-    public abstract class HtmlContentOption:IHtmlContentOption
+    public abstract class TryNoteHtmlGenerator:ITryNoteHtmlGenerator
     {
         private readonly Regex filter;
 
-        protected HtmlContentOption(Regex filter)
+        protected TryNoteHtmlGenerator(Regex filter)
         {
             this.filter = filter;
         }

@@ -12,7 +12,7 @@ namespace Planner.Models.Test.Blobs
 {
     public class BlobReaderTest
     {
-        private readonly BlobContentOption sut;
+        private readonly BlobGenerator sut;
         private readonly LocalDate date = new LocalDate(1975,07,28);
         private readonly Mock<ILocalRepository<Blob>> repo = new Mock<ILocalRepository<Blob>>();
         private readonly Mock<IBlobContentStore> store = new Mock<IBlobContentStore>();
@@ -22,7 +22,7 @@ namespace Planner.Models.Test.Blobs
         {
             repo.Setup(i => i.CompletedItemsForDate(date)).ReturnsAsync(todaysBlobs);
             repo.Setup(i => i.CompletedItemsForDate(date.PlusDays(1))).ReturnsAsync(new List<Blob>());
-            sut = new BlobContentOption(repo.Object, store.Object);
+            sut = new BlobGenerator(repo.Object, store.Object);
         }
 
         [Theory]

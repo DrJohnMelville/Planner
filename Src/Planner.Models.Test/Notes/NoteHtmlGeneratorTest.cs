@@ -33,16 +33,16 @@ namespace Planner.Models.Test.Notes
         public NoteHtmlGeneratorTest()
         {
             repo.Setup(i => i.CompletedItemsForDate(date)).ReturnsAsync(notes);
-            sut = new NoteHtmlGenerator(repo.Object, 
-                new List<IHtmlContentOption>()
+            sut = new NoteHtmlGenerator(new List<ITryNoteHtmlGenerator>()
                 {
-                    new StaticFiles(),
-                    new BlobContentOption(blobRepo.Object, blobStore.Object),
-                    new DailyJournalPageContent(
+                    new StaticFileGenerator(),
+                    new EditNoteNotificationGenerator(repo.Object, broadcast.Object),
+                    new BlobGenerator(blobRepo.Object, blobStore.Object),
+                    new DailyJournalPageGenerator(
                         i=> new JournalItemRenderer(i, new MarkdownTranslator(), urlGen.Object),
                         repo.Object),
-                    new DefaultText()
-                }, broadcast.Object);
+                    new DefaultTextGenerator()
+                });
         }
 
         [Fact]

@@ -7,12 +7,12 @@ using Melville.MVVM.FileSystem;
 
 namespace Planner.Models.HtmlGeneration
 {
-    public class StaticFiles :  IHtmlContentOption
+    public class StaticFileGenerator :  ITryNoteHtmlGenerator
     {
         private readonly Dictionary<string, byte[]> files = 
             new Dictionary<string, byte[]>(StringComparer.OrdinalIgnoreCase);
 
-        public StaticFiles()
+        public StaticFileGenerator()
         {
             const string prefix = "Planner.Models.HtmlGeneration.Content.";
             var assembly = GetType().Assembly;

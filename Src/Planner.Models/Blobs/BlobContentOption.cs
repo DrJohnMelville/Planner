@@ -10,12 +10,12 @@ using Planner.Models.Time;
 
 namespace Planner.Models.Blobs
 {
-    public class BlobContentOption: HtmlContentOption
+    public class BlobGenerator: TryNoteHtmlGenerator
     {
         private readonly ILocalRepository<Blob> repository;
         private readonly IBlobContentStore store;
 
-        public BlobContentOption(ILocalRepository<Blob> repository, IBlobContentStore store):
+        public BlobGenerator(ILocalRepository<Blob> repository, IBlobContentStore store):
             base(new Regex(@"([\d-]+)\/(\d+)\.(\d+)(?:\.(\d+))?_(\d+)"))
         {
             this.repository = repository;
@@ -31,10 +31,7 @@ namespace Planner.Models.Blobs
                 ExtractOrdinalFromMatch(match), destination);
         }
         
-        private static int ExtractOrdinalFromMatch(Match match)
-        {
-            return int.Parse(match.Groups[5].Value);
-        }
+        private static int ExtractOrdinalFromMatch(Match match) => int.Parse(match.Groups[5].Value);
 
         private static LocalDate ConstructDateFromMatch(LocalDate pageDate, GroupCollection groups) =>
             ContextualDateParser.SelectedDate(groups[4].Value, groups[2].Value, groups[3].Value,
@@ -53,7 +50,6 @@ namespace Planner.Models.Blobs
                 EmptyStream() : 
                 store.Read(listForDate[ordinal - 1]);
         }
-
 
         private static Task<Stream> EmptyStream() => 
             Task.FromResult((Stream)new MemoryStream(Array.Empty<byte>()));

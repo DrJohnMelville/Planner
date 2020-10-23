@@ -64,9 +64,11 @@ namespace Planner.Wpf.AppRoot
         {
             service.BindGeneric(typeof(IEventBroadcast<>), typeof(EventBroadcast<>),
                 i=>i.AsSingleton());
-            service.Bind<IHtmlContentOption>().To<StaticFiles>();
-            service.Bind<IHtmlContentOption>().To<BlobContentOption>();
-            service.Bind<IHtmlContentOption>().To<DailyJournalPageContent>();
+            service.Bind<ITryNoteHtmlGenerator>().To<StaticFileGenerator>();
+            service.Bind<ITryNoteHtmlGenerator>().To<EditNoteNotificationGenerator>();
+            service.Bind<ITryNoteHtmlGenerator>().To<BlobGenerator>();
+            service.Bind<ITryNoteHtmlGenerator>().To<DailyJournalPageGenerator>();
+            service.Bind<ITryNoteHtmlGenerator>().To<DefaultTextGenerator>();
             
             service.Bind<INotesServer>().To<NotesServer>().FixResult(i=>i.Launch()).AsSingleton();
             service.Bind<IRequestHandler>().To<WebNavigationRouter>();

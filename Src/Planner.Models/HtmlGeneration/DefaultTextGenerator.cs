@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Planner.Models.HtmlGeneration
 {
-    public class DefaultText : HtmlContentOption
+    public class DefaultTextGenerator : TryNoteHtmlGenerator
     {
-        public DefaultText():base(new Regex(".*")) // matches everything because this is the default
+        public DefaultTextGenerator():base(new Regex(".*")) // matches everything because this is the default
         {
         }
 

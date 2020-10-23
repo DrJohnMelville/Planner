@@ -10,11 +10,11 @@ using Planner.Models.Time;
 
 namespace Planner.Models.HtmlGeneration
 {
-    public class DailyJournalPageContent : HtmlContentOption
+    public class DailyJournalPageGenerator : TryNoteHtmlGenerator
     {
         private readonly Func<TextWriter, JournalItemRenderer> rendererFactory;
         private ILocalRepository<Note> noteRepository;
-        public DailyJournalPageContent(
+        public DailyJournalPageGenerator(
             Func<TextWriter, JournalItemRenderer> rendererFactory, 
             ILocalRepository<Note> noteRepository) : base(
             new Regex(@"(\d{4}-\d{1,2}-\d{1,2})/(?:show/([0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}))?"))
