@@ -7,7 +7,6 @@ using Melville.MVVM.Wpf.RootWindows;
 using NodaTime;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Tasks;
-using Planner.WpfViewModels.Notes.Pasters;
 using Planner.WpfViewModels.TaskList;
 
 namespace Planner.WpfViewModels.PlannerPages
@@ -17,7 +16,7 @@ namespace Planner.WpfViewModels.PlannerPages
         private readonly INotesServer noteServer;
         private readonly IPlannerNavigator navigator;
         private readonly INoteUrlGenerator urlGen;
-        private readonly IMarkdownPaster paster;
+        private readonly IEventBroadcast<NoteEditRequestEventArgs> noteEditRequest;
         public NoteCreator NoteCreator { get; }
         public DailyTaskListViewModel TodayTaskList { get; }
         private readonly LocalDate currentDate;
@@ -37,14 +36,13 @@ namespace Planner.WpfViewModels.PlannerPages
             INotesServer noteServer,
             NoteCreator noteCreator, 
             IPlannerNavigator navigator, 
-            INoteUrlGenerator urlGen, 
-            IMarkdownPaster paster)
+            INoteUrlGenerator urlGen, IEventBroadcast<NoteEditRequestEventArgs> noteEditRequest)
         {
             this.noteServer = noteServer;
             this.navigator = navigator;
             NoteCreator = noteCreator;
             this.urlGen = urlGen;
-            this.paster = paster;
+            this.noteEditRequest = noteEditRequest;
             this.currentDate = currentDate; 
             TodayTaskList = taskListFactory(currentDate);
         }
@@ -63,8 +61,8 @@ namespace Planner.WpfViewModels.PlannerPages
         private void ReloadNotesDisplay() => 
             ((IExternalNotifyPropertyChanged) this).OnPropertyChanged(nameof(NotesUrl));
         
-        public void NavigatedTo() => noteServer.NoteEditRequested += DoEditNoteRequest;
-        public void NavigatedAwayFrom() => noteServer.NoteEditRequested -= DoEditNoteRequest;
+        public void NavigatedTo() => noteEditRequest.Fired += DoEditNoteRequest;
+        public void NavigatedAwayFrom() => noteEditRequest.Fired -= DoEditNoteRequest;
 
         private void DoEditNoteRequest(object? sender, NoteEditRequestEventArgs e) =>
             navigator.ToEditNote(e);

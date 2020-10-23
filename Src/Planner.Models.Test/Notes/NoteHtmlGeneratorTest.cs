@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Moq;
 using NodaTime;
 using Planner.Models.Blobs;
@@ -23,6 +24,9 @@ namespace Planner.Models.Test.Notes
         private readonly Mock<INoteUrlGenerator> urlGen = new Mock<INoteUrlGenerator>();
         private readonly Mock<ILocalRepository<Blob>> blobRepo = new Mock<ILocalRepository<Blob>>();
         private readonly Mock<IBlobContentStore> blobStore = new Mock<IBlobContentStore>();
+        private readonly Mock<IEventBroadcast<NoteEditRequestEventArgs>> broadcast =
+            new Mock<IEventBroadcast<NoteEditRequestEventArgs>>();
+        
 
         private readonly LocalDate date = new LocalDate(1975,07,28);
 
@@ -38,7 +42,7 @@ namespace Planner.Models.Test.Notes
                         i=> new JournalItemRenderer(i, new MarkdownTranslator(), urlGen.Object),
                         repo.Object),
                     new DefaultText()
-                });
+                }, broadcast.Object);
         }
 
         [Fact]
@@ -131,16 +135,10 @@ namespace Planner.Models.Test.Notes
             var note = new Note() {Key = guid};
             notes.Add(note);
             
-            var fired = 0;
-            sut.NoteEditRequested += (s, e) =>
-            {
-                fired++;
-                Assert.Equal(note, e.Note);
-                Assert.Equal(notes, e.DailyList);
-            };
-
             await sut.GenerateResponse($"{date:yyyy-M-d}/{guid}", output);
-            Assert.Equal(1, fired);
+            
+            broadcast.Verify(i=>i.Fire(It.IsAny<object>(), It.Is<NoteEditRequestEventArgs>(i=>
+                i.Note == note && i.DailyList == notes)), Times.Once());
         }
 
         [Fact]

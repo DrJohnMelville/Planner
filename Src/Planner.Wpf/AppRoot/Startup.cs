@@ -62,6 +62,8 @@ namespace Planner.Wpf.AppRoot
 
         private void RegisterNoteServer(IBindableIocService service)
         {
+            service.BindGeneric(typeof(IEventBroadcast<>), typeof(EventBroadcast<>),
+                i=>i.AsSingleton());
             service.Bind<IHtmlContentOption>().To<StaticFiles>();
             service.Bind<IHtmlContentOption>().To<BlobContentOption>();
             service.Bind<IHtmlContentOption>().To<DailyJournalPageContent>();

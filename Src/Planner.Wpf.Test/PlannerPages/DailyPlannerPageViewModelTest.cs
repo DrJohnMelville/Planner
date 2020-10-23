@@ -28,7 +28,7 @@ namespace Planner.Wpf.Test.PlannerPages
         private readonly Mock<ILocalRepository<Note>> noteRepo= new Mock<ILocalRepository<Note>>();
         private readonly Mock<ILocalRepository<PlannerTask>> repo = new Mock<ILocalRepository<PlannerTask>>();
         private readonly Mock<INoteUrlGenerator> urlGen = new Mock<INoteUrlGenerator>();
-        private readonly Mock<IMarkdownPaster> paster = new Mock<IMarkdownPaster>();
+        private readonly EventBroadcast<NoteEditRequestEventArgs> requestEdit = new EventBroadcast<NoteEditRequestEventArgs>();
         private readonly DailyPlannerPageViewModel sut;
         
 
@@ -43,7 +43,7 @@ namespace Planner.Wpf.Test.PlannerPages
                      notes.Object, 
                          noteCreator,
                         navigation.Object, 
-                urlGen.Object, paster.Object
+                urlGen.Object, requestEdit
                 );
         }
 
@@ -134,9 +134,8 @@ namespace Planner.Wpf.Test.PlannerPages
         {
             if (attached) sut.NavigatedTo();
             if (detached) sut.NavigatedAwayFrom();
-            notes.Raise(i=>i.NoteEditRequested -= null, 
-                new NoteEditRequestEventArgs(
-                    new List<Note>(), new Note()));
+            requestEdit.Fire(this, new NoteEditRequestEventArgs(
+                new List<Note>(), new Note()));
             navigation.Verify(i=>i.ToEditNote(It.IsAny<NoteEditRequestEventArgs>()), Times.Exactly(calls));
         }
         

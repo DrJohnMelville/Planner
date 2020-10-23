@@ -26,20 +26,21 @@ namespace Planner.Models.HtmlGeneration
     public interface INoteHtmlGenerator
     {
         Task GenerateResponse(string url, Stream destination);
-        event EventHandler<NoteEditRequestEventArgs>? NoteEditRequested;
     }
     
     public class NoteHtmlGenerator : INoteHtmlGenerator
     {
         private readonly IList<IHtmlContentOption> options;
         private readonly ILocalRepository<Note> noteRepo;
+        private readonly IEventBroadcast<NoteEditRequestEventArgs> notifyEventRequest;
 
         public NoteHtmlGenerator(
             ILocalRepository<Note> noteRepo, 
-            IList<IHtmlContentOption> options)
+            IList<IHtmlContentOption> options, IEventBroadcast<NoteEditRequestEventArgs> notifyEventRequest)
         {
             this.noteRepo = noteRepo;
             this.options = options;
+            this.notifyEventRequest = notifyEventRequest;
         }
 
         private static bool TryParseLocalDate(string s, out LocalDate ret)
@@ -81,10 +82,8 @@ namespace Planner.Models.HtmlGeneration
             var item = list.FirstOrDefault(i => i.Key == noteKey);
             if (item == null) return;
             
-            NoteEditRequested?.Invoke(this,  new NoteEditRequestEventArgs(list, item));
+            notifyEventRequest.Fire(this,  new NoteEditRequestEventArgs(list, item));
         }
-        
-        public event EventHandler<NoteEditRequestEventArgs>? NoteEditRequested;
         //pattern for url is 9999-1-1/00000000-0000-0000-0000-000000000000
         private readonly static Regex EditRequestFinder = new Regex(
             @"(\d{4}-\d{1,2}-\d{1,2})/([0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})");

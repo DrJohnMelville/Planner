@@ -53,11 +53,5 @@ namespace Planner.WpfViewModels.Notes
             var match = extractQuery.Match(uriString);
             return match.Success?match.Groups[1].Value:uriString;
         }
-
-        public event EventHandler<NoteEditRequestEventArgs>? NoteEditRequested
-        {
-            add => generator.NoteEditRequested += value;
-            remove => generator.NoteEditRequested -= value;
-        }
     }
 }

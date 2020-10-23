@@ -7,7 +7,6 @@ namespace Planner.Models.HtmlGeneration
     public interface INotesServer
     {
         string BaseUrl { get; }
-        event EventHandler<NoteEditRequestEventArgs>? NoteEditRequested;
         void Launch();
     }
 
