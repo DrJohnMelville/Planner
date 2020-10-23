@@ -46,9 +46,9 @@ namespace Planner.Wpf.Test.Notes
         [Fact]
         public void DisplayUrlTest()
         {
-            Assert.Equal($"url://0/{note.Date:yyyy-M-d}/{note.Key}", sut.NoteUrl);
-            Assert.Equal($"url://1/{note.Date:yyyy-M-d}/{note.Key}", sut.NoteUrl);
-            Assert.Equal($"url://2/{note.Date:yyyy-M-d}/{note.Key}", sut.NoteUrl);
+            Assert.Equal($"url://0/{note.Date:yyyy-M-d}/show/{note.Key}", sut.NoteUrl);
+            Assert.Equal($"url://1/{note.Date:yyyy-M-d}/show/{note.Key}", sut.NoteUrl);
+            Assert.Equal($"url://2/{note.Date:yyyy-M-d}/show/{note.Key}", sut.NoteUrl);
         }
 
         [Fact]

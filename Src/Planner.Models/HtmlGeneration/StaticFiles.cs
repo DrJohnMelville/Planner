@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Threading.Tasks;
 using Melville.MVVM.FileSystem;
 
 namespace Planner.Models.HtmlGeneration
 {
-    public interface IStaticFiles
-    {
-        bool TryGetValue(string name, [NotNullWhen(true)] out byte[]? value);
-    }
-
-    public class StaticFiles : IStaticFiles
+    public class StaticFiles :  IHtmlContentOption
     {
         private readonly Dictionary<string, byte[]> files = 
             new Dictionary<string, byte[]>(StringComparer.OrdinalIgnoreCase);
@@ -29,7 +26,10 @@ namespace Planner.Models.HtmlGeneration
             }
         }
 
-        public bool TryGetValue(string name, [NotNullWhen(true)] out byte[]? value) => 
-            files.TryGetValue(name, out value);
+        public Task? TryRespond(string url, Stream destination)
+        {
+            return files.TryGetValue(url, out var file)?
+                destination.WriteAsync(file).AsTask(): null;
+        }
     }
 }

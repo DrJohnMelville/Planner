@@ -16,6 +16,8 @@ namespace Planner.Models.HtmlGeneration
         string DailyUrl(LocalDate date);
         string EditNoteUrl(LocalDate date, Guid key);
         string EditNoteUrl(Note note) => EditNoteUrl(note.Date, note.Key);
+        string ShowNoteUrl(LocalDate date, Guid key);
+        string ShowNoteUrl(Note note) => ShowNoteUrl(note.Date, note.Key);
     }
     public class NoteUrlGenerator:INoteUrlGenerator
     {
@@ -30,5 +32,6 @@ namespace Planner.Models.HtmlGeneration
         public string DailyUrl(LocalDate date) => Prefix() + date.ToString("yyyy-M-d/", null);
 
         public string EditNoteUrl(LocalDate date, Guid key) => DailyUrl(date)+key;
+        public string ShowNoteUrl(LocalDate date, Guid key) => DailyUrl(date)+"show/"+key;
     }
 }

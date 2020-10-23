@@ -47,7 +47,7 @@ namespace Planner.WpfViewModels.Notes
             $@"Note Created: {Note.TimeCreated
                 .InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).LocalDateTime:f}";
 
-        public string NoteUrl => urlGen.EditNoteUrl(Note);
+        public string NoteUrl => urlGen.ShowNoteUrl(Note);
 
 
         public void NavigateToPlannerPage() => LeavePage(false);

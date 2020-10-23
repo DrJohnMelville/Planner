@@ -13,6 +13,7 @@ using Melville.WpfAppFramework.StartupBases;
 using Microsoft.Extensions.Configuration;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
+using Planner.Models.Blobs;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Repositories;
 using Planner.Wpf.Notes;
@@ -61,6 +62,10 @@ namespace Planner.Wpf.AppRoot
 
         private void RegisterNoteServer(IBindableIocService service)
         {
+            service.Bind<IHtmlContentOption>().To<StaticFiles>();
+            service.Bind<IHtmlContentOption>().To<BlobContentOption>();
+            service.Bind<IHtmlContentOption>().To<DailyJournalPageContent>();
+            
             service.Bind<INotesServer>().To<NotesServer>().FixResult(i=>i.Launch()).AsSingleton();
             service.Bind<IRequestHandler>().To<WebNavigationRouter>();
         }

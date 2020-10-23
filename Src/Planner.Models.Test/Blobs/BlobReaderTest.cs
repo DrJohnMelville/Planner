@@ -12,7 +12,7 @@ namespace Planner.Models.Test.Blobs
 {
     public class BlobReaderTest
     {
-        private readonly BlobReader sut;
+        private readonly BlobContentOption sut;
         private readonly LocalDate date = new LocalDate(1975,07,28);
         private readonly Mock<ILocalRepository<Blob>> repo = new Mock<ILocalRepository<Blob>>();
         private readonly Mock<IBlobContentStore> store = new Mock<IBlobContentStore>();
@@ -21,27 +21,27 @@ namespace Planner.Models.Test.Blobs
         public BlobReaderTest()
         {
             repo.Setup(i => i.CompletedItemsForDate(date)).ReturnsAsync(todaysBlobs);
-            sut = new BlobReader(repo.Object, store.Object);
+            repo.Setup(i => i.CompletedItemsForDate(date.PlusDays(1))).ReturnsAsync(new List<Blob>());
+            sut = new BlobContentOption(repo.Object, store.Object);
         }
 
-        [Fact]
-        public async Task NonExistantPropertyReturnsEmpty()
+        [Theory]
+        [InlineData("1975-07-28/7.28_1000", 0)]
+        [InlineData("1975-07-28/7.28_0", 0)]
+        [InlineData("1975-07-28/7.28_2", 0)]
+        [InlineData("1975-07-28/7.28_1", 3)]
+        [InlineData("1975-07-28/7.28.75_1", 3)]
+        [InlineData("1975-07-28/7.28.1975_1", 3)]
+        [InlineData("1975-07-28/7.29_1", 0)]
+        public async Task NonExistantPropertyReturnsEmpty(string url, int len)
         {
-            var str = await sut.Read(date, 1000);
-            Assert.Equal(0, str.Length);
-        }
-
-        [Fact]
-        public async Task GetNamedStream()
-        {
+            var dest = new MemoryStream();
             var item = new Blob();
             todaysBlobs.Add(item);
             var resultStr = new MemoryStream(new byte[]{1,2,3});
             store.Setup(i => i.Read(item)).ReturnsAsync(resultStr);
-
-            Assert.Equal(resultStr, await sut.Read(date, 1));
-            
+            await sut.TryRespond(url,dest)!;
+            Assert.Equal(len, dest.Length);
         }
-
     }
 }
