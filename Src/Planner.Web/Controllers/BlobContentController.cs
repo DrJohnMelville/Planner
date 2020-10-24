@@ -10,10 +10,10 @@ namespace Planner.Web.Controllers
     [Route("BlobContent")]
     public class BlobContentController : Controller
     {
-        private readonly ItemByKeyRepository<Blob> infoSource;
+        private readonly IItemByKeyRepository<Blob> infoSource;
         private readonly IBlobContentStore contentStore;
 
-        public BlobContentController(ItemByKeyRepository<Blob> infoSource, IBlobContentStore contentStore)
+        public BlobContentController(IItemByKeyRepository<Blob> infoSource, IBlobContentStore contentStore)
         {
             this.infoSource = infoSource;
             this.contentStore = contentStore;

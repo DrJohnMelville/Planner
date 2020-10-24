@@ -46,7 +46,7 @@ namespace Planner.Models.Blobs
 
         private Task<Stream> GetStreamFromOrdinal(int ordinal, IList<Blob> listForDate)
         {
-            return IsInvalidOrdinal(ordinal, listForDate) ? 
+                return IsInvalidOrdinal(ordinal, listForDate) ? 
                 EmptyStream() : 
                 store.Read(listForDate[ordinal - 1]);
         }

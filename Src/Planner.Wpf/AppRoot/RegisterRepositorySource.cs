@@ -23,12 +23,14 @@ namespace Planner.Wpf.AppRoot
 
         public void UseWebSource(HttpClient authenticatedClient)
         {
-            container.Bind<IJsonWebService>().To<JsonWebService>().WithParameters(authenticatedClient);
+            container.Bind<IJsonWebService>().To<JsonWebService>()
+                .WithParameters(authenticatedClient);
             RegisterWebRepository<PlannerTask>("/Task");
             RegisterWebRepository<Note>("/Note");
             RegisterWebRepository<Blob>("/Blob");
-            container.Bind<IDirectory>().ToConstant(new MemoryDirectory("c:\\sss")).WhenConstructingType<BlobContentStore>();
-            container.Bind<IBlobContentStore>().To<BlobContentStore>().AsSingleton();
+            container.Bind<IBlobContentStore>().To<WebBlobContentStore>()
+                .WithParameters(authenticatedClient)
+                .AsSingleton();
         }
 
         private void RegisterWebRepository<T>(string urlPrefix) where T:PlannerItemWithDate => 

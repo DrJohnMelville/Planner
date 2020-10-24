@@ -30,7 +30,6 @@ namespace Planner.Web.CompositionRoot
             this.configuration = configuration;
         }
 
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -40,8 +39,9 @@ namespace Planner.Web.CompositionRoot
             services.AddScoped<IDatedRemoteRepository<PlannerTask>, SqlRemoteRepositoryWithDate<PlannerTask>>();
             services.AddScoped<IDatedRemoteRepository<Note>, SqlRemoteRepositoryWithDate<Note>>();
             services.AddScoped<IDatedRemoteRepository<Blob>, SqlRemoteRepositoryWithDate<Blob>>();
-
+            
             services.AddSingleton<IBlobContentStore, BlobContentStore>();
+            services.AddScoped(typeof(IItemByKeyRepository<>), typeof(SqlItemByKeyRepository<>));
             
             services.AddControllersWithViews().AddJsonOptions(ConfigureJsonSerialization);
         }

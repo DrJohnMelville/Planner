@@ -17,8 +17,8 @@ namespace Planner.Models.Repositories
         IAsyncEnumerable<T> TasksForDate(LocalDate date);
     }
 
-    public interface ItemByKeyRepository<T> where T : PlannerItemBase
+    public interface IItemByKeyRepository<T> where T : PlannerItemBase
     {
-        Task<T> ItemByKey(Guid key);
+        Task<T?> ItemByKey(Guid key);
     }
 }

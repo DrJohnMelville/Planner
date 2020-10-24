@@ -15,7 +15,7 @@ namespace Planner.Web.CompositionRoot
 
         private static void RegisterDatabase(IServiceCollection services)
         {
-            services.AddScoped(i => TestDatabaseFactory.TestDatabaseCreator());
+            services.AddSingleton(i => TestDatabaseFactory.TestDatabaseCreator());
         }
 
         private static void RegisterDataDirectory(IServiceCollection services)

@@ -14,7 +14,7 @@ namespace Planner.Web.Test.Controllers
     public class BlobContentControllerTest
     {
         private readonly Mock<IBlobContentStore> storage = new Mock<IBlobContentStore>();
-        private readonly Mock<ItemByKeyRepository<Blob>> repo = new Mock<ItemByKeyRepository<Blob>>();
+        private readonly Mock<IItemByKeyRepository<Blob>> repo = new Mock<IItemByKeyRepository<Blob>>();
         
         
         private readonly BlobContentController sut;
