@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
+using Planner.Models.Blobs;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
@@ -15,7 +17,15 @@ namespace Planner.Web.Controllers
     [Route("Note")]
     public class NoteController : DataController<Note>
     {
-        public NoteController(IDatedRemoteRepository<Note> source) : base(source, g=>new Note(){Key = g})
+        public NoteController(IDatedRemoteRepository<Note> source) : base(source, g=>new Note {Key = g})
+        {
+        }
+    }
+
+    [Route("Blob")]
+    public class BlobController : DataController<Blob>
+    {
+        public BlobController(IDatedRemoteRepository<Blob> source) : base(source, g=> new Blob {Key = g})
         {
         }
     }

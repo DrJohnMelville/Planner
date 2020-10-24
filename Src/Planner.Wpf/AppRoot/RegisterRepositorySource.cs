@@ -26,6 +26,9 @@ namespace Planner.Wpf.AppRoot
             container.Bind<IJsonWebService>().To<JsonWebService>().WithParameters(authenticatedClient);
             RegisterWebRepository<PlannerTask>("/Task");
             RegisterWebRepository<Note>("/Note");
+            RegisterWebRepository<Blob>("/Blob");
+            container.Bind<IDirectory>().ToConstant(new MemoryDirectory("c:\\sss")).WhenConstructingType<BlobContentStore>();
+            container.Bind<IBlobContentStore>().To<BlobContentStore>().AsSingleton();
         }
 
         private void RegisterWebRepository<T>(string urlPrefix) where T:PlannerItemWithDate => 
