@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using NodaTime;
@@ -14,8 +15,10 @@ namespace Planner.Models.Repositories
     public interface IDatedRemoteRepository<T>: IRemoteRepository<T> where T: PlannerItemWithDate
     {
         IAsyncEnumerable<T> TasksForDate(LocalDate date);
-        
     }
 
-    
+    public interface ItemByKeyRepository<T> where T : PlannerItemBase
+    {
+        Task<T> ItemByKey(Guid key);
+    }
 }

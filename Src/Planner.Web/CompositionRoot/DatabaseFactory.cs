@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using Melville.MVVM.FileSystem;
+using Microsoft.Extensions.DependencyInjection;
 using Planner.Repository.SqLite;
 
 namespace Planner.Web.CompositionRoot
@@ -7,8 +9,18 @@ namespace Planner.Web.CompositionRoot
     {
         public static void ConfigureDatabase(IServiceCollection services)
         {
-            var dbCreator = TestDatabaseFactory.TestDatabaseCreator();
-            services.AddScoped(i=>dbCreator);
+            RegisterDataDirectory(services);
+            RegisterDatabase(services);
+        }
+
+        private static void RegisterDatabase(IServiceCollection services)
+        {
+            services.AddScoped(i => TestDatabaseFactory.TestDatabaseCreator());
+        }
+
+        private static void RegisterDataDirectory(IServiceCollection services)
+        {
+            services.AddSingleton<IDirectory>(new MemoryDirectory("C:\\Content"));
         }
     }
 }

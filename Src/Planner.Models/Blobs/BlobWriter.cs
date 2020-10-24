@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Melville.MVVM.FileSystem;
 
@@ -6,7 +7,8 @@ namespace Planner.Models.Blobs
 {
     public interface IBlobContentStore
     {
-        Task Write(Blob blob, Stream data);
+        Task Write(Guid key, Stream data);
+        Task Write(Blob blob, Stream data) => this.Write(blob.Key, data);
         Task<Stream> Read(Blob blob);
     }
     public class BlobContentStore: IBlobContentStore
@@ -16,12 +18,12 @@ namespace Planner.Models.Blobs
         {
             this.targetDir = targetDir;
         }
-        private IFile FileFromBlob(Blob blob) => targetDir.File(blob.Key.ToString());
-        public async Task Write(Blob blob, Stream data)
+        private IFile FileFromKey(Guid key) => targetDir.File(key.ToString());
+        public async Task Write(Guid key, Stream data)
         {
-            await using var destination = await FileFromBlob(blob).CreateWrite();
+            await using var destination = await FileFromKey(key).CreateWrite();
             await data.CopyToAsync(destination);
         }
-        public Task<Stream> Read(Blob blob) => FileFromBlob(blob).OpenRead();
+        public Task<Stream> Read(Blob blob) => FileFromKey(blob.Key).OpenRead();
     }
 }

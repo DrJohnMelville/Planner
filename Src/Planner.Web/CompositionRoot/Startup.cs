@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Melville.MVVM.FileSystem;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -20,13 +21,15 @@ namespace Planner.Web.CompositionRoot
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IConfiguration configuration;
+        private readonly IWebHostEnvironment webHostEnvironment;
+        
+        public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
-            Configuration = configuration;
+            this.webHostEnvironment = webHostEnvironment;
+            this.configuration = configuration;
         }
-        
-        
-        public IConfiguration Configuration { get; }
+
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -38,6 +41,8 @@ namespace Planner.Web.CompositionRoot
             services.AddScoped<IDatedRemoteRepository<Note>, SqlRemoteRepositoryWithDate<Note>>();
             services.AddScoped<IDatedRemoteRepository<Blob>, SqlRemoteRepositoryWithDate<Blob>>();
 
+            services.AddSingleton<IBlobContentStore, BlobContentStore>();
+            
             services.AddControllersWithViews().AddJsonOptions(ConfigureJsonSerialization);
         }
 
@@ -49,8 +54,8 @@ namespace Planner.Web.CompositionRoot
 
         private void AddCapWebAuthentication(IServiceCollection services) =>
             services.AddCapWebTokenService(
-                Configuration.GetValue<string>("TokenService:Name"),
-                Configuration.GetValue<string>("TokenService:Secret"));
+                configuration.GetValue<string>("TokenService:Name"),
+                configuration.GetValue<string>("TokenService:Secret"));
 
         private void ConfigureJsonSerialization(JsonOptions o)
         {

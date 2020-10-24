@@ -12,7 +12,7 @@ namespace Planner.Models.Test.Blobs
     public class BlobContentStoreTest
     {
         private MockDirectory dir = new MockDirectory("c:\\sss");
-        private BlobContentStore sut;
+        private IBlobContentStore sut;
 
         public BlobContentStoreTest()
         {
