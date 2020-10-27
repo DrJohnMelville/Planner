@@ -3,10 +3,10 @@ using System.IO;
 
 namespace Planner.WpfViewModels.Notes.Pasters
 {
-	//A bitmap file is a device independant bitmap with a 14 byte headder prepended to it.
-	//when you get a DIB from the clipboard, the 14 byte file headder is  missing, but can
+	//A bitmap file is a device independant bitmap with a 14 byte header prepended to it.
+	//when you get a DIB from the clipboard, the 14 byte file header is  missing, but can
 	// be calculated from the stuff that you can find.  This stream does some bit mangling on
-	// the first read operation to add the 14 byte headder to the front of the stream
+	// the first read operation to add the 14 byte header to the front of the stream
 	public class BitmapPrefixStream : Stream
 	{
 		private bool firstBlockDone = false;
@@ -14,104 +14,113 @@ namespace Planner.WpfViewModels.Notes.Pasters
 		const int fileHeaderLength = 14;
 		const int bitmapHeaderLength = 40;
 
-		public BitmapPrefixStream(Stream innerStream)
-		{
-			this.innerStream = innerStream;
-		}
+		public BitmapPrefixStream(Stream innerStream) => this.innerStream = innerStream;
+		
+		public override int Read(byte[] buffer, int offset, int count) =>
+			firstBlockDone ? innerStream.Read(buffer, offset, count) : ReadFirstBlock(buffer, offset, count);
 
-		public override void Flush()
+		private int ReadFirstBlock(byte[] buffer, int offset, int count)
 		{
-		}
-
-		public override int Read(byte[] buffer, int offset, int count)
-		{
-			if (firstBlockDone) return innerStream.Read(buffer, offset, count);
 			firstBlockDone = true;
-			if (count - offset < fileHeaderLength + bitmapHeaderLength)
-				throw new InvalidOperationException("Buffer To Small");
-			if (offset != 0) throw new InvalidOperationException("Buffer Misaligned");
+			VerifyValidBufferForPrefix(offset, count);
 			var bytesRead = innerStream.Read(buffer, fileHeaderLength, count - fileHeaderLength);
-
-			var reader = new BitReader(buffer, fileHeaderLength);
-
-			int infoHeaderSize = reader.BiSize();
-			int fileSize = fileHeaderLength + infoHeaderSize + reader.BiSizeImage();
-
-			var bw = new BitWriter(buffer);
-			bw.WriteInt(0x4d42, 0, 2);
-			bw.WriteInt(fileSize, 2, 4);
-			bw.WriteInt(fileHeaderLength + infoHeaderSize + reader.BiClrUsed() * 4, 10, 4);
+			FillHeaderBlock(buffer);
 			return fileHeaderLength + bytesRead;
 		}
 
-		public override long Seek(long offset, SeekOrigin origin)
+		private static void VerifyValidBufferForPrefix(int offset, int count)
 		{
-			throw new System.NotSupportedException();
+			if (count - offset < fileHeaderLength + bitmapHeaderLength)
+				throw new InvalidOperationException("Buffer To Small");
+			if (offset != 0) throw new InvalidOperationException("Buffer Misaligned");
 		}
 
-		public override void SetLength(long value)
+		private static void FillHeaderBlock(byte[] buffer)
 		{
-			throw new System.NotSupportedException();
+			var reader = new BitReader(buffer, fileHeaderLength);
+			var fuillHeadderLength = fileHeaderLength + reader.BiSize();
+			int fileSize = fuillHeadderLength + reader.BiSizeImage();
+			var bitmapDataStart = fuillHeadderLength + reader.BiClrUsed() * 4;
+			WriteHeaderBlockValues(buffer, fileSize, bitmapDataStart);
 		}
 
-		public override void Write(byte[] buffer, int offset, int count)
+		private static void WriteHeaderBlockValues(byte[] buffer, int fileSize, int fullHeadderLength)
 		{
-			throw new System.NotSupportedException();
+			var bw = new BitWriter(buffer);
+			bw.WriteInt(0x4d42, 0, 2);
+			bw.WriteInt(fileSize, 2, 4);
+			bw.WriteInt(fullHeadderLength, 10, 4);
 		}
+
+		#region Irrelevant overrides
+
+		public override long Seek(long offset, SeekOrigin origin) => 
+			throw new NotSupportedException();
+
+		public override void SetLength(long value) => 
+			throw new NotSupportedException();
+
+		public override void Write(byte[] buffer, int offset, int count) => 
+			throw new NotSupportedException();
 
 		public override bool CanRead => true;
 		public override bool CanSeek => false;
 		public override bool CanWrite => false;
 		public override long Length => fileHeaderLength + innerStream.Length;
 		public override long Position { get; set; }
-	}
-
-	struct BitWriter
-	{
-		private byte[] bytes;
-
-		public BitWriter(byte[] target)
+		public override void Flush()
 		{
-			bytes = target;
 		}
+		#endregion
 
-		public void WriteInt(int value, int position, int len)
+
+		private struct BitWriter
 		{
-			for (int i = 0; i < len; i++)
+			private byte[] bytes;
+
+			public BitWriter(byte[] target)
 			{
-				bytes[position + i] = (byte) (value & 0xff);
-				value >>= 8;
-			}
-		}
-	}
-
-
-	struct BitReader
-	{
-		private byte[] target;
-		private int offset;
-
-		public BitReader(byte[] target, int offset)
-		{
-			this.target = target;
-			this.offset = offset;
-		}
-
-		private int ReadInt(int outerOffset)
-		{
-			int position = outerOffset + offset;
-			int ret = 0;
-			for (int i = 3; i >= 0; i--)
-			{
-				ret <<= 8;
-				ret |= target[position + i];
+				bytes = target;
 			}
 
-			return ret;
+			public void WriteInt(int value, int position, int len)
+			{
+				for (int i = 0; i < len; i++)
+				{
+					bytes[position + i] = (byte) (value & 0xff);
+					value >>= 8;
+				}
+			}
 		}
 
-		public int BiSize() => ReadInt(0);
-		public int BiSizeImage() => ReadInt(20);
-		public int BiClrUsed() => ReadInt(32);
+
+		private struct BitReader
+		{
+			private byte[] target;
+			private int offset;
+
+			public BitReader(byte[] target, int offset)
+			{
+				this.target = target;
+				this.offset = offset;
+			}
+
+			private int ReadInt(int outerOffset)
+			{
+				int position = outerOffset + offset;
+				int ret = 0;
+				for (int i = 3; i >= 0; i--)
+				{
+					ret <<= 8;
+					ret |= target[position + i];
+				}
+
+				return ret;
+			}
+
+			public int BiSize() => ReadInt(0);
+			public int BiSizeImage() => ReadInt(20);
+			public int BiClrUsed() => ReadInt(32);
+		}
 	}
 }
