@@ -16,7 +16,7 @@ namespace Planner.Models.Blobs
         private readonly IBlobContentStore store;
 
         public BlobGenerator(ILocalRepository<Blob> repository, IBlobContentStore store):
-            base(new Regex(@"([\d-]+)\/(\d+)\.(\d+)(?:\.(\d+))?_(\d+)"))
+            base(new Regex(@"(\d{4}-\d{1,2}-\d{1,2})(?:\/show)?\/(\d+)\.(\d+)(?:\.(\d+))?_(\d+)"))
         {
             this.repository = repository;
             this.store = store;

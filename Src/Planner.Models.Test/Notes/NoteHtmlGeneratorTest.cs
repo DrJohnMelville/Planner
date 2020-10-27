@@ -141,15 +141,17 @@ namespace Planner.Models.Test.Notes
                 i.Note == note && i.DailyList == notes)), Times.Once());
         }
 
-        [Fact]
-        public async Task RetrieveImage()
+        [Theory]
+        [InlineData("1975-7-28/3.2_1")]
+        [InlineData("1975-7-28/show/3.2_1")]
+        public async Task RetrieveImage(string url)
         {
             var foundBlob = new Blob();
             blobRepo.Setup(i => i.CompletedItemsForDate(new LocalDate(1975, 3, 2))).ReturnsAsync(
                 new List<Blob>() {foundBlob});
             blobStore.Setup(i=>i.Read(foundBlob))
                 .ReturnsAsync(new MemoryStream(Encoding.UTF8.GetBytes("From Blob")));
-            await sut.GenerateResponse("1975-7-28/3.2_1", output);
+            await sut.GenerateResponse(url, output);
             Assert.Equal("From Blob", OutputAsString);
         }
 
