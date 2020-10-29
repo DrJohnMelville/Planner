@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Web;
 using Melville.MVVM.RunShellCommands;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Notes;
@@ -73,17 +74,37 @@ namespace Planner.Wpf.Notes
         }
     }
 
-    public class DefaultToExec : ILinkRedirect
+    public class OpenLocalFile : ILinkRedirect
+    {
+        private readonly IRunShellCommand runShellCommand;
+
+        public OpenLocalFile(IRunShellCommand runShellCommand)
+        {
+            this.runShellCommand = runShellCommand;
+        }
+
+        private static Regex pattern = new Regex(@"/LocalFile/(.+)$");
+        public bool? DoRedirect(string url)
+        {
+            var match = pattern.Match(url);
+            if (!match.Success) return null;
+            runShellCommand.ShellExecute(HttpUtility.UrlDecode(match.Groups[1].Value));
+            return true;
+        }
+    }
+
+    public class RunNonPlannerUrlsInSystemBrowser : ILinkRedirect
     {
         private readonly IRunShellCommand shell;
 
-        public DefaultToExec(IRunShellCommand shell)
+        public RunNonPlannerUrlsInSystemBrowser(IRunShellCommand shell)
         {
             this.shell = shell;
         }
 
         public bool? DoRedirect(string url)
         {
+            if (url.StartsWith("http://localhost:28775")) return null;
             shell.ShellExecute(url);
             return true;
         }

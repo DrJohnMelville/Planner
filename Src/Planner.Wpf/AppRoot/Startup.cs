@@ -78,9 +78,9 @@ namespace Planner.Wpf.AppRoot
             
             service.Bind<INotesServer>().To<NotesServer>().FixResult(i=>i.Launch()).AsSingleton();
             
+            service.Bind<ILinkRedirect>().To<RunNonPlannerUrlsInSystemBrowser>();
             service.Bind<ILinkRedirect>().To<EditNotification>();
-            service.Bind<ILinkRedirect>().To<LocalLink>();
-            service.Bind<ILinkRedirect>().To<DefaultToExec>();
+            service.Bind<ILinkRedirect>().To<OpenLocalFile>(); 
             service.Bind<ILinkRedirect>().To<CompositeLinkRedirect>().BlockSelfInjection();
             service.Bind<IRequestHandler>().To<WebNavigationRouter>();
         }

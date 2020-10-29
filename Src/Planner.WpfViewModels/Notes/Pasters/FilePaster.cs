@@ -16,7 +16,7 @@ namespace Planner.WpfViewModels.Notes.Pasters
 
         private string FormatFile(string fileName)
         {
-            return $"[{Path.GetFileName(fileName)}](/0/localfile/{HttpUtility.UrlEncode(fileName)})";
+            return $"[{Path.GetFileName(fileName)}](/LocalFile/{fileName})";
         }
     }
 }

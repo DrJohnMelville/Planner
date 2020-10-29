@@ -21,7 +21,7 @@ namespace Planner.Wpf.Notes
             IFrame frame, IRequest request, bool userGesture, bool isRedirect)
         {
             if ((!userGesture) || isRedirect) return false;
-            return redirect.DoRedirect(request.Url) ?? true;
+            return redirect.DoRedirect(request.Url) ?? false;
         }
     }
 

@@ -96,7 +96,7 @@ namespace Planner.Wpf.Test.Notes.Pasters
         {
             PutTextInClipboard("FileDrop", new string[]{"C:\\a.txt", "D:\\b.jpg"});
             var sut = new FilePaster();
-            Assert.Equal("[a.txt](/0/localfile/C%3a%5ca.txt)\r\n[b.jpg](/0/localfile/D%3a%5cb.jpg)", 
+            Assert.Equal("[a.txt](/LocalFile/C:\\a.txt)\r\n[b.jpg](/LocalFile/D:\\b.jpg)", 
                 await sut.GetPasteText(clip.Object, date));
         }
 
