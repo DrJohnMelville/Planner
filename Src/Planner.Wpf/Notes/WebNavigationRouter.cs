@@ -1,4 +1,7 @@
-﻿using CefSharp;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using CefSharp;
 using CefSharp.Handler;
 using Melville.MVVM.RunShellCommands;
 
@@ -6,11 +9,11 @@ namespace Planner.Wpf.Notes
 {
     public class WebNavigationRouter:RequestHandler
     {
-        private readonly IRunShellCommand runner;
+        private readonly ILinkRedirect redirect;
 
-        public WebNavigationRouter(IRunShellCommand runner)
+        public WebNavigationRouter(ILinkRedirect redirect)
         {
-            this.runner = runner;
+            this.redirect = redirect;
         }
 
         protected override bool OnBeforeBrowse(
@@ -18,9 +21,8 @@ namespace Planner.Wpf.Notes
             IFrame frame, IRequest request, bool userGesture, bool isRedirect)
         {
             if ((!userGesture) || isRedirect) return false;
-            if (request.Url.StartsWith("http://localhost:28775")) return false;
-            runner.ShellExecute(request.Url);
-            return true;
+            return redirect.DoRedirect(request.Url) ?? true;
         }
     }
+
 }

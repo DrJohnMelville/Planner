@@ -41,13 +41,34 @@ namespace Planner.WpfViewModels.Notes.Pasters
         private static void SetupPasteEnhancement(TextBox box, IMarkdownPaster mp)
         {
             box.PreviewKeyDown += IsPasteKeyStroke;
-
+            box.AllowDrop = true;
+            box.PreviewDragOver += HandleDragOver;
+            box.PreviewDrop += HandleDrop;
         }
+
+        #region Handle Drop
+            private static void HandleDrop(object sender, DragEventArgs e)
+            {
+                if (!(sender is TextBox tb)) return;
+                DoPaste(tb, e.Data);
+                e.Effects = DragDropEffects.Copy;
+                e.Handled = true;
+            }
+
+            private static void HandleDragOver(object sender, DragEventArgs e)
+            {
+                e.Effects = DragDropEffects.Copy;
+                e.Handled = true;
+            }
+                
+        #endregion
+        
+        #region Handle Paste
         private static void IsPasteKeyStroke(object sender, KeyEventArgs e)
         {
-            if (IsPasteKeyStroke(e) && sender is TextBox tb)
+            if (IsPasteKeyStroke(e) && sender is TextBox tb && Clipboard.GetDataObject() is {} dataObject)
             {
-                DoPaste(tb);
+                DoPaste(tb, dataObject);
                 e.Handled = true;
             }
         }
@@ -55,9 +76,9 @@ namespace Planner.WpfViewModels.Notes.Pasters
         private static bool IsPasteKeyStroke(KeyEventArgs e) => 
             e.Key == Key.V && e.KeyboardDevice.Modifiers == ModifierKeys.Control;
 
-        private static async void DoPaste(TextBox ctrl)
+        private static async void DoPaste(TextBox ctrl, IDataObject dataObject)
         {
-            if (await GetSpecialPasteString(ctrl) is {} pastedText) PasteIntoTextBox(ctrl, pastedText);
+            if (await GetSpecialPasteString(ctrl, dataObject) is {} pastedText) PasteIntoTextBox(ctrl, pastedText);
         }
 
         private static void PasteIntoTextBox(TextBox ctrl, string pastedText)
@@ -66,7 +87,8 @@ namespace Planner.WpfViewModels.Notes.Pasters
             (ctrl.SelectionLength, ctrl.SelectionStart) = (0, ctrl.SelectionStart + ctrl.SelectionLength);
         }
 
-        private static ValueTask<string?> GetSpecialPasteString(TextBox ctrl) => 
-            GetMarkdownPaster(ctrl).GetPasteText(Clipboard.GetDataObject(), GetPasterDate(ctrl));
+        private static ValueTask<string?> GetSpecialPasteString(TextBox ctrl, IDataObject dataObject) => 
+            GetMarkdownPaster(ctrl).GetPasteText(dataObject, GetPasterDate(ctrl));
+        #endregion 
     }
 }

@@ -54,11 +54,12 @@ namespace Planner.Wpf.AppRoot
             service.Bind<IReadFromClipboard>().To<ReadFromClipboard>().AsSingleton();
             service.Bind<IMarkdownPaster>().To<CsvPaster>();
             service.Bind<IMarkdownPaster>().To<PngMarkdownPaster>();
+            service.Bind<IMarkdownPaster>().To<FilePaster>();
             service.Bind<IMarkdownPaster>().To<StringPaster>().WithParameters(DataFormats.UnicodeText);
-            
+            service.Bind<IMarkdownPaster>().To<HtmlMarkdownPaster>();
+
             //if none of the text formats work, try for an image
             service.Bind<IMarkdownPaster>().To<ImageMarkdownPaster>();
-            service.Bind<IMarkdownPaster>().To<HtmlMarkdownPaster>();
 
             service.Bind<IMarkdownPaster>().To<CompositeMarkdownPaster>()
                 .BlockSelfInjection().AsSingleton();
@@ -66,15 +67,21 @@ namespace Planner.Wpf.AppRoot
 
         private void RegisterNoteServer(IBindableIocService service)
         {
+            service.Bind<IEventBroadcast<NoteEditRequestEventArgs>>()
+                .To<EventBroadcast<NoteEditRequestEventArgs>>().AsScoped();
             service.BindGeneric(typeof(IEventBroadcast<>), typeof(EventBroadcast<>),
                 i=>i.AsSingleton());
             service.Bind<ITryNoteHtmlGenerator>().To<StaticFileGenerator>();
-            service.Bind<ITryNoteHtmlGenerator>().To<EditNoteNotificationGenerator>();
             service.Bind<ITryNoteHtmlGenerator>().To<BlobGenerator>();
             service.Bind<ITryNoteHtmlGenerator>().To<DailyJournalPageGenerator>();
             service.Bind<ITryNoteHtmlGenerator>().To<DefaultTextGenerator>();
             
             service.Bind<INotesServer>().To<NotesServer>().FixResult(i=>i.Launch()).AsSingleton();
+            
+            service.Bind<ILinkRedirect>().To<EditNotification>();
+            service.Bind<ILinkRedirect>().To<LocalLink>();
+            service.Bind<ILinkRedirect>().To<DefaultToExec>();
+            service.Bind<ILinkRedirect>().To<CompositeLinkRedirect>().BlockSelfInjection();
             service.Bind<IRequestHandler>().To<WebNavigationRouter>();
         }
 
