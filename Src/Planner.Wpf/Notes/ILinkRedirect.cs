@@ -8,6 +8,7 @@ using Planner.Models.HtmlGeneration;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
 using Planner.Models.Time;
+using Planner.WpfViewModels.PlannerPages;
 
 namespace Planner.Wpf.Notes
 {
@@ -31,31 +32,36 @@ namespace Planner.Wpf.Notes
                 .DefaultIfEmpty(false)
                 .First();
     }
-
-    public class LocalLink : ILinkRedirect
-    {
-        public bool? DoRedirect(string url) => 
-            url.StartsWith("http://localhost:28775") ? (bool?)false : null;
-    }
     
-    public class EditNotification : ILinkRedirect
+    public abstract class RegexLink: ILinkRedirect
+    {
+        private Regex pattern;
+        protected RegexLink(Regex pattern) => this.pattern = pattern;
+
+        public bool? DoRedirect(string url)
+        {
+            var match = pattern.Match(url);
+            return match.Success ? DoRedirect(match) : null;
+        }
+
+        protected abstract bool? DoRedirect(Match match);
+    }
+
+    
+    public class EditNotification :RegexLink
     {
         private readonly ILocalRepository<Note> noteRepo;
         private readonly IEventBroadcast<NoteEditRequestEventArgs> notifyEventRequest;
 
-        public EditNotification(ILocalRepository<Note> noteRepo, IEventBroadcast<NoteEditRequestEventArgs> notifyEventRequest)
+        public EditNotification(ILocalRepository<Note> noteRepo, IEventBroadcast<NoteEditRequestEventArgs> notifyEventRequest):
+            base(new Regex(@"(\d{4}-\d{1,2}-\d{1,2})/([0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})"))
         {
             this.noteRepo = noteRepo;
             this.notifyEventRequest = notifyEventRequest;
         }
 
-        private static Regex criteria = 
-            new Regex(@"(\d{4}-\d{1,2}-\d{1,2})/([0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})");
-        public bool? DoRedirect(string url)
+        protected override bool? DoRedirect(Match match)
         {
-            var match = criteria.Match(url);
-            if (!match.Success) return null;
-
             LaunchEditor(match);
             return true;
         }
@@ -68,26 +74,39 @@ namespace Planner.Wpf.Notes
             var list = await noteRepo.CompletedItemsForDate(date);
             var item = list.FirstOrDefault(i => i.Key == noteKey);
             if (item == null) return;
-            
             notifyEventRequest.Fire(this,  new NoteEditRequestEventArgs(list, item));
+        }
+    }
+    public class PlannerNavigateNotification :RegexLink
+    {
+        private readonly IPlannerNavigator navigator;
+        public PlannerNavigateNotification(IPlannerNavigator navigator):
+            base(new Regex(@"/navToPage/(\d{4}-\d{1,2}-\d{1,2})"))
+        {
+            this.navigator = navigator;
+        }
 
+        protected override bool? DoRedirect(Match match)
+        {
+            if (TimeOperations.TryParseLocalDate(match.Groups[1].Value, out var date))
+            {
+                navigator.ToDate(date);
+            }
+            return true;
         }
     }
 
-    public class OpenLocalFile : ILinkRedirect
+    public class OpenLocalFile : RegexLink
     {
         private readonly IRunShellCommand runShellCommand;
 
-        public OpenLocalFile(IRunShellCommand runShellCommand)
+        public OpenLocalFile(IRunShellCommand runShellCommand):base(new Regex(@"/LocalFile/(.+)$"))
         {
             this.runShellCommand = runShellCommand;
         }
 
-        private static Regex pattern = new Regex(@"/LocalFile/(.+)$");
-        public bool? DoRedirect(string url)
+        protected override bool? DoRedirect(Match match)
         {
-            var match = pattern.Match(url);
-            if (!match.Success) return null;
             runShellCommand.ShellExecute(HttpUtility.UrlDecode(match.Groups[1].Value));
             return true;
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NodaTime;
 using Planner.Models.Notes;
 
 namespace Planner.Models.HtmlGeneration
@@ -14,5 +15,15 @@ namespace Planner.Models.HtmlGeneration
             DailyList = dailyList;
             Note = note;
         }
+    }
+
+    public class PlannerNagivateRequestEventArgs:EventArgs
+    {
+        public PlannerNagivateRequestEventArgs(LocalDate date)
+        {
+            Date = date;
+        }
+
+        public LocalDate Date { get; }
     }
 }

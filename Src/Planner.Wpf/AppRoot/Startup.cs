@@ -69,6 +69,8 @@ namespace Planner.Wpf.AppRoot
         {
             service.Bind<IEventBroadcast<NoteEditRequestEventArgs>>()
                 .To<EventBroadcast<NoteEditRequestEventArgs>>().AsScoped();
+            service.Bind<IEventBroadcast<PlannerNagivateRequestEventArgs>>()
+                .To<EventBroadcast<PlannerNagivateRequestEventArgs>>().AsScoped();
             service.BindGeneric(typeof(IEventBroadcast<>), typeof(EventBroadcast<>),
                 i=>i.AsSingleton());
             service.Bind<ITryNoteHtmlGenerator>().To<StaticFileGenerator>();
@@ -77,9 +79,9 @@ namespace Planner.Wpf.AppRoot
             service.Bind<ITryNoteHtmlGenerator>().To<DefaultTextGenerator>();
             
             service.Bind<INotesServer>().To<NotesServer>().FixResult(i=>i.Launch()).AsSingleton();
-            
             service.Bind<ILinkRedirect>().To<RunNonPlannerUrlsInSystemBrowser>();
             service.Bind<ILinkRedirect>().To<EditNotification>();
+            service.Bind<ILinkRedirect>().To<PlannerNavigateNotification>();
             service.Bind<ILinkRedirect>().To<OpenLocalFile>(); 
             service.Bind<ILinkRedirect>().To<CompositeLinkRedirect>().BlockSelfInjection();
             service.Bind<IRequestHandler>().To<WebNavigationRouter>();
