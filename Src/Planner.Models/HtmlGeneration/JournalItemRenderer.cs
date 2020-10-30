@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using NodaTime;
 using Planner.Models.Markdown;
 using Planner.Models.Notes;
 
@@ -10,10 +11,10 @@ namespace Planner.Models.HtmlGeneration
     public class JournalItemRenderer 
     {
         private readonly TextWriter destination;
-        private readonly IMarkdownTranslator markdown;
+        private readonly Func<LocalDate, IMarkdownTranslator> markdown;
         private readonly INoteUrlGenerator urlGenerator;
 
-        public JournalItemRenderer(TextWriter destination, IMarkdownTranslator markdown, INoteUrlGenerator urlGenerator)
+        public JournalItemRenderer(TextWriter destination, Func<LocalDate, IMarkdownTranslator> markdown, INoteUrlGenerator urlGenerator)
         {
             this.destination = destination;
             this.markdown = markdown;
@@ -23,12 +24,16 @@ namespace Planner.Models.HtmlGeneration
         public void WriteJournalList(IList<Note> notes, Note? desiredNote = null)
         {
             WritePrologue();
-            int position = 1;
-            foreach (var note in notes.OrderBy(i => i.TimeCreated))
+            if (notes.Count > 0)
             {
-                TryRenderHorizontalRule(desiredNote, position);
-                if (ShouldRenderThisNote(desiredNote, note)) GenerateNote(note, position);
-                position++;
+                var renderMarkdown = markdown(notes[0].Date);
+                int position = 1;
+                foreach (var note in notes.OrderBy(i => i.TimeCreated))
+                {
+                    TryRenderHorizontalRule(desiredNote, position);
+                    if (ShouldRenderThisNote(desiredNote, note)) GenerateNote(note, position, renderMarkdown);
+                    position++;
+                }
             }
             EpilogueManager.Write(EffectiveNoteList(notes, desiredNote), destination);
         }
@@ -50,7 +55,8 @@ namespace Planner.Models.HtmlGeneration
         private void WritePrologue() => destination.Write(
             "<html><head><link rel=\"stylesheet\" href=\"/0/journal.css\"></head><body>");
         
-        private void GenerateNote(Note note, int itemNumber)
+        
+        private void GenerateNote(Note note, int itemNumber, IMarkdownTranslator markdownTranslator)
         {
             destination.Write("<h3>");
             destination.Write($"<a href=\"{urlGenerator.EditNoteUrl(note)}\">");
@@ -58,10 +64,10 @@ namespace Planner.Models.HtmlGeneration
             destination.Write(".");
             destination.Write("</a>");
             destination.Write(" ");
-            destination.Write(markdown.RenderLine(note.Title));
+            destination.Write(markdownTranslator.RenderLine(note.Title, note.Date));
             destination.Write("</h3>");
             destination.Write("<div>");
-            destination.Write(markdown.Render(note.Text));
+            destination.Write(markdownTranslator.Render(note.Text, note.Date));
             destination.Write("</div>");
         }
     }

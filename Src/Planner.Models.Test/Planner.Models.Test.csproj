@@ -20,4 +20,8 @@
       <ProjectReference Include="..\Planner.Models\Planner.Models.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Markdown\PlannerLinks" />
+    </ItemGroup>
+
 </Project>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestPlatform.Utilities;
@@ -39,7 +40,7 @@ namespace Planner.Models.Test.Notes
                     new EditNoteNotificationGenerator(repo.Object, broadcast.Object),
                     new BlobGenerator(blobRepo.Object, blobStore.Object),
                     new DailyJournalPageGenerator(
-                        i=> new JournalItemRenderer(i, new MarkdownTranslator(), urlGen.Object),
+                        i=> new JournalItemRenderer(i, d=>new MarkdownTranslator(d), urlGen.Object),
                         repo.Object),
                     new DefaultTextGenerator()
                 });
@@ -97,6 +98,16 @@ namespace Planner.Models.Test.Notes
             Assert.Contains("Title", OutputAsString);
             Assert.Contains("<strong>Text</strong>", OutputAsString);
             Assert.DoesNotContain("<hr/>", OutputAsString);
+        }
+        [Theory]
+        [InlineData("(1.2.3)", "<a href='/navToPage/1975-1-2'>(1.2.3)</a>")]
+        [InlineData("(1.2.1975.3)", "<a href='/navToPage/1975-1-2'>(1.2.1975.3)</a>")]
+        [InlineData("(1.2.75.3)", "<a href='/navToPage/1975-1-2'>(1.2.75.3)</a>")]
+        public async Task DateLinkInText(string link, string expected)
+        {
+            notes.Add(new Note(){Title = "Title", Text="See "+link, Date = date});
+            await sut.GenerateResponse("1975-7-28/", output);
+            Assert.Contains(expected, OutputAsString);
         }
         [Fact]
         public async Task MarkdownInTitle()
