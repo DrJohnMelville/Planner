@@ -5,8 +5,10 @@ using Melville.MVVM.Wpf;
 using Melville.MVVM.Wpf.RootWindows;
 using Moq;
 using NodaTime;
+using Planner.Models.Blobs;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Notes;
+using Planner.Models.Repositories;
 using Planner.WpfViewModels.Notes;
 using Xunit;
 
@@ -18,6 +20,8 @@ namespace Planner.Wpf.Test.Notes
         private readonly Note note;
         private readonly IList<Note> notes = new List<Note>();
         private readonly Mock<INavigationWindow> navWin = new Mock<INavigationWindow>();
+        private readonly Mock<ILocalRepository<Blob>> blobs = new Mock<ILocalRepository<Blob>>();
+        private readonly IList<Blob> blobList = new List<Blob>();
         private readonly NoteEditorViewModel sut;
 
         private readonly ZonedDateTime creationTime = new LocalDateTime(1975, 07, 28, 0, 0, 0)
@@ -26,17 +30,18 @@ namespace Planner.Wpf.Test.Notes
 
         public NoteEditorViewModelTest()
         {
+            blobs.Setup(i => i.ItemsForDate(It.IsAny<LocalDate>())).Returns(blobList);
             noteServer.SetupGet(i => i.BaseUrl).Returns("url://");
             note = new Note()
             {
                 Key = Guid.NewGuid(),
                 Title = "Title",
                 Text = "**Text**",
-                TimeCreated = creationTime.ToInstant()
+                TimeCreated = creationTime.ToInstant(),
             };
             notes.Add(note);
             sut = new NoteEditorViewModel(new NoteEditRequestEventArgs(notes, note),
-                new NoteUrlGenerator(noteServer.Object), navWin.Object, i=>null);
+                new NoteUrlGenerator(noteServer.Object), navWin.Object, i=>null, blobs.Object);
         }
 
         [Fact]
@@ -118,6 +123,32 @@ namespace Planner.Wpf.Test.Notes
             Assert.Equal(!confirmed, notes.Contains(note));
             navWin.VerifyNoOtherCalls();            
         }
+
+        [Fact]
+        public void BlobDisplayVisibility()
+        {
+            Assert.Equal(Visibility.Collapsed, sut.BlobDisplayVisibility);
+            sut.Blobs.Add(new Blob());
+            Assert.Equal(Visibility.Visible, sut.BlobDisplayVisibility);
+        }
+
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void DeleteBlob(bool confirmed)
+        {
+            var msgbox = new Mock<IMessageBoxWrapper>();
+            msgbox.Setup(i => i.Show("Do you want to delete: Title", "Planner",
+                    MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No))
+                .Returns(confirmed?MessageBoxResult.Yes:MessageBoxResult.No);
+
+            var blob = new Blob() {Name = "Title"};
+            blobList.Add(blob);
+            sut.DeleteBlob(blob, msgbox.Object);
+            Assert.Equal(confirmed?0:1, blobList.Count);
+        }
+
 
     }
 }

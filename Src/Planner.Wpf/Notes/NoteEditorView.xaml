@@ -10,30 +10,67 @@
              xmlns:eventBindings="clr-namespace:Melville.MVVM.Wpf.EventBindings;assembly=Melville.MVVM.Wpf"
              xmlns:DiBindings="clr-namespace:Melville.MVVM.Wpf.DiParameterSources;assembly=Melville.MVVM.Wpf"
              xmlns:pasters="clr-namespace:Planner.WpfViewModels.Notes.Pasters;assembly=Planner.WpfViewModels"
+             xmlns:blobs="clr-namespace:Planner.Models.Blobs;assembly=Planner.Models"
              mc:Ignorable="d"
              d:DataContext="{d:DesignData {x:Type notes:NoteEditorViewModel}}"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid easyGrids:GridOperations.ColsAndRows="*,*/auto,*,auto" Margin="10">
-        <TextBox FontSize="18" FontWeight="Bold" Text="{Binding Note.Title, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Grid.Row="1" AcceptsReturn="True" 
-                 Text="{Binding Note.Text, UpdateSourceTrigger=PropertyChanged}"
-                 pasters:TextBoxPasteEnhancement.MarkdownPaster="{DiBindings:DIBinding}"
-                 pasters:TextBoxPasteEnhancement.PasterDate="{Binding Note.Date}"
-                 />
+        <TextBox FontSize="18" FontWeight="Bold" Text="{Binding Note.Title, UpdateSourceTrigger=PropertyChanged}" />
+        <DockPanel Grid.Row="1">
+            <Grid IsSharedSizeScope="True" DockPanel.Dock="Bottom" Visibility="{Binding BlobDisplayVisibility}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="Date"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="Button"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock HorizontalAlignment="Center">Created</TextBlock>
+                <TextBlock HorizontalAlignment="Center" Grid.Column="1">Name</TextBlock>
+                <TextBlock HorizontalAlignment="Center" Grid.Column="2">Delete</TextBlock>
+                <ItemsControl Grid.Row="1" Grid.ColumnSpan="3" ItemsSource="{Binding Blobs}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type blobs:Blob}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="Date"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="Button"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding TimeCreated, Converter={x:Static notes:NoteEditorViewModel.DisplayInstant}}"/>
+                                <TextBlock  Grid.Column="1" Text="{Binding Name}" Margin="5 0"/>
+                                <Button Background="Red" Foreground="White" Click="{eventBindings:EventBinding DeleteBlob}"
+                                         Grid.Column="2">X</Button>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+            <TextBox AcceptsReturn="True"
+                     Text="{Binding Note.Text, UpdateSourceTrigger=PropertyChanged}"
+                     pasters:TextBoxPasteEnhancement.MarkdownPaster="{DiBindings:DIBinding}"
+                     pasters:TextBoxPasteEnhancement.PasterDate="{Binding Note.Date}" />
+        </DockPanel>
         <TextBlock Grid.Row="2" Text="{Binding DisplayCreationDate}"></TextBlock>
         <wpf:ChromiumWebBrowser Address="{Binding NoteUrl, Mode=OneWay}"
                                 RequestHandler="{DiBindings:DIBinding }"
-                                Grid.Column="1" Grid.RowSpan="2" IsTabStop="False"/>
+                                Grid.Column="1" Grid.RowSpan="2" IsTabStop="False" />
         <DockPanel Grid.Row="2" Grid.Column="1" LastChildFill="False">
             <DockPanel.Resources>
                 <Style TargetType="{x:Type Button}">
-                    <Setter Property="Margin" Value="10 0"/>
-                    <Setter Property="MinWidth" Value="60"/>
+                    <Setter Property="Margin" Value="10 0" />
+                    <Setter Property="MinWidth" Value="60" />
                 </Style>
             </DockPanel.Resources>
             <Button Click="{eventBindings:EventBinding DeleteNote}">Delete Note</Button>
             <Button Click="{eventBindings:EventBinding CancelEdit}" DockPanel.Dock="Right">Cancel</Button>
             <Button Click="{eventBindings:EventBinding NavigateToPlannerPage}" DockPanel.Dock="Right">Ok</Button>
-            </DockPanel>
+        </DockPanel>
     </Grid>
 </UserControl>
