@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows;
+using Melville.MVVM.Wpf;
 using Melville.MVVM.Wpf.RootWindows;
 using Moq;
 using NodaTime;
@@ -96,5 +98,26 @@ namespace Planner.Wpf.Test.Notes
             navWin.VerifyNoOtherCalls();
             Assert.Equal("**Text**", note.Text);
         }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void DeleteNote(bool confirmed)
+        {
+            var msgbox = new Mock<IMessageBoxWrapper>();
+            msgbox.Setup(i => i.Show("Do you want to delete: Title", "Planner",
+                MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No))
+                .Returns(confirmed?MessageBoxResult.Yes:MessageBoxResult.No);
+            sut.DeleteNote(msgbox.Object);
+
+            if (confirmed)
+            {
+                navWin.Verify(i=>i.NavigateTo(null), Times.Once);
+            }
+
+            Assert.Equal(!confirmed, notes.Contains(note));
+            navWin.VerifyNoOtherCalls();            
+        }
+
     }
 }

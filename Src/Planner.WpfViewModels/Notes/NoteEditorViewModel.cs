@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows;
 using Melville.INPC;
+using Melville.MVVM.Wpf;
+using Melville.MVVM.Wpf.DiParameterSources;
 using Melville.MVVM.Wpf.RootWindows;
 using NodaTime;
 using Planner.Models.HtmlGeneration;
@@ -59,5 +62,16 @@ namespace Planner.WpfViewModels.Notes
             navigator.NavigateTo(plannerPageFactory(Note.Date));
         }
         private void UnhookNoteUpdates() => Note.PropertyChanged -= UpdateWhenNoteChanges;
+
+        public void DeleteNote([FromServices]IMessageBoxWrapper msgbox)
+        {
+            if (!UserConfirmsIntentToDelete(msgbox)) return;
+            notesForDay.Remove(Note);
+            LeavePage(false);
+        }
+
+        private bool UserConfirmsIntentToDelete(IMessageBoxWrapper msgbox) =>
+            msgbox.Show($"Do you want to delete: {Note.Title}", "Planner",
+                MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) == MessageBoxResult.Yes;
     }
 }
