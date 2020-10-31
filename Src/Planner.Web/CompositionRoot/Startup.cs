@@ -35,12 +35,11 @@ namespace Planner.Web.CompositionRoot
         {
             ConfigureDataProtection(services);
             AddCapWebAuthentication(services);
-            DatabaseFactory.ConfigureDatabase(services);
+            DatabaseFactory.ConfigureDatabase(services, webHostEnvironment
+            );
             services.AddScoped<IDatedRemoteRepository<PlannerTask>, SqlRemoteRepositoryWithDate<PlannerTask>>();
             services.AddScoped<IDatedRemoteRepository<Note>, SqlRemoteRepositoryWithDate<Note>>();
             services.AddScoped<IDatedRemoteRepository<Blob>, SqlRemoteRepositoryWithDate<Blob>>();
-            
-            services.AddSingleton<IBlobContentStore, BlobContentStore>();
             services.AddScoped(typeof(IItemByKeyRepository<>), typeof(SqlItemByKeyRepository<>));
             
             services.AddControllersWithViews().AddJsonOptions(ConfigureJsonSerialization);
@@ -49,7 +48,7 @@ namespace Planner.Web.CompositionRoot
         private static void ConfigureDataProtection(IServiceCollection services) =>
             services.AddDataProtection()
                 .PersistKeysToFileSystem(new DirectoryInfo(".\\App_Data"))
-                .SetApplicationName("Hints")
+                .SetApplicationName("Planner")
                 .SetDefaultKeyLifetime(TimeSpan.FromDays(30));
 
         private void AddCapWebAuthentication(IServiceCollection services) =>
