@@ -24,6 +24,7 @@ namespace Planner.Web.Controllers
         public async Task<IActionResult> Get(Guid key)
         {
             var blob = await infoSource.ItemByKey(key);
+            if (blob == null) return NotFound();
             return new FileStreamResult(await contentStore.Read(blob), blob.MimeType);
         }
 

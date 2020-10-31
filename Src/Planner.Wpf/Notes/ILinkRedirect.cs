@@ -28,7 +28,7 @@ namespace Planner.Wpf.Notes
         public bool? DoRedirect(string url) =>
             children.Select(i => i.DoRedirect(url))
                 .Where(i => i.HasValue)
-                .Select(i => i.Value)
+                .Select(i => i!.Value)
                 .DefaultIfEmpty(false)
                 .First();
     }
