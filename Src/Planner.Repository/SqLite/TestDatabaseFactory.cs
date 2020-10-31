@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using NodaTime;
 using NodaTime.Extensions;
 using Planner.Models.Notes;
@@ -8,6 +9,13 @@ using Planner.Models.Tasks;
 
 namespace Planner.Repository.SqLite
 {
+    /// <summary>
+    /// Allows the design time EF tools to create a database context
+    /// </summary>
+    public class DesignTimeFactory : IDesignTimeDbContextFactory<PlannerDataContext>
+    {
+        public PlannerDataContext CreateDbContext(string[] args) => TestDatabaseFactory.TestDatabaseCreator()();
+    }
     public static class TestDatabaseFactory
     {
         public static Func<PlannerDataContext> TestDatabaseCreator()
