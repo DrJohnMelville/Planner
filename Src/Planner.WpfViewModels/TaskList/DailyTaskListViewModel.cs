@@ -126,5 +126,10 @@ namespace Planner.WpfViewModels.TaskList
             Segment<TaskTextType> segment, 
             [FromServices] IRunShellCommand commandObject) =>
             commandObject.ShellExecute(segment.Text, Array.Empty<string>());
+
+        public void DeleteTask(PlannerTaskViewModel task)
+        {
+            sourceList.Remove(task.PlannerTask);
+        }
     }
 }

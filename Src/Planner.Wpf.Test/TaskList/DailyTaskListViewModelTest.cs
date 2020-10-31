@@ -255,5 +255,14 @@ namespace Planner.Wpf.Test.TaskList
             command.Verify(i=>i.ShellExecute("c:\\blah.txt", Array.Empty<string>()));
             command.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public void DeleteTask()
+        {
+            var item = sut.TaskItems.OfType<PlannerTaskViewModel>().First();
+            sut.DeleteTask(item);
+            Assert.False(sut.TaskItems.Contains(item));
+        }
+
     }
 }

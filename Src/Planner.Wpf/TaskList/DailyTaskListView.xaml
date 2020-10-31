@@ -88,6 +88,7 @@
                                 <TextBlock Text="n" FontFamily="Marlett"></TextBlock>
                             </MenuItem.Icon>
                         </MenuItem>
+                        <MenuItem Header="Delete Task" Click="{eventBindings:EventBinding DeleteTask}"/>
                         <Separator />
                         <MenuItem Header="{Binding PlacementTarget.Tag.DeferToName[0], 
                             RelativeSource={RelativeSource AncestorType=ContextMenu}}"
@@ -181,7 +182,7 @@
                                  LostKeyboardFocus="{eventBindings:EventBinding TryAddPlannerTask}"
                                  KeyDown="{eventBindings:EventBinding NewTaskKeyDown, Parameters=$arg.Key}" />
                     </Grid>
-                    <Rectangle Grid.ColumnSpan="3" Height="1.0" VerticalAlignment="Bottom"
+                    <Rectangle Height="1.0" VerticalAlignment="Bottom"
                                HorizontalAlignment="Stretch" Fill="LightGray" />
                 </StackPanel>
             </ScrollViewer>
