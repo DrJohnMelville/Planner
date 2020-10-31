@@ -34,6 +34,9 @@ bld/
 [Ll]og/
 [Ll]ogs/
 
+#website instance data
+App_Data/
+
 # Visual Studio 2015/2017 cache/options directory
 .vs/
 .idea/
