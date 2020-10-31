@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.Unicode;
 using System.Threading.Tasks;
@@ -12,11 +13,11 @@ namespace Planner.Models.Test.Blobs
     public class BlobContentStoreTest
     {
         private MockDirectory dir = new MockDirectory("c:\\sss");
-        private IBlobContentStore sut;
+        private IDeletableBlobContentStore sut;
 
         public BlobContentStoreTest()
         {
-            sut = new BlobContentStore(dir);
+            sut = new BlobContentContentStore(dir);
         }
 
         private async Task<Blob> WriteHelloBlob()
@@ -42,6 +43,16 @@ namespace Planner.Models.Test.Blobs
             using var tr = new StreamReader(await  sut.Read(blob));
             Assert.Equal("Hello", await tr.ReadToEndAsync());
             
+        }
+
+        [Fact]
+        public async Task DeleteBlob()
+        {
+            Assert.Empty(dir.AllFiles());
+            var blob = await WriteHelloBlob();
+            Assert.Single(dir.AllFiles());
+            sut.Delete(blob);
+            Assert.Empty(dir.AllFiles());
         }
 
     }

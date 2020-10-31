@@ -24,7 +24,9 @@ namespace Planner.Web.CompositionRoot
 
         private static void RegisterDataDirectory(IServiceCollection services, IDirectory dataDir)
         {
-            services.AddSingleton<IBlobContentStore>(new BlobContentStore(dataDir));
+            var store = new BlobContentContentStore(dataDir);
+            services.AddSingleton<IBlobContentStore>(store);
+            services.AddSingleton<IDeletableBlobContentStore>(store);
         }
     }
 }

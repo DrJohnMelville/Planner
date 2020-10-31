@@ -9,12 +9,17 @@ namespace Planner.Models.Blobs
     {
         Task Write(Guid key, Stream data);
         Task Write(Blob blob, Stream data) => this.Write(blob.Key, data);
-        Task<Stream> Read(Blob blob);
+        Task<Stream> Read(Blob blob); 
     }
-    public class BlobContentStore: IBlobContentStore
+
+    public interface IDeletableBlobContentStore : IBlobContentStore
+    {
+        void Delete(Blob blob);
+    } 
+    public class BlobContentContentStore: IDeletableBlobContentStore
     {
         private readonly IDirectory targetDir;
-        public BlobContentStore(IDirectory targetDir)
+        public BlobContentContentStore(IDirectory targetDir)
         {
             this.targetDir = targetDir;
         }
@@ -25,5 +30,6 @@ namespace Planner.Models.Blobs
             await data.CopyToAsync(destination);
         }
         public Task<Stream> Read(Blob blob) => FileFromKey(blob.Key).OpenRead();
+        public void Delete(Blob blob) => FileFromKey(blob.Key).Delete();
     }
 }

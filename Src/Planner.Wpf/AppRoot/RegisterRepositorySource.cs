@@ -39,9 +39,13 @@ namespace Planner.Wpf.AppRoot
         public void UseLocalTestSource()
         {
             container.Bind<Func<PlannerDataContext>>().ToConstant(TestDatabaseFactory.TestDatabaseCreator());
+            container.Bind<IDatedRemoteRepository<Blob>>().To <SqlRemoteRepositoryWithDate<Blob>>();
+            container.Bind<IDatedRemoteRepository<Blob>>().To <CompopsiteBlobRemoteRepository>()
+                .BlockSelfInjection();
             container.BindGeneric(typeof(IDatedRemoteRepository<>), typeof(SqlRemoteRepositoryWithDate<>));
-            container.Bind<IDirectory>().ToConstant(new MemoryDirectory("c:\\sss")).WhenConstructingType<BlobContentStore>();
-            container.Bind<IBlobContentStore>().To<BlobContentStore>().AsSingleton();
+            container.Bind<IDirectory>().ToConstant(new MemoryDirectory("c:\\sss")).WhenConstructingType<BlobContentContentStore>();
+            container.Bind<IBlobContentStore>().And<IDeletableBlobContentStore>()
+                .To<BlobContentContentStore>().AsSingleton();
         }
     }
 }
