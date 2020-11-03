@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Windows.Data;
 using System.Windows.Input;
 using Melville.INPC;
 using Melville.MVVM.AdvancedLists.PersistentLinq;
@@ -16,14 +14,13 @@ namespace Planner.WpfViewModels.TaskList
     public partial class DailyTaskListViewModel
     {
         private readonly IList<PlannerTask> sourceList;
-        public CollectionView TaskItems { get; }
+        public IList<PlannerTaskViewModel> TaskViewModels { get; }
         public string[] DeferToName { get; }
 
         [AutoNotify] private bool isRankingTasks;
         [AutoNotify] private string newTaskName = "";
 
         private readonly ILocalRepository<PlannerTask> taskRepository;
-        private readonly Func<PlannerTask, PlannerTaskViewModel> viewModelFactory;
         private readonly LocalDate date;
         public DailyTaskListViewModel(
             ILocalRepository<PlannerTask> taskRepository,
@@ -31,11 +28,16 @@ namespace Planner.WpfViewModels.TaskList
             LocalDate date)
         {
             this.taskRepository = taskRepository;
-            this.viewModelFactory = viewModelFactory;
             this.date = date;
             sourceList = taskRepository.ItemsForDate(date);
-            TaskItems = CreateTaskItemsCollectionView();
+            TaskViewModels = SetupViewModelCollection(viewModelFactory);
             DeferToName = CreateDayNames();
+        }
+
+        private SelectCollection<PlannerTask, PlannerTaskViewModel> SetupViewModelCollection(
+            Func<PlannerTask, PlannerTaskViewModel> viewModelFactory)
+        {
+            return sourceList.SelectCol(viewModelFactory);
         }
 
         private string[] CreateDayNames()
@@ -46,15 +48,6 @@ namespace Planner.WpfViewModels.TaskList
             {
                 ret[i] = date.PlusDays(i+1).DayOfWeek.ToString();
             }
-            return ret;
-        }
-
-        private CollectionView CreateTaskItemsCollectionView()
-        {
-            var ret = new ListCollectionView(sourceList.SelectCol(viewModelFactory));
-            ret.SortDescriptions.Add(new SortDescription("PlannerTask.Priority", ListSortDirection.Ascending));
-            ret.SortDescriptions.Add(new SortDescription("PlannerTask.Order", ListSortDirection.Ascending));
-            ret.IsLiveSorting = true;
             return ret;
         }
 

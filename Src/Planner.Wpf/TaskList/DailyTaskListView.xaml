@@ -10,6 +10,7 @@
              xmlns:taskList="clr-namespace:Planner.WpfViewModels.TaskList;assembly=Planner.WpfViewModels"
              xmlns:mouseClicks="clr-namespace:Melville.MVVM.Wpf.MouseClicks;assembly=Melville.MVVM.Wpf"
              xmlns:hacks="clr-namespace:Melville.WpfControls.Hacks;assembly=Melville.WpfControls"
+             xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              d:DataContext="{d:DesignData {x:Type taskList:DailyTaskListViewModel}}"
              mc:Ignorable="d" Grid.IsSharedSizeScope="True">
     <UserControl.Resources>
@@ -147,6 +148,14 @@
                 </UniformGrid>
             </Grid>
         </DataTemplate>
+        <CollectionViewSource x:Key="SortedList" 
+                              Source="{Binding TaskViewModels}" 
+                              IsLiveSortingRequested="True">
+            <CollectionViewSource.SortDescriptions>
+                <componentModel:SortDescription PropertyName="PlannerTask.Priority" Direction="Ascending"/> 
+                <componentModel:SortDescription PropertyName="PlannerTask.Order" Direction="Ascending"/> 
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
     </UserControl.Resources>
     <Border BorderThickness="0" BorderBrush="Transparent" x:Name="PlannerTaskListBorder" Background="Transparent">
         <Grid>
@@ -167,7 +176,8 @@
             <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"
                           Grid.ColumnSpan="3" Grid.Row="1">
                 <StackPanel>
-                    <ItemsControl ItemsSource="{Binding TaskItems}" ItemTemplate="{StaticResource TaskLineTemplate}" />
+                    <ItemsControl ItemsSource="{Binding Source={StaticResource SortedList}}"
+                                  ItemTemplate="{StaticResource TaskLineTemplate}" />
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" SharedSizeGroup="CheckMark" />

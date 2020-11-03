@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Windows;
+using System.Windows.Data;
 using CefSharp;
 using Melville.IOC.IocContainers;
 using Melville.IOC.IocContainers.ActivationStrategies.TypeActivation;
+using Melville.MVVM.AdvancedLists;
 using Melville.MVVM.Wpf.Clipboards;
-using Melville.MVVM.Wpf.MouseDragging;
 using Melville.MVVM.Wpf.RootWindows;
 using Melville.MVVM.Wpf.ViewFrames;
 using Melville.WpfAppFramework.StartupBases;
@@ -30,6 +31,7 @@ namespace Planner.Wpf.AppRoot
         [STAThread]
         public static int Main(string[] commandLineArgs)
         {
+            UiThreadBuilder.RunOnUiThread = i => throw new InvalidOperationException("xxx");
             CefSharpRegistration.Initialize();
             ApplicationRootImplementation.Run(new Startup());
             return 0;
