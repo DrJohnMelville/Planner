@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Security.Policy;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Melville.MVVM.WaitingServices;
 using Melville.MVVM.Wpf.DiParameterSources;
+using Melville.MVVM.Wpf.KeyboardFacade;
 using Melville.MVVM.Wpf.RootWindows;
+using Melville.MVVM.Wpf.ViewFrames;
 using NodaTime;
 using Planner.Models.Time;
 using Planner.WpfViewModels.PlannerPages;
+using Serilog;
 using TokenServiceClient.Native;
 using TokenServiceClient.Native.PersistentToken;
 
@@ -18,6 +23,7 @@ namespace Planner.WpfViewModels.Logins
         void UseWebSource(HttpClient authenticatedClient);
         void UseLocalTestSource();
     }
+    [OnDisplayed(nameof(TryAutoLogin))]
     public partial class LoginViewModel
     {
         public IList<TargetSite> Sites { get; }
@@ -35,6 +41,16 @@ namespace Planner.WpfViewModels.Logins
         {
           registry.UseLocalTestSource();
           navigator.ToDate(clock.CurrentDate());
+        }
+
+        public  Task TryAutoLogin(
+            IWaitingService wait,
+            [FromServices] IRegisterRepositorySource registry,
+            [FromServices] IClock clock, 
+            [FromServices] IKeyboardQuery keyboardQuery)
+        {
+            if ((keyboardQuery.Modifiers & ModifierKeys.Control) != 0 ||Sites.Count == 0) return Task.CompletedTask;
+            return LogIn(wait, Sites[0], registry, clock);
         }
         public async Task LogIn(
             IWaitingService wait,
