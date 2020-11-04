@@ -51,20 +51,21 @@ namespace Planner.Models.Test.Tasks
         }
 
         [Theory]
-        [InlineData("a (1.2.3) b", TaskTextType.PlannerPage)]
-        [InlineData("a (1.2.20.3) b", TaskTextType.PlannerPage)]
-        [InlineData("a https://zxci.abc.com b", TaskTextType.WebLink)]
-        [InlineData("a c:\\xxx.jod b", TaskTextType.FileLink)]
-        [InlineData("a \\\\da\\xxx.jod b", TaskTextType.FileLink)]
-        [InlineData("a \"c:\\xxx.jod xx yy\" b", TaskTextType.FileLink)]
-        [InlineData("a \"\\\\da\\xxx is 333.jod\" b", TaskTextType.FileLink)]
-        public void RegcognizeMiddleLink(string text, TaskTextType middleType)
+        [InlineData("a (1.2.3) b", TaskTextType.PlannerPage, "(1.2.3)")]
+        [InlineData("a (1.2.20.3) b", TaskTextType.PlannerPage, "(1.2.20.3)")]
+        [InlineData("a https://zxci.abc.com b", TaskTextType.WebLink,"zcxi.abc.com")]
+        [InlineData("a c:\\xxx.jod b", TaskTextType.FileLink, "xxx.jod")]
+        [InlineData("a \\\\da\\xxx.jod b", TaskTextType.FileLink, "xxx.jod")]
+        [InlineData("a \"c:\\xxx.jod xx yy\" b", TaskTextType.FileLink, "xxx.jod xxx yy")]
+        [InlineData("a \"\\\\da\\xxx is 333.jod\" b", TaskTextType.FileLink, "xxx is 333.jod")]
+        public void RecognizeMiddleLink(string text, TaskTextType middleType, string display)
         {
             var list = DoParse(text);
             Assert.Equal(3, list.Count);
             Assert.Equal(middleType, list[1].Label);
             Assert.Equal(text[2..^2], list[1].Text);
-            
+//            Assert.Equal(display, list[1].DisplayText);
+               
         }
 
     }

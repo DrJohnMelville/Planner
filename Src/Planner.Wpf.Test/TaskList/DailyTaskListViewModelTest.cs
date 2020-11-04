@@ -38,7 +38,7 @@ namespace Planner.Wpf.Test.TaskList
                 (Func<LocalDate, IList<PlannerTask>>)GenerateDailyTaskList);
             sut = new DailyTaskListViewModel(taskFactory.Object, i=>new PlannerTaskViewModel(i),
                 date);
-            itemVM = sut.TaskItems.OfType<PlannerTaskViewModel>().First();
+            itemVM = sut.TaskViewModels.OfType<PlannerTaskViewModel>().First();
         }
         public IList<PlannerTask> GenerateDailyTaskList(LocalDate date)
         {
@@ -77,7 +77,7 @@ namespace Planner.Wpf.Test.TaskList
         public void TurnOffSortingWhenDone()
         {
             sut.IsRankingTasks = true;
-            foreach (var model in sut.TaskItems.OfType<PlannerTaskViewModel>())
+            foreach (var model in sut.TaskViewModels.OfType<PlannerTaskViewModel>())
             {
                 while (!model.PlannerTask.Prioritized)
                 {
@@ -91,7 +91,7 @@ namespace Planner.Wpf.Test.TaskList
         public void AutoOrder()
         {
             sut.IsRankingTasks = true;
-            var models = sut.TaskItems.OfType<PlannerTaskViewModel>().ToList();
+            var models = sut.TaskViewModels.OfType<PlannerTaskViewModel>().ToList();
             Assert.Equal(4, models.Count);
             
             sut.ButtonA(models[0]);
@@ -108,7 +108,7 @@ namespace Planner.Wpf.Test.TaskList
         public void AutoOrderPartial()
         {
             sut.IsRankingTasks = true;
-            var models = sut.TaskItems.OfType<PlannerTaskViewModel>().ToList();
+            var models = sut.TaskViewModels.OfType<PlannerTaskViewModel>().ToList();
             Assert.Equal(4, models.Count);
             
             sut.ButtonA(models[0]);
@@ -137,7 +137,7 @@ namespace Planner.Wpf.Test.TaskList
         {
             sut.NewTaskName = newName;
             sut.TryAddPlannerTask();
-            Assert.Equal(4, sut.TaskItems.Count);
+            Assert.Equal(4, sut.TaskViewModels.Count);
             Assert.Equal("", sut.NewTaskName);
             
         }
@@ -145,7 +145,7 @@ namespace Planner.Wpf.Test.TaskList
         [Fact]
         public void EnterTriesToCreateNewTask()
         {
-            Assert.Equal(4, sut.TaskItems.Count);
+            Assert.Equal(4, sut.TaskViewModels.Count);
             sut.NewTaskKeyDown(Key.Enter);
             sut.NewTaskName = "Foo";
             sut.NewTaskKeyDown(Key.A);
@@ -193,7 +193,7 @@ namespace Planner.Wpf.Test.TaskList
         [InlineData(6)]
         public void TestDefer(int deferIndex)
         {
-            var item = sut.TaskItems.OfType<PlannerTaskViewModel>().First();
+            var item = sut.TaskViewModels.OfType<PlannerTaskViewModel>().First();
             switch (deferIndex)
             {
                 case 0: sut.Defer0(item); break;
@@ -220,7 +220,7 @@ namespace Planner.Wpf.Test.TaskList
         [Fact]
         public void DeferToDateTest()
         {
-            var item = sut.TaskItems.OfType<PlannerTaskViewModel>().First();
+            var item = sut.TaskViewModels.OfType<PlannerTaskViewModel>().First();
             sut.DeferToDate(item);
             
             // show the popup
@@ -259,9 +259,9 @@ namespace Planner.Wpf.Test.TaskList
         [Fact]
         public void DeleteTask()
         {
-            var item = sut.TaskItems.OfType<PlannerTaskViewModel>().First();
+            var item = sut.TaskViewModels.OfType<PlannerTaskViewModel>().First();
             sut.DeleteTask(item);
-            Assert.False(sut.TaskItems.Contains(item));
+            Assert.False(sut.TaskViewModels.Contains(item));
         }
 
     }
