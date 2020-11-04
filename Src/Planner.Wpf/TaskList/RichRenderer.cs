@@ -16,8 +16,9 @@ namespace Planner.Wpf.TaskList
             var ac = (IAddChild) ret;
             foreach (var span in parser.Parse(source))
             {
-                var run = new Run(span.Text);
-                ac.AddChild(span.Label == TaskTextType.NoLink ? SetupRun(run) : CreateLink(run, span));
+                var run = new Run(span.DisplayText);
+                ac.AddChild(span.Label == TaskTextType.NoLink ? SetupRun(run) : 
+                    CreateLink(run, span));
             }
         }
 
@@ -31,6 +32,7 @@ namespace Planner.Wpf.TaskList
         private static Hyperlink CreateLink(Run run, Segment<TaskTextType> segment)
         {
             var ret = new Hyperlink(run);
+            ret.ToolTip = segment.Text;
             ret.Focusable = false;
             ret.IsEnabled = true;
             ret.Click += (s, e) => RunOnVisualTreeSearch.Run((DependencyObject)s, 
