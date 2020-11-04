@@ -144,7 +144,7 @@ namespace Planner.Wpf.Test.PlannerPages
         {
             sut.CurrentDate = new LocalDate(1975,07,28);
             var match = Regex.Match("(1.2.3)", @"\((\d+)\.(\d+)\.(\d+)\)");
-            sut.PlannerPageLinkClicked(new Segment<TaskTextType>("(1.2.3)", TaskTextType.PlannerPage,
+            sut.PlannerPageLinkClicked(new Segment<TaskTextType>("(1.2.3)", "(1.2.3)", TaskTextType.PlannerPage,
                 match));
             navigation.Verify(i=>i.ToDate(new LocalDate(1975,1,2)));
             
@@ -154,8 +154,8 @@ namespace Planner.Wpf.Test.PlannerPages
         {
             sut.CurrentDate = new LocalDate(1975,07,28);
             var match = Regex.Match("(1.2.1980.3)", @"\((\d+)\.(\d+)\.(\d+)\.(\d+)\)");
-            sut.PlannerPageLinkClicked(new Segment<TaskTextType>("(1.2.1980.3)", TaskTextType.PlannerPage,
-                match));
+            sut.PlannerPageLinkClicked(new Segment<TaskTextType>("(1.2.1980.3)", "(1.2.1980.3)",
+                TaskTextType.PlannerPage, match));
             navigation.Verify(i=>i.ToDate(new LocalDate(1980,1,2)));
         }
         [Fact]
@@ -163,7 +163,7 @@ namespace Planner.Wpf.Test.PlannerPages
         {
             sut.CurrentDate = new LocalDate(1975,07,28);
             var match = Regex.Match("(1.2.80.3)", @"\((\d+)\.(\d+)\.(\d+)\.(\d+)\)");
-            sut.PlannerPageLinkClicked(new Segment<TaskTextType>("(1.2.80.3)", TaskTextType.PlannerPage,
+            sut.PlannerPageLinkClicked(new Segment<TaskTextType>("(1.2.80.3)", "(1.2.80.3)", TaskTextType.PlannerPage,
                 match));
             navigation.Verify(i=>i.ToDate(new LocalDate(1980,1,2)));
         }

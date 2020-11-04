@@ -241,7 +241,7 @@ namespace Planner.Wpf.Test.TaskList
         public void OpenWebLink()
         {
             var command = new Mock<IRunShellCommand>();
-            sut.WebLinkLinkClicked(new Segment<TaskTextType>("www.google.com", TaskTextType.WebLink, null),
+            sut.WebLinkLinkClicked(new Segment<TaskTextType>("www.google.com", TaskTextType.WebLink, 0),
                 command.Object);
             command.Verify(i=>i.ShellExecute("www.google.com", Array.Empty<string>()));
             command.VerifyNoOtherCalls();
@@ -250,7 +250,7 @@ namespace Planner.Wpf.Test.TaskList
         public void OpenFileLink()
         {
             var command = new Mock<IRunShellCommand>();
-            sut.FileLinkLinkClicked(new Segment<TaskTextType>("c:\\blah.txt", TaskTextType.FileLink, null),
+            sut.FileLinkLinkClicked(new Segment<TaskTextType>("c:\\blah.txt", TaskTextType.FileLink, 0),
                 command.Object);
             command.Verify(i=>i.ShellExecute("c:\\blah.txt", Array.Empty<string>()));
             command.VerifyNoOtherCalls();

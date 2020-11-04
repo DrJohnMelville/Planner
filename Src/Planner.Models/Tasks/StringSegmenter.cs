@@ -7,27 +7,46 @@ namespace Planner.Models.Tasks
 {
     public class SegmentDecl<T>
     {
-        public Regex Recognizer { get; }
-        public T Label {get;}
+        private readonly Regex recognizer;
+        private readonly T label;
+        private Regex formatter;
 
-        public SegmentDecl(Regex recognizer, T label)
+        public SegmentDecl(Regex recognizer, T label, Regex formatter)
         {
-            Recognizer = recognizer;
-            Label = label;
+            this.recognizer = recognizer;
+            this.label = label;
+            this.formatter = formatter;
+        }
+
+        public Segment<T>? TryMatchSegment(string text, int startPos)
+        {
+            var match = recognizer.Match(text, startPos);
+            return match.Success ? new Segment<T>(match.Value, 
+                formatter.Match(match.Value).Groups[1].Value, label, match) : null;
         }
     }
 
     public class Segment<T>
     {
         public string Text { get; }
+        public string DisplayText { get; }
+        public int StartPos { get; }
+        public int Length => Text.Length;
+        public int NextPos => StartPos+Length;
         public T Label { get; }
         public Match? Match { get; }
 
-        public Segment(string text, T label, Match? match)
+        public Segment(string text, T label, int startPos)
         {
             Text = text;
+            DisplayText = text;
             Label = label;
+            StartPos = startPos;
+        }
+        public Segment(string text, string displayText, T label, Match match): this (text, label, match.Index)
+        {
             Match = match;
+            DisplayText = displayText;
         }
     }
 
@@ -51,46 +70,35 @@ namespace Planner.Models.Tasks
                 if (HasTextBeforeNextLink(startPos, nextLink.StartPos))
                     yield return SegmentBeforeLink(text, startPos, nextLink.StartPos);
 
-                yield return LinkAsSegment(text, nextLink);
+                yield return nextLink;
                 
                 startPos = nextLink.NextPos;
             }
         }
 
-        private static Segment<T> LinkAsSegment(string text, 
-            (Match? Match, T label, int StartPos, int NextPos) nextLink) =>
-            new Segment<T>(text[nextLink.StartPos..nextLink.NextPos], 
-                nextLink.label, nextLink.Match);
-
         private Segment<T> SegmentBeforeLink(string text, int startPos, int linkStartPos) => 
-            new Segment<T>(text[startPos..linkStartPos], defaultLabel, null);
+            new Segment<T>(text[startPos..linkStartPos], defaultLabel, startPos);
 
         private static bool HasTextBeforeNextLink(int startPos, int linkPos) => linkPos > startPos;
 
-        private (Match? Match, T label, int StartPos, int NextPos) FindNextMatch(string text, int startPos)
+        private Segment<T> FindNextMatch(string text, int startPos)
         {
             var candidates = CandidateLinkQuery(text, startPos);
             if (!candidates.Any())
             {
                 return MatchRestOfString(text, startPos);
             }
-            var nextLink = candidates.MinThat(i => i.Match.Index);
-            return LinkToMatchData(nextLink);
+            var nextLink = candidates.MinThat(i => i.StartPos);
+            return nextLink;
         }
 
-        private (Match? Match, T label, int StartPos, int NextPos) 
-            MatchRestOfString(string text, int startPos) => 
-            (null, defaultLabel, startPos, text.Length);
+        private Segment<T> MatchRestOfString(string text, int startPos) =>
+            new Segment<T>(text[startPos..], defaultLabel, startPos);
 
-        private static (Match Match, T Label, int Index, int) 
-            LinkToMatchData((Match Match, T Label) nextLink) =>
-            (nextLink.Match, nextLink.Label,
-                nextLink.Match.Index, nextLink.Match.Index + nextLink.Match.Length);
-
-        private List<(Match Match, T Label)> CandidateLinkQuery(string text, int startPos) =>
+        private List<Segment<T>> CandidateLinkQuery(string text, int startPos) =>
             declarations
-                .Select(i => (Match:i.Recognizer.Match(text, startPos), Label:i.Label))
-                .Where(i => i.Match.Success)
+                .Select(i => i.TryMatchSegment(text, startPos))
+                .OfType<Segment<T>>() // filters out the null segments
                 .ToList();
     }
 }
