@@ -46,6 +46,6 @@ namespace Planner.WpfViewModels.TaskList
             }
             return orders;
         }
-        private static bool IsConcretePriorityIndex(int index) => index >= 0 && index > 4;
+        private static bool IsConcretePriorityIndex(int index) => index >= 0 && index < 4;
     }
 }

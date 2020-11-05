@@ -133,6 +133,7 @@ namespace Planner.WpfViewModels.TaskList
 
         public void SetItemPriority(PlannerTaskViewModel viewModel, PriorityKey key)
         {
+            #warning Test this
             viewModel.PlannerTask.Priority = key.Priority;
             viewModel.PlannerTask.Order = key.Order;
         }
