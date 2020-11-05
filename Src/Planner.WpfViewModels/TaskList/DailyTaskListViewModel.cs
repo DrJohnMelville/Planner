@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Input;
 using Melville.INPC;
 using Melville.MVVM.AdvancedLists.PersistentLinq;
@@ -123,6 +124,46 @@ namespace Planner.WpfViewModels.TaskList
         public void DeleteTask(PlannerTaskViewModel task)
         {
             sourceList.Remove(task.PlannerTask);
+        }
+
+        public void InitializePriorityMenu(PlannerTaskViewModel model)
+        {
+            model.Menus = sourceList.CreatePriorityMenu();
+        }
+    }
+
+    public class PriorityKey
+    {
+        public char Priority { get; }
+        public int Order { get; }
+        public string Display => $"{Priority}{Order}";
+
+        public PriorityKey(char priority, int order)
+        {
+            Priority = priority;
+            Order = order;
+        }
+    }
+
+    public static class PriortyKeyListFactory
+    {
+        public static IEnumerable<PriorityKey> CreatePriorityMenu(this IList<PlannerTask> tasks)
+        {
+            int[] orders = new[] {1, 1, 1, 1};
+            foreach (var task in tasks)
+            {
+                var index = task.Priority - 'A';
+                if (index < 0 || index > 3) continue;
+                orders[index] = Math.Max(orders[index], task.Order + 1);
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < orders[i]; j++)
+                {
+                    yield return new PriorityKey((char)('A' + i), j + 1);
+                }
+            }
         }
     }
 }

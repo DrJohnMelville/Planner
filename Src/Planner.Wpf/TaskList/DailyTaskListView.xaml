@@ -12,7 +12,7 @@
              xmlns:hacks="clr-namespace:Melville.WpfControls.Hacks;assembly=Melville.WpfControls"
              xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              d:DataContext="{d:DesignData {x:Type taskList:DailyTaskListViewModel}}"
-             mc:Ignorable="d" Grid.IsSharedSizeScope="True">
+             mc:Ignorable="d" Grid.IsSharedSizeScope="True" x:Name="TopControl">
     <UserControl.Resources>
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="Margin" Value="4 2" />
@@ -36,6 +36,7 @@
         </DataTemplate>
         <DataTemplate x:Key="TaskLineTemplate" DataType="{x:Type taskList:PlannerTaskViewModel}">
             <Grid Background="Transparent" 
+                  ContextMenuOpening="{eventBindings:EventBinding InitializePriorityMenu}"
                   ToolTip="{Binding PlannerTask.StatusDetail, 
                   Converter={x:Static taskList:PlannerTaskViewModel.ToolTipOnlyWithText}}"
                   Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type local:DailyTaskListView}}}">
@@ -64,6 +65,14 @@
                 </Grid.Resources>
                 <Grid.ContextMenu>
                     <ContextMenu>
+                        <MenuItem Header="Priority" ItemsSource="{Binding Menus}">
+                            <MenuItem.ItemTemplate>
+                                <DataTemplate>
+                                    <MenuItem Header="{Binding Display}"
+                                              Click="{eventBindings:EventBinding SetItemPriority}"/>
+                                </DataTemplate>
+                            </MenuItem.ItemTemplate>
+                        </MenuItem>
                         <MenuItem Header="Incomplete" Click="{eventBindings:EventBinding MarkIncomplete}">
                             <MenuItem.Icon>
                                 <TextBlock Text="" FontFamily="Wingdings"></TextBlock>

@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 using Melville.INPC;
@@ -11,7 +14,6 @@ namespace Planner.WpfViewModels.TaskList
     public partial class PlannerTaskViewModel
     {
         public PlannerTask PlannerTask {get;}
-
         public PlannerTaskViewModel(PlannerTask plannerTask)
         {
             PlannerTask = plannerTask;
@@ -24,6 +26,8 @@ namespace Planner.WpfViewModels.TaskList
                 nameof(PlannerTask.Status), nameof(StatusDisplayText), nameof(StatusDisplayFont));
 
         }
+
+        [AutoNotify] private IEnumerable menus;
         
         public bool ShowPriorityButton => PlannerTask.Priority == ' ';
         public bool ShowBlankButton => !ShowPriorityButton;
