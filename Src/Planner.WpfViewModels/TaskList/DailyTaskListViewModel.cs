@@ -130,40 +130,11 @@ namespace Planner.WpfViewModels.TaskList
         {
             model.Menus = sourceList.CreatePriorityMenu();
         }
-    }
 
-    public class PriorityKey
-    {
-        public char Priority { get; }
-        public int Order { get; }
-        public string Display => $"{Priority}{Order}";
-
-        public PriorityKey(char priority, int order)
+        public void SetItemPriority(PlannerTaskViewModel viewModel, PriorityKey key)
         {
-            Priority = priority;
-            Order = order;
-        }
-    }
-
-    public static class PriortyKeyListFactory
-    {
-        public static IEnumerable<PriorityKey> CreatePriorityMenu(this IList<PlannerTask> tasks)
-        {
-            int[] orders = new[] {1, 1, 1, 1};
-            foreach (var task in tasks)
-            {
-                var index = task.Priority - 'A';
-                if (index < 0 || index > 3) continue;
-                orders[index] = Math.Max(orders[index], task.Order + 1);
-            }
-
-            for (int i = 0; i < 4; i++)
-            {
-                for (int j = 0; j < orders[i]; j++)
-                {
-                    yield return new PriorityKey((char)('A' + i), j + 1);
-                }
-            }
+            viewModel.PlannerTask.Priority = key.Priority;
+            viewModel.PlannerTask.Order = key.Order;
         }
     }
 }
