@@ -126,16 +126,10 @@ namespace Planner.WpfViewModels.TaskList
             sourceList.Remove(task.PlannerTask);
         }
 
-        public void InitializePriorityMenu(PlannerTaskViewModel model)
-        {
+        public void InitializePriorityMenu(PlannerTaskViewModel model) => 
             model.Menus = sourceList.CreatePriorityMenu();
-        }
 
-        public void SetItemPriority(PlannerTaskViewModel viewModel, PriorityKey key)
-        {
-            #warning Test this
-            viewModel.PlannerTask.Priority = key.Priority;
-            viewModel.PlannerTask.Order = key.Order;
-        }
+        public void SetItemPriority(PlannerTaskViewModel viewModel, PriorityKey key) => 
+            sourceList.ChangeTaskPriority(viewModel.PlannerTask, key.Priority, key.Order);
     }
 }
