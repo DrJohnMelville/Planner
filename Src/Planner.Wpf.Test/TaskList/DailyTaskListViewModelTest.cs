@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 using Windows.ApplicationModel.Calls.Background;
+using Windows.UI.Xaml;
 using Melville.MVVM.AdvancedLists;
 using Melville.MVVM.RunShellCommands;
 using Melville.TestHelpers.InpcTesting;
@@ -139,8 +140,26 @@ namespace Planner.Wpf.Test.TaskList
             sut.TryAddPlannerTask();
             Assert.Equal(4, sut.TaskViewModels.Count);
             Assert.Equal("", sut.NewTaskName);
-            
         }
+
+        [Fact]
+        public void SetPriority()
+        {
+            var model = sut.TaskViewModels.OfType<PlannerTaskViewModel>().First();
+            sut.SetItemPriority(model, new PriorityKey('D',3));
+            Assert.Equal("D3", model.PlannerTask.PriorityDisplay);
+        }
+
+        [Fact]
+        public void SetupPriorityMenu()
+        {
+            var model = sut.TaskViewModels.OfType<PlannerTaskViewModel>().First();
+            Assert.Empty(model.Menus.OfType<object>());
+            sut.InitializePriorityMenu(model);
+            Assert.Equal(5, model.Menus.OfType<object>().Count());
+        }
+
+
 
         [Fact]
         public void EnterTriesToCreateNewTask()

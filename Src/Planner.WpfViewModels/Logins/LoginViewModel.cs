@@ -49,8 +49,12 @@ namespace Planner.WpfViewModels.Logins
             [FromServices] IClock clock, 
             [FromServices] IKeyboardQuery keyboardQuery)
         {
+#if DEBUG
+             return Task.CompletedTask;
+#else
             if ((keyboardQuery.Modifiers & ModifierKeys.Control) != 0 ||Sites.Count == 0) return Task.CompletedTask;
             return LogIn(wait, Sites[0], registry, clock);
+#endif
         }
         public async Task LogIn(
             IWaitingService wait,
