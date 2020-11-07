@@ -14,7 +14,7 @@ namespace Planner.Models.Test.Blobs
     public class BlobCreatorTest
     {
         private readonly Mock<ILocalRepository<Blob>> repo = new Mock<ILocalRepository<Blob>>();
-        private readonly List<Blob> dailyList = new List<Blob>();
+        private readonly ItemList<Blob> dailyList = new ItemList<Blob>();
         private readonly Mock<IClock> clock = new Mock<IClock>();
         private readonly Mock<IBlobContentStore> writer = new Mock<IBlobContentStore>();
         private readonly BlobCreator sut;
@@ -22,7 +22,7 @@ namespace Planner.Models.Test.Blobs
 
         public BlobCreatorTest()
         {
-            repo.Setup(i => i.CompletedItemsForDate(date)).ReturnsAsync(dailyList);
+            repo.Setup(i => i.ItemsForDate(date)).Returns(dailyList);
             repo.Setup(i => i.CreateItem(date, It.IsAny<Action<Blob>>()))
                 .Returns((LocalDate date, Action<Blob> init) =>
                 {

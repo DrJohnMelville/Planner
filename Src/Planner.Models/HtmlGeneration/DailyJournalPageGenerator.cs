@@ -34,7 +34,7 @@ namespace Planner.Models.HtmlGeneration
         private async Task TryRespond(LocalDate date, Guid? note, Stream destination)
         {
             await using var writer = new StreamWriter(destination);
-            var items = await noteRepository.CompletedItemsForDate(date);
+            var items = await noteRepository.ItemsForDate(date).CompleteList();
             rendererFactory(writer).WriteJournalList(items, items.FirstOrDefault(
                 i=>note.HasValue && note == i.Key));
         }

@@ -16,12 +16,12 @@ namespace Planner.Models.Test.Blobs
         private readonly LocalDate date = new LocalDate(1975,07,28);
         private readonly Mock<ILocalRepository<Blob>> repo = new Mock<ILocalRepository<Blob>>();
         private readonly Mock<IBlobContentStore> store = new Mock<IBlobContentStore>();
-        private readonly List<Blob> todaysBlobs = new List<Blob>(); 
+        private readonly ItemList<Blob> todaysBlobs = new ItemList<Blob>(); 
         
         public BlobReaderTest()
         {
-            repo.Setup(i => i.CompletedItemsForDate(date)).ReturnsAsync(todaysBlobs);
-            repo.Setup(i => i.CompletedItemsForDate(date.PlusDays(1))).ReturnsAsync(new List<Blob>());
+            repo.Setup(i => i.ItemsForDate(date)).Returns(todaysBlobs);
+            repo.Setup(i => i.ItemsForDate(date.PlusDays(1))).Returns(new ItemList<Blob>());
             sut = new BlobGenerator(repo.Object, store.Object);
         }
 

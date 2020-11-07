@@ -1,8 +1,25 @@
 ﻿@page "/DailyPage/{DateString}"
+@using Planner.Models.Repositories
+@using Planner.Models.Tasks
+@inject ILocalRepository<PlannerTask> taskStore;
 <h3>Daily Page for @DateString </h3>
+<ol>
+    @if (tasks != null)
+    @foreach(var task in tasks)
+    {
+        <li>@task.Name</li>
+    }
+</ol>
 
 @code {
 
     [Parameter]
     public string DateString { get; set; }
+
+    private IListPendingCompletion<PlannerTask>? tasks;
+    
+    protected override Task OnInitializedAsync() => 
+        taskStore.TryItemsForDate(DateString, out tasks) ?
+        tasks.CompleteList() : Task.CompletedTask;
+
 }

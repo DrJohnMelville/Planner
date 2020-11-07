@@ -36,14 +36,14 @@ namespace Planner.Wpf.Test.TaskList
                     return ret;
                 });
             taskFactory.Setup(i => i.ItemsForDate(date)).Returns(
-                (Func<LocalDate, IList<PlannerTask>>)GenerateDailyTaskList);
+                (Func<LocalDate, IListPendingCompletion<PlannerTask>>)GenerateDailyTaskList);
             sut = new DailyTaskListViewModel(taskFactory.Object, i=>new PlannerTaskViewModel(i),
                 date);
             itemVM = sut.TaskViewModels.OfType<PlannerTaskViewModel>().First();
         }
-        public IList<PlannerTask> GenerateDailyTaskList(LocalDate date)
+        public IListPendingCompletion<PlannerTask> GenerateDailyTaskList(LocalDate date)
         {
-            var src = new ThreadSafeBindableCollection<PlannerTask>();
+            var src = new ItemList<PlannerTask>();
             src.Add(new PlannerTask() {Name = "Task1"});
             src.Add(new PlannerTask() {Name = "Task2"});
             src.Add(new PlannerTask() {Name = "Task3"});

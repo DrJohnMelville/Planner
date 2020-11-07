@@ -45,17 +45,13 @@ namespace Planner.Models.Repositories
                 remote.Update(plannerTask).FireAndForget();
         }
 
-        public IList<T> ItemsForDate(LocalDate date)
+        public IListPendingCompletion<T> ItemsForDate(LocalDate date)
         {
             var ret = new ItemList<T>();
             RegisterItemRemovalNotification(ret);
             ret.SetCompletionTask(LoadItemsForDate(date, ret));
             return ret;
         }
-
-        public Task<IList<T>> CompletedItemsForDate(LocalDate date) => 
-            ((IListPendingCompletion<T>) ItemsForDate(date)).CompleteList();
-
         private void RegisterItemRemovalNotification(ThreadSafeBindableCollection<T> ret) => 
             ret.CollectionChanged += CollectionChanged;
 

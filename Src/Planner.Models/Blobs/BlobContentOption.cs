@@ -39,7 +39,7 @@ namespace Planner.Models.Blobs
 
         private async Task CopyBlob(LocalDate date, int ordinal, Stream destination)
         {
-            var listForDate = await repository.CompletedItemsForDate(date);
+            var listForDate = await repository.ItemsForDate(date).CompleteList();
             await using var data = await GetStreamFromOrdinal(ordinal, listForDate);
             await data.CopyToAsync(destination);
         }

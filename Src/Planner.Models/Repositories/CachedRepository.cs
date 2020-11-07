@@ -11,8 +11,8 @@ namespace Planner.Models.Repositories
 
     public class CachedRepository<T> : ILocalRepository<T> where T : PlannerItemWithDate
     {
-        private readonly Dictionary<LocalDate, WeakReference<IList<T>>> cache =
-            new Dictionary<LocalDate, WeakReference<IList<T>>>();
+        private readonly Dictionary<LocalDate, WeakReference<IListPendingCompletion<T>>> cache =
+            new Dictionary<LocalDate, WeakReference<IListPendingCompletion<T>>>();
 
         private readonly ILocalRepository<T> source;
 
@@ -30,19 +30,12 @@ namespace Planner.Models.Repositories
             return ret;
         }
 
-        public IList<T> ItemsForDate(LocalDate date)
+        public IListPendingCompletion<T> ItemsForDate(LocalDate date)
         {
             if (cache.TryGetValue(date, out var weakRef) && weakRef.TryGetTarget(out var val)) return val;
             var ret = source.ItemsForDate(date);
-            cache[date] = new WeakReference<IList<T>>(ret);
+            cache[date] = new WeakReference<IListPendingCompletion<T>>(ret);
             return ret;
-        }
-
-        public Task<IList<T>> CompletedItemsForDate(LocalDate date)
-        {
-            var ret = ItemsForDate(date);
-            return  ret is IListPendingCompletion<T> lpc?
-                lpc.CompleteList(): Task.FromResult(ret);
         }
     }
 }

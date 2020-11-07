@@ -35,7 +35,7 @@ namespace Planner.Wpf.Test.PlannerPages
         public DailyPlannerPageViewModelTest()
         {
             repo.Setup(i => i.ItemsForDate(It.IsAny<LocalDate>())).Returns(
-                (LocalDate d) => new List<PlannerTask>());
+                (LocalDate d) => new ItemList<PlannerTask>());
             Func<LocalDate, DailyTaskListViewModel> taskListFactory = d => new DailyTaskListViewModel(repo.Object, i=> new PlannerTaskViewModel(i), d);
             var noteCreator = new NoteCreator(noteRepo.Object, clock.Object);
             sut = new DailyPlannerPageViewModel(new LocalDate(1975,07,28), 

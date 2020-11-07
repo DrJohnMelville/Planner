@@ -17,17 +17,14 @@ namespace Planner.Repository
             return ret;
         }
 
-        public IList<PlannerTask> ItemsForDate(LocalDate date)
+        public IListPendingCompletion<PlannerTask> ItemsForDate(LocalDate date)
         {
-            var src = new ThreadSafeBindableCollection<PlannerTask>();
+            var src = new ItemList<PlannerTask>();
             src.Add(new PlannerTask() {Name = "Task1"});
             src.Add(new PlannerTask() {Name = "Task2"});
             src.Add(new PlannerTask() {Name = "Task3"});
             src.Add(new PlannerTask() {Name = "Task4"});
             return src;
         }
-
-        public Task<IList<PlannerTask>> CompletedItemsForDate(LocalDate date) => 
-          Task.FromResult(ItemsForDate(date));
     }
 }

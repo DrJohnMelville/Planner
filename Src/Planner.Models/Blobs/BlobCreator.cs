@@ -26,7 +26,7 @@ namespace Planner.Models.Blobs
         public async Task<string> MarkdownForNewImage(
             string fileName, string mimeType, LocalDate date, Stream data)
         {
-            var blobList = await blobSource.CompletedItemsForDate(date);
+            var blobList = await blobSource.ItemsForDate(date).CompleteList();
             var record = blobSource.CreateItem(date, i=>
             {
                 i.Key = Guid.NewGuid();

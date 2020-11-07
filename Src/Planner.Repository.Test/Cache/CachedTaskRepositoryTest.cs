@@ -28,7 +28,7 @@ namespace Planner.Repository.Test.Cache
             repo.Setup(i => i.ItemsForDate(baseDate)).Returns(
                 (LocalDate d)=>NewList(tcs));
             var l1 = sut.ItemsForDate(baseDate);
-            var t1 = sut.CompletedItemsForDate(baseDate);
+            var t1 = sut.ItemsForDate(baseDate).CompleteList();
             Assert.False(t1.IsCompleted);
             tcs.SetResult(1);
             var l2 = await t1;

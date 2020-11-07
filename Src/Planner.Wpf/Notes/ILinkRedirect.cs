@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 using Melville.MVVM.RunShellCommands;
+using NodaTime;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
@@ -71,7 +73,7 @@ namespace Planner.Wpf.Notes
             if (!(TimeOperations.TryParseLocalDate(match.Groups[1].Value, out var date) &&
                   Guid.TryParse(match.Groups[2].Value, out var noteKey))) return;
             
-            var list = await noteRepo.CompletedItemsForDate(date);
+            var list = await noteRepo.ItemsForDate(date).CompleteList();
             var item = list.FirstOrDefault(i => i.Key == noteKey);
             if (item == null) return;
             notifyEventRequest.Fire(this,  new NoteEditRequestEventArgs(list, item));

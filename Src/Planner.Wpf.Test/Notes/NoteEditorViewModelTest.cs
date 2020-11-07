@@ -21,7 +21,7 @@ namespace Planner.Wpf.Test.Notes
         private readonly IList<Note> notes = new List<Note>();
         private readonly Mock<INavigationWindow> navWin = new Mock<INavigationWindow>();
         private readonly Mock<ILocalRepository<Blob>> blobs = new Mock<ILocalRepository<Blob>>();
-        private readonly IList<Blob> blobList = new List<Blob>();
+        private readonly ItemList<Blob> blobList = new ItemList<Blob>();
         private readonly NoteEditorViewModel sut;
 
         private readonly ZonedDateTime creationTime = new LocalDateTime(1975, 07, 28, 0, 0, 0)

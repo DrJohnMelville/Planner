@@ -19,7 +19,7 @@ namespace Planner.Models.Test.Notes
     public class NoteHtmlGeneratorTest
     {
         private readonly Mock<ILocalRepository<Note>> repo = new Mock<ILocalRepository<Note>>();
-        private readonly List<Note> notes = new List<Note>();
+        private readonly ItemList<Note> notes = new ItemList<Note>();
         private readonly NoteHtmlGenerator sut;
         private readonly MemoryStream output = new MemoryStream();
         private readonly Mock<INoteUrlGenerator> urlGen = new Mock<INoteUrlGenerator>();
@@ -33,7 +33,7 @@ namespace Planner.Models.Test.Notes
 
         public NoteHtmlGeneratorTest()
         {
-            repo.Setup(i => i.CompletedItemsForDate(date)).ReturnsAsync(notes);
+            repo.Setup(i => i.ItemsForDate(date)).Returns(notes);
             sut = new NoteHtmlGenerator(new List<ITryNoteHtmlGenerator>()
                 {
                     new StaticFileGenerator(),
@@ -158,8 +158,8 @@ namespace Planner.Models.Test.Notes
         public async Task RetrieveImage(string url)
         {
             var foundBlob = new Blob();
-            blobRepo.Setup(i => i.CompletedItemsForDate(new LocalDate(1975, 3, 2))).ReturnsAsync(
-                new List<Blob>() {foundBlob});
+            blobRepo.Setup(i => i.ItemsForDate(new LocalDate(1975, 3, 2))).Returns(
+                new ItemList<Blob>() {foundBlob});
             blobStore.Setup(i=>i.Read(foundBlob))
                 .ReturnsAsync(new MemoryStream(Encoding.UTF8.GetBytes("From Blob")));
             await sut.GenerateResponse(url, output);
