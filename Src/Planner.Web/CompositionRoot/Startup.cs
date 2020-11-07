@@ -72,6 +72,7 @@ namespace Planner.Web.CompositionRoot
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseWebAssemblyDebugging();
             }
             else
             {
@@ -82,7 +83,7 @@ namespace Planner.Web.CompositionRoot
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseBlazorFrameworkFiles();
             app.UseRouting();
 
             app.AddCapWebAuthentication();
@@ -93,6 +94,8 @@ namespace Planner.Web.CompositionRoot
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}").RequireAuthorization();
+                endpoints.MapRazorPages().RequireAuthorization();
+                endpoints.MapFallbackToFile("index.html").RequireAuthorization();
             });
         }
     }
