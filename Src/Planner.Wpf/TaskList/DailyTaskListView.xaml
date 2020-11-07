@@ -177,8 +177,6 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Grid.Resources>
-            </Grid.Resources>
             <TextBlock FontFamily="Marlett">a</TextBlock>
             <TextBlock Grid.Column="1">P1</TextBlock>
             <TextBlock Grid.Column="2">Task</TextBlock>
@@ -215,6 +213,12 @@
                           HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="5 0">
                 Rank
             </ToggleButton>
+            <Grid Background="#77000000" Grid.RowSpan="2" Grid.ColumnSpan="3"
+                       Margin="30" 
+                       wpfHacks:VisibilityHack.CollapseIf="{Binding SourceList.FinishedLoading}">
+                <TextBlock Foreground="White" FontSize="18" HorizontalAlignment="Center"
+                           VerticalAlignment="Center">Loading ...</TextBlock>
+            </Grid>
         </Grid>
     </Border>
 </UserControl>

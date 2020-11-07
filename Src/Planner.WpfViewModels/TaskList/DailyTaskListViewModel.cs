@@ -14,7 +14,7 @@ namespace Planner.WpfViewModels.TaskList
 {
     public partial class DailyTaskListViewModel
     {
-        private readonly IList<PlannerTask> sourceList;
+        public IList<PlannerTask> SourceList { get; }
         public IList<PlannerTaskViewModel> TaskViewModels { get; }
         public string[] DeferToName { get; }
 
@@ -30,7 +30,7 @@ namespace Planner.WpfViewModels.TaskList
         {
             this.taskRepository = taskRepository;
             this.date = date;
-            sourceList = taskRepository.ItemsForDate(date);
+            SourceList = taskRepository.ItemsForDate(date);
             TaskViewModels = SetupViewModelCollection(viewModelFactory);
             DeferToName = CreateDayNames();
         }
@@ -38,7 +38,7 @@ namespace Planner.WpfViewModels.TaskList
         private SelectCollection<PlannerTask, PlannerTaskViewModel> SetupViewModelCollection(
             Func<PlannerTask, PlannerTaskViewModel> viewModelFactory)
         {
-            return sourceList.SelectCol(viewModelFactory);
+            return SourceList.SelectCol(viewModelFactory);
         }
 
         private string[] CreateDayNames()
@@ -59,14 +59,14 @@ namespace Planner.WpfViewModels.TaskList
 
         private void PriorityButtonPress(PlannerTaskViewModel model, char button)
         {
-            sourceList.PickPriority(model.PlannerTask, button);
-            sourceList.SetImpliedOrders();
+            SourceList.PickPriority(model.PlannerTask, button);
+            SourceList.SetImpliedOrders();
             CheckIfDonePrioritizing();
         }
 
         private void CheckIfDonePrioritizing()
         {
-            if (sourceList.CompletelyPrioritized()) IsRankingTasks = false;
+            if (SourceList.CompletelyPrioritized()) IsRankingTasks = false;
         }
 
         public void NewTaskKeyDown(Key key)
@@ -123,13 +123,13 @@ namespace Planner.WpfViewModels.TaskList
 
         public void DeleteTask(PlannerTaskViewModel task)
         {
-            sourceList.Remove(task.PlannerTask);
+            SourceList.Remove(task.PlannerTask);
         }
 
         public void InitializePriorityMenu(PlannerTaskViewModel model) => 
-            model.Menus = sourceList.CreatePriorityMenu();
+            model.Menus = SourceList.CreatePriorityMenu();
 
         public void SetItemPriority(PlannerTaskViewModel viewModel, PriorityKey key) => 
-            sourceList.ChangeTaskPriority(viewModel.PlannerTask, key.Priority, key.Order);
+            SourceList.ChangeTaskPriority(viewModel.PlannerTask, key.Priority, key.Order);
     }
 }
