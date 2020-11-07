@@ -27,7 +27,7 @@ namespace Planner.WpfViewModels.TaskList
 
         }
 
-        [AutoNotify] private IEnumerable menus = Array.Empty<byte>();
+        [AutoNotify] private IEnumerable<PriorityKey> menus = Array.Empty<PriorityKey>();
         
         public bool ShowPriorityButton => PlannerTask.Priority == ' ';
         public bool ShowBlankButton => !ShowPriorityButton;
