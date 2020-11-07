@@ -13,6 +13,7 @@
              xmlns:wpfHacks="clr-namespace:Melville.MVVM.Wpf.WpfHacks;assembly=Melville.MVVM.Wpf"
              xmlns:diParameterSources="clr-namespace:Melville.MVVM.Wpf.DiParameterSources;assembly=Melville.MVVM.Wpf"
              xmlns:pasters="clr-namespace:Planner.WpfViewModels.Notes.Pasters;assembly=Planner.WpfViewModels"
+             xmlns:plannerPages1="clr-namespace:Planner.Wpf.PlannerPages"
              d:DataContext="{d:DesignData {x:Type plannerPages:DailyPlannerPageViewModel}}"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -38,7 +39,7 @@
         <easyGrids:EasyGrid Grid.ColumnSpan="3" easyGrids:GridOperations.ColsAndRows="*,*/*,*">
             <viewFrames:ViewFrame Content="{Binding TodayTaskList}" Margin="0 0 5 5"/>
             <Grid Grid.RowSpan="2" easyGrids:GridOperations.ColsAndRows="*/*,auto,auto">
-                <wpf1:ChromiumWebBrowser Address="{Binding NotesUrl, Mode=OneWay}"
+                <plannerPages1:NoteBrowser Address="{Binding NotesUrl, Mode=OneWay}" x:Name="Browser"
                                          RequestHandler="{diParameterSources:DIBinding }"/>
                 <TextBox Grid.Row="1" Text="{Binding NoteCreator.Title, UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBlock Foreground="DarkGray" Grid.Row="1" HorizontalAlignment="Center" 
@@ -52,6 +53,13 @@
                          pasters:TextBoxPasteEnhancement.PasterDate="{Binding CurrentDate}"
                          wpfHacks:VisibilityHack.CollapseIfWhitespace="{Binding NoteCreator.Title}"
                          LostFocus="{eventBindings:EventBinding CreateNoteOnDay}"/>
+                <Grid Background="#77000000" Grid.Row="0" Grid.Column="0"
+                      Margin="30" 
+                      wpfHacks:VisibilityHack.CollapseUnless="{Binding IsNavigating, ElementName=Browser}">
+                    <TextBlock Foreground="White" FontSize="18" HorizontalAlignment="Center"
+                               VerticalAlignment="Center">Loading ...</TextBlock>
+                </Grid>
+                
             </Grid>
             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 5 0">Appointments</TextBlock>
             <GridSplitter easyGrids:EasyGrid.ForceColumn="0" easyGrids:EasyGrid.ForceRow="0" Grid.RowSpan="2" 
