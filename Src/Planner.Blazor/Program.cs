@@ -1,12 +1,10 @@
 using System;
+using System.Formats.Asn1;
 using System.Net.Http;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Text;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using Planner.Blazor.CompositionRoot;
 
 namespace Planner.Blazor
 {
@@ -16,9 +14,10 @@ namespace Planner.Blazor
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
-
+            
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-
+            new Startup(builder.Services).Configure();
+            
             await builder.Build().RunAsync();
         }
     }

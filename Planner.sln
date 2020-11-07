@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Repository.Web", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Blazor", "Src\Planner.Blazor\Planner.Blazor.csproj", "{701576D8-599C-4C01-B0D0-58E32F63CC4A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Blazor.Test", "Src\Planner.Blazor.Test\Planner.Blazor.Test.csproj", "{B09F721C-2F53-4374-AC0B-AA5F183E7E3E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,5 +74,9 @@ Global
 		{701576D8-599C-4C01-B0D0-58E32F63CC4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{701576D8-599C-4C01-B0D0-58E32F63CC4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{701576D8-599C-4C01-B0D0-58E32F63CC4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B09F721C-2F53-4374-AC0B-AA5F183E7E3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B09F721C-2F53-4374-AC0B-AA5F183E7E3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B09F721C-2F53-4374-AC0B-AA5F183E7E3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B09F721C-2F53-4374-AC0B-AA5F183E7E3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

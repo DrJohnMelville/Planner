@@ -1,0 +1,8 @@
+﻿@page "/DailyPage/{DateString}"
+<h3>Daily Page for @DateString </h3>
+
+@code {
+
+    [Parameter]
+    public string DateString { get; set; }
+}
