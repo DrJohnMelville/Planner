@@ -41,7 +41,8 @@
             <Grid Grid.RowSpan="2" easyGrids:GridOperations.ColsAndRows="*/*,auto,auto">
                 <plannerPages1:NoteBrowser Address="{Binding NotesUrl, Mode=OneWay}" x:Name="Browser"
                                          RequestHandler="{diParameterSources:DIBinding }"/>
-                <TextBox Grid.Row="1" Text="{Binding NoteCreator.Title, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Grid.Row="1" Text="{Binding NoteCreator.Title, UpdateSourceTrigger=PropertyChanged}"
+                         TextWrapping="Wrap"/>
                 <TextBlock Foreground="DarkGray" Grid.Row="1" HorizontalAlignment="Center" 
                            IsHitTestVisible="False" 
                          wpfHacks:VisibilityHack.CollapseUnlessWhitespace="{Binding NoteCreator.Title}">
@@ -52,7 +53,8 @@
                          pasters:TextBoxPasteEnhancement.MarkdownPaster="{diParameterSources:DIBinding}"
                          pasters:TextBoxPasteEnhancement.PasterDate="{Binding CurrentDate}"
                          wpfHacks:VisibilityHack.CollapseIfWhitespace="{Binding NoteCreator.Title}"
-                         LostFocus="{eventBindings:EventBinding CreateNoteOnDay}"/>
+                         LostFocus="{eventBindings:EventBinding CreateNoteOnDay}"
+                         TextWrapping="Wrap"/>
                 <Grid Background="#77000000" Grid.Row="0" Grid.Column="0"
                       Margin="30" 
                       wpfHacks:VisibilityHack.CollapseUnless="{Binding IsNavigating, ElementName=Browser}">
