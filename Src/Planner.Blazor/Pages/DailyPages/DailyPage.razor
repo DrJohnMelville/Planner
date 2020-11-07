@@ -3,13 +3,23 @@
 @using Planner.Models.Tasks
 @inject ILocalRepository<PlannerTask> taskStore;
 <h3>Daily Page for @DateString </h3>
-<ol>
+<table>
+    <tr>
+        <th>Check</th>
+        <th>Priority</th>
+        <th>Task</th>
+    </tr>
     @if (tasks != null)
-    @foreach(var task in tasks)
+    @foreach (var task in tasks)
     {
-        <li>@task.Name</li>
-    }
-</ol>
+        <tr>
+            <td>X</td>
+            <td>@task.PriorityDisplay</td>
+            <td>@task.Name</td>
+        </tr>
+   }
+
+</table>
 
 @code {
 
