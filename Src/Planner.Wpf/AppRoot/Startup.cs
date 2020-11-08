@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Windows;
-using System.Windows.Data;
 using CefSharp;
 using Melville.IOC.IocContainers;
 using Melville.IOC.IocContainers.ActivationStrategies.TypeActivation;
 using Melville.MVVM.AdvancedLists;
+using Melville.MVVM.Asyncs;
 using Melville.MVVM.Wpf.Clipboards;
 using Melville.MVVM.Wpf.RootWindows;
 using Melville.MVVM.Wpf.ViewFrames;
@@ -18,6 +18,7 @@ using Planner.Models.Blobs;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Repositories;
 using Planner.Wpf.Notes;
+using Planner.Wpf.PlannerPages;
 using Planner.WpfViewModels.Logins;
 using Planner.WpfViewModels.Notes;
 using Planner.WpfViewModels.Notes.Pasters;
@@ -129,6 +130,7 @@ namespace Planner.Wpf.AppRoot
                 var scope  = GetRootService(ioc).CreateScope();
                 return (scope.Get<IRootNavigationWindow>(), scope.Get<IPlannerNavigator>());
             });
+            service.Bind<IStaWorker>().To<DispatcherStaWorker>();
         }
 
         private static IIocService GetRootService(IIocService ioc)

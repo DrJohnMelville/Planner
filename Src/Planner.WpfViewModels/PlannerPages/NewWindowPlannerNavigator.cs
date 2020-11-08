@@ -25,7 +25,7 @@ namespace Planner.WpfViewModels.PlannerPages
         }
 
         public IPlannerNavigator Target() =>
-            ShoudNavigateInSameWindow() ? 
+            ShouldShoudNavigateInSameWindow() ? 
                 target : 
                 NavigatorForNewWindows();
 
@@ -36,7 +36,7 @@ namespace Planner.WpfViewModels.PlannerPages
             return UnwrapCreatedNavigator(newNav);
         }
 
-        private bool ShoudNavigateInSameWindow() => (keyboard.Modifiers & ModifierKeys.Control) == 0;
+        private bool ShouldShoudNavigateInSameWindow() => (keyboard.Modifiers & ModifierKeys.Control) == 0;
 
         private static IPlannerNavigator UnwrapCreatedNavigator(IPlannerNavigator newNav) => 
             ((NewWindowPlannerNavigator)newNav).target;
