@@ -4,16 +4,11 @@
 @inject ILocalRepository<PlannerTask> taskStore;
 <h3>Daily Page for @DateString </h3>
 <table>
-    <tr>
-        <th>Check</th>
-        <th>Priority</th>
-        <th>Task</th>
-    </tr>
     @if (tasks != null)
     @foreach (var task in tasks)
     {
         <tr>
-            <td>X</td>
+            <td><span class="@ClassFromStatus(task.Status)" aria-hidden="true"></span></td>
             <td>@task.PriorityDisplay</td>
             <td>@task.Name</td>
         </tr>
@@ -31,5 +26,15 @@
     protected override Task OnInitializedAsync() => 
         taskStore.TryItemsForDate(DateString, out tasks) ?
         tasks.CompleteList() : Task.CompletedTask;
+
+    private string ClassFromStatus(PlannerTaskStatus status) =>
+        status switch{
+            PlannerTaskStatus.Pending => "oi oi-timer",
+            PlannerTaskStatus.Canceled => "oi oi-x",
+            PlannerTaskStatus.Deferred => "oi oi-arrow-thick-right",
+            PlannerTaskStatus.Delegated => "oi oi-media-record",
+            PlannerTaskStatus.Done => "oi oi-check",
+            _ => "",
+            };
 
 }
