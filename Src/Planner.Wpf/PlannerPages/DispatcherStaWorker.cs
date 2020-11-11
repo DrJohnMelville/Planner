@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Threading;
 using Melville.MVVM.Asyncs;
 using Melville.MVVM.Wpf.RootWindows;
@@ -10,7 +11,9 @@ namespace Planner.Wpf.PlannerPages
     {
         private readonly Dispatcher dispatcher;
 
-        public DispatcherStaWorker(RootNavigationWindow rootWin)
+        // this has to take a Window and not a RootNavigationWindow because the IOC is setup to only
+        // have one window per scope Can have any number of RootNavigationWindows.
+        public DispatcherStaWorker(Window rootWin)
         {
             dispatcher = rootWin.Dispatcher;
         }

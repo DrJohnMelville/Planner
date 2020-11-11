@@ -32,7 +32,6 @@ namespace Planner.Wpf.AppRoot
         [STAThread]
         public static int Main(string[] commandLineArgs)
         {
-            UiThreadBuilder.RunOnUiThread = i => throw new InvalidOperationException("xxx");
             CefSharpRegistration.Initialize();
             ApplicationRootImplementation.Run(new Startup());
             return 0;
@@ -124,6 +123,7 @@ namespace Planner.Wpf.AppRoot
             service.Bind<IRootNavigationWindow>()
                 .And<Window>()
                 .To<RootNavigationWindow>()
+                .FixResult(i=>((RootNavigationWindow)i).Title = "John Melville's Planner")
                 .AsScoped();
             service.Bind<Func<(IRootNavigationWindow, IPlannerNavigator)>>().ToMethod(ioc => () =>
             {
