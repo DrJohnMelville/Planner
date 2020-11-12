@@ -29,10 +29,10 @@
 
     private string ClassFromStatus(PlannerTaskStatus status) =>
         status switch{
-            PlannerTaskStatus.Pending => "oi oi-timer",
+            PlannerTaskStatus.Delegated => "oi oi-timer",
             PlannerTaskStatus.Canceled => "oi oi-x",
             PlannerTaskStatus.Deferred => "oi oi-arrow-thick-right",
-            PlannerTaskStatus.Delegated => "oi oi-media-record",
+            PlannerTaskStatus.Pending => "oi oi-media-record",
             PlannerTaskStatus.Done => "oi oi-check",
             _ => "",
             };

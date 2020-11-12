@@ -65,7 +65,7 @@
                 </Grid.Resources>
                 <Grid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Priority" ItemsSource="{Binding Menus}">
+                        <MenuItem Header="Priority" ItemsSource="{Binding Menus}" Grid.IsSharedSizeScope="True">
                             <MenuItem.ItemTemplate>
                                 <DataTemplate>
                                     <MenuItem Header="{Binding Display}"
@@ -73,7 +73,7 @@
                                 </DataTemplate>
                             </MenuItem.ItemTemplate>
                         </MenuItem>
-                        <MenuItem Header="Incomplete" Click="{eventBindings:EventBinding MarkIncomplete}">
+=                        <MenuItem Header="Incomplete" Click="{eventBindings:EventBinding MarkIncomplete}">
                             <MenuItem.Icon>
                                 <TextBlock Text="" FontFamily="Wingdings"></TextBlock>
                             </MenuItem.Icon>
@@ -90,12 +90,12 @@
                         </MenuItem>
                         <MenuItem Header="Pending" Click="{eventBindings:EventBinding MarkPending}">
                             <MenuItem.Icon>
-                                <TextBlock Text="¡" FontFamily="Wingdings"></TextBlock>
+                                <TextBlock Text="n" FontFamily="Marlett"></TextBlock>
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Header="Delegated" Click="{eventBindings:EventBinding MarkDelegated}">
                             <MenuItem.Icon>
-                                <TextBlock Text="n" FontFamily="Marlett"></TextBlock>
+                                <TextBlock Text="¡" FontFamily="Wingdings"></TextBlock>
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Header="Delete Task" Click="{eventBindings:EventBinding DeleteTask}"/>

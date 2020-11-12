@@ -54,8 +54,8 @@ namespace Planner.WpfViewModels.TaskList
                 PlannerTaskStatus.Incomplete => "",
                 PlannerTaskStatus.Done => "a",
                 PlannerTaskStatus.Canceled => "r",
-                PlannerTaskStatus.Pending => "¡",
-                PlannerTaskStatus.Delegated => "n",
+                PlannerTaskStatus.Delegated => "¡",
+                PlannerTaskStatus.Pending => "n",
                 PlannerTaskStatus.Deferred => "è",
               _ => "Error"    
             };
@@ -67,7 +67,7 @@ namespace Planner.WpfViewModels.TaskList
             PlannerTask.Status switch
             {
                 PlannerTaskStatus.Incomplete =>Wingdings,
-                PlannerTaskStatus.Pending =>Wingdings,
+                PlannerTaskStatus.Delegated =>Wingdings,
                 PlannerTaskStatus.Deferred=>Wingdings,
                 _ => Marlett
             };
