@@ -66,14 +66,14 @@
                 <Grid.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Priority" ItemsSource="{Binding Menus}" Grid.IsSharedSizeScope="True">
-                            <MenuItem.ItemTemplate>
-                                <DataTemplate>
-                                    <MenuItem Header="{Binding Display}"
-                                              Click="{eventBindings:EventBinding SetItemPriority}"/>
-                                </DataTemplate>
-                            </MenuItem.ItemTemplate>
+                            <MenuItem.ItemContainerStyle>
+                                <Style TargetType="MenuItem">
+                                    <Setter Property="Header" Value="{Binding Display}"/>
+                                    <eventBindings:EventIocSetter Event="Click" MethodName="SetItemPriority"/>
+                                </Style>
+                            </MenuItem.ItemContainerStyle>
                         </MenuItem>
-=                        <MenuItem Header="Incomplete" Click="{eventBindings:EventBinding MarkIncomplete}">
+                        <MenuItem Header="Incomplete" Click="{eventBindings:EventBinding MarkIncomplete}">
                             <MenuItem.Icon>
                                 <TextBlock Text="" FontFamily="Wingdings"></TextBlock>
                             </MenuItem.Icon>
