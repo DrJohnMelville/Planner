@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 using NodaTime.Extensions;
 using NodaTime.Serialization.SystemTextJson;
+using Planner.Blazor.ModalComponent;
 using Planner.Models.Blobs;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
@@ -23,10 +24,21 @@ namespace Planner.Blazor.CompositionRoot
 
         public void Configure()
         {
-            services.AddSingleton<IClock>(SystemClock.Instance);
-            services.AddSingleton<IWallClock, WallClock>();
+            RegisterModalComponents();
+            RegisterClocks();
             RegisterRepositories();
             SetupJsonSerialization();
+        }
+
+        private void RegisterModalComponents()
+        {
+            services.AddScoped<ModalService>();
+        }
+
+        private void RegisterClocks()
+        {
+            services.AddSingleton<IClock>(SystemClock.Instance);
+            services.AddSingleton<IWallClock, WallClock>();
         }
 
         private void SetupJsonSerialization()

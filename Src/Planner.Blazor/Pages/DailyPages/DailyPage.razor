@@ -1,18 +1,27 @@
 ﻿@page "/DailyPage/{DateString}"
 @using Planner.Models.Repositories
 @using Planner.Models.Tasks
+@using NodaTime
+@using Planner.Blazor.ModalComponent
+@using Planner.Models.Time
 @inject ILocalRepository<PlannerTask> taskStore;
-<h3>Daily Page for @DateString </h3>
+@inject ModalService ModalService
+<div class="dateHeader"></div>
+<a href="/DailyPage/@RelativeDateString(-1)"><span class="oi oi-caret-left" aria-hidden="true"></span></a>
+<a @onclick="ShowDatePicker"><h3>@date</h3></a> 
+<a href="/DailyPage/@RelativeDateString(1)"><span class="oi oi-caret-right" aria-hidden="true"></span></a>
 <table>
     @if (tasks != null)
-    @foreach (var task in tasks)
     {
-        <tr>
-            <td><span class="@ClassFromStatus(task.Status)" aria-hidden="true"></span></td>
-            <td>@task.PriorityDisplay</td>
-            <td>@task.Name</td>
-        </tr>
-   }
+        @foreach (var task in tasks)
+        {
+            <tr>
+                <td><span class="@ClassFromStatus(task.Status)" aria-hidden="true"></span></td>
+                <td>@task.PriorityDisplay</td>
+                <td>@task.Name</td>
+            </tr>
+        }
+    }
 
 </table>
 
@@ -21,11 +30,16 @@
     [Parameter]
     public string DateString { get; set; } = "";
 
-    private IListPendingCompletion<PlannerTask>? tasks;
+    private LocalDate date;
     
-    protected override Task OnInitializedAsync() => 
-        taskStore.TryItemsForDate(DateString, out tasks) ?
-        tasks.CompleteList() : Task.CompletedTask;
+    private IListPendingCompletion<PlannerTask>? tasks;
+    protected override Task OnParametersSetAsync() => OnInitializedAsync();
+    protected override Task OnInitializedAsync()
+    {
+        tasks = TimeOperations.TryParseLocalDate(DateString, out date) ?
+            taskStore.ItemsForDate(date) : null;
+        return tasks?.CompleteList() ?? Task.CompletedTask;
+    }
 
     private string ClassFromStatus(PlannerTaskStatus status) =>
         status switch{
@@ -36,5 +50,12 @@
             PlannerTaskStatus.Done => "oi oi-check",
             _ => "",
             };
+
+    private string RelativeDateString(int delta)
+    {
+        return date.PlusDays(delta).ToString("yyyy-MM-dd", null);
+    }
+
+    private void ShowDatePicker() => ModalService.Show<PickDate>("Date To Display");
 
 }
