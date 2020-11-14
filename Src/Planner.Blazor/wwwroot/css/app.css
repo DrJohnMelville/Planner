@@ -5,3 +5,16 @@ html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+.CalendarGrid {
+    width: 95%;
+}
+
+.CalendarGrid td{
+    padding-bottom: 20px;
+    text-align: center;
+}
+.CenterWithSides{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
