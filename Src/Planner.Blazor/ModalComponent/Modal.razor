@@ -19,7 +19,7 @@
 </div>
 @code {
     protected bool IsVisible { get; set; }
-    protected string Title { get; set; }
+    protected string Title { get; set; } = "";
     protected RenderFragment? Content { get; set; }
 
     protected override void OnInitialized()

@@ -5,6 +5,7 @@ using NodaTime;
 using NodaTime.Extensions;
 using NodaTime.Serialization.SystemTextJson;
 using Planner.Blazor.ModalComponent;
+using Planner.Blazor.Pages;
 using Planner.Models.Blobs;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
@@ -27,7 +28,13 @@ namespace Planner.Blazor.CompositionRoot
             RegisterModalComponents();
             RegisterClocks();
             RegisterRepositories();
+            RegisterPages();
             SetupJsonSerialization();
+        }
+
+        private void RegisterPages()
+        {
+            services.AddTransient<IAppNavigation, AppNavigation>();
         }
 
         private void RegisterModalComponents()
@@ -61,10 +68,8 @@ namespace Planner.Blazor.CompositionRoot
             services.AddSingleton(typeof(ILocalRepository<>), typeof(CachedRepository<>));
         }
 
-        private void RegisterWebRepository<T>(string name) where T:PlannerItemWithDate
-        {
+        private void RegisterWebRepository<T>(string name) where T:PlannerItemWithDate =>
             services.AddTransient<IDatedRemoteRepository<T>>
                 (i => new WebRepository<T>(i.GetRequiredService<IJsonWebService>(), name));
-        }
     }
 }

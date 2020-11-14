@@ -1,6 +1,6 @@
 ﻿@using NodaTime
 @using System.Diagnostics.Tracing
-
+@inject ModalService ModalService
 <div class="CenterWithSides">
 <a @onclick="LastMonth"><span class="oi oi-caret-left" aria-hidden="true"></span></a>
 <h3>@BaseDate.ToString("MMMM yyyy", null)</h3>
@@ -22,7 +22,8 @@
         <tr>
             @for (int i = 0; i < 7; i++)
             {
-                <td><a href="#">@week.PlusDays(i).Day</a></td>
+                var day = week.PlusDays(i);
+                <td><a href="#" @onclick="()=>DateSelected(day)">@day.Day</a></td>
             }
         </tr>
     }
@@ -32,7 +33,9 @@
 
     [Parameter]
     public LocalDate BaseDate { get; set; }
-
+    [Parameter] 
+    public Action<LocalDate>? PickAction { get; set; } 
+    
     private IEnumerable<LocalDate> WeekHeaders(LocalDate start)
     {
         var last = start.With(DateAdjusters.EndOfMonth);
@@ -46,4 +49,9 @@
     private void NextMonth() => BaseDate = BaseDate.PlusMonths(1);
     private void LastMonth() => BaseDate = BaseDate.PlusMonths(-1);
 
+    private void DateSelected(LocalDate ld)
+    {
+        ModalService.Close();
+        PickAction?.Invoke(ld);
+    }
 }

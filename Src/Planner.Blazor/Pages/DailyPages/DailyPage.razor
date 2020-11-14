@@ -1,4 +1,5 @@
-﻿@page "/DailyPage/{DateString}"
+﻿@page "/"
+@page "/DailyPage/{DateString}"
 @using Planner.Models.Repositories
 @using Planner.Models.Tasks
 @using NodaTime
@@ -6,12 +7,15 @@
 @using Planner.Models.Time
 @inject ILocalRepository<PlannerTask> taskStore;
 @inject ModalService ModalService
+@inject IAppNavigation AppNavigation
+@inject IClock Clock
+
 <div class="CenterWithSides">
 <a href="/DailyPage/@RelativeDateString(-1)"><span class="oi oi-caret-left" aria-hidden="true"></span></a>
 <a @onclick="ShowDatePicker"><h3>@date</h3></a> 
 <a href="/DailyPage/@RelativeDateString(1)"><span class="oi oi-caret-right" aria-hidden="true"></span></a>
 </div>
-<table>
+<table class="TaskTable">
     @if (tasks != null)
     {
         @foreach (var task in tasks)
@@ -35,12 +39,26 @@
     
     private IListPendingCompletion<PlannerTask>? tasks;
     protected override Task OnParametersSetAsync() => OnInitializedAsync();
+
     protected override Task OnInitializedAsync()
     {
-        tasks = TimeOperations.TryParseLocalDate(DateString, out date) ?
-            taskStore.ItemsForDate(date) : null;
-        return tasks?.CompleteList() ?? Task.CompletedTask;
+        SetDate();
+        tasks = taskStore.ItemsForDate(date);
+        return tasks.CompleteList();
     }
+
+    private void SetDate()
+    {
+        if (TimeOperations.TryParseLocalDate(DateString, out var ret))
+        {
+            date = ret;
+        }
+        else if (DateIsUnset())
+        {
+            date = Clock.CurrentDate();
+        }
+    }
+    private bool DateIsUnset() => date == new LocalDate();
 
     private string ClassFromStatus(PlannerTaskStatus status) =>
         status switch{
@@ -57,6 +75,10 @@
         return date.PlusDays(delta).ToString("yyyy-MM-dd", null);
     }
 
-    private void ShowDatePicker() => ModalService.Show<PickDate>("Date To Display", ("BaseDate", date));
+    private void ShowDatePicker() => ModalService.Show<PickDate>("Date To Display", ("BaseDate", date),
+        ("PickAction", (Action<LocalDate>)NavigateToNewDate));
+
+    private void NavigateToNewDate(LocalDate newDate) => AppNavigation.ToPlannerPage(newDate);
+
 
 }
