@@ -1,5 +1,49 @@
-﻿<h3>PickDate</h3>
+﻿@using NodaTime
+@using System.Diagnostics.Tracing
+
+<div class="CenterWithSides">
+<a @onclick="LastMonth"><span class="oi oi-caret-left" aria-hidden="true"></span></a>
+<h3>@BaseDate.ToString("MMMM yyyy", null)</h3>
+<a @onclick="NextMonth"><span class="oi oi-caret-right" aria-hidden="true"></span></a>
+</div>
+<table class="CalendarGrid">
+    <tr>
+        <th>Sa</th>
+        <th>Mo</th>
+        <th>Tu</th>
+        <th>We</th>
+        <th>Th</th>
+        <th>Fr</th>
+        <th>Sa</th>
+    </tr>
+
+    @foreach (var week in WeekHeaders(BaseDate))
+    {
+        <tr>
+            @for (int i = 0; i < 7; i++)
+            {
+                <td><a href="#">@week.PlusDays(i).Day</a></td>
+            }
+        </tr>
+    }
+</table>
 
 @code {
-    
+
+    [Parameter]
+    public LocalDate BaseDate { get; set; }
+
+    private IEnumerable<LocalDate> WeekHeaders(LocalDate start)
+    {
+        var last = start.With(DateAdjusters.EndOfMonth);
+        var first = start.With(DateAdjusters.StartOfMonth).With(DateAdjusters.PreviousOrSame(IsoDayOfWeek.Sunday));
+        for (LocalDate i = first; i <= last; i = i.PlusDays(7))
+        {
+            yield return i;
+        }
+    }
+
+    private void NextMonth() => BaseDate = BaseDate.PlusMonths(1);
+    private void LastMonth() => BaseDate = BaseDate.PlusMonths(-1);
+
 }

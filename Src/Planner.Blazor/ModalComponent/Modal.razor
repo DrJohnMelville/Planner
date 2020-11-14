@@ -6,7 +6,7 @@
 
     <div class="blazor-modal">
         <div class="bm-header">
-            <h3 class="bm-title">@Title @IsVisible</h3>
+            <h3 class="bm-title">@Title</h3>
             <button type="button" class="bm-close" @onclick="CloseModal">
                 <span>&times;</span>
             </button>
@@ -20,7 +20,7 @@
 @code {
     protected bool IsVisible { get; set; }
     protected string Title { get; set; }
-    protected RenderFragment Content { get; set; }
+    protected RenderFragment? Content { get; set; }
 
     protected override void OnInitialized()
     {

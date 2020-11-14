@@ -6,10 +6,11 @@
 @using Planner.Models.Time
 @inject ILocalRepository<PlannerTask> taskStore;
 @inject ModalService ModalService
-<div class="dateHeader"></div>
+<div class="CenterWithSides">
 <a href="/DailyPage/@RelativeDateString(-1)"><span class="oi oi-caret-left" aria-hidden="true"></span></a>
 <a @onclick="ShowDatePicker"><h3>@date</h3></a> 
 <a href="/DailyPage/@RelativeDateString(1)"><span class="oi oi-caret-right" aria-hidden="true"></span></a>
+</div>
 <table>
     @if (tasks != null)
     {
@@ -56,6 +57,6 @@
         return date.PlusDays(delta).ToString("yyyy-MM-dd", null);
     }
 
-    private void ShowDatePicker() => ModalService.Show<PickDate>("Date To Display");
+    private void ShowDatePicker() => ModalService.Show<PickDate>("Date To Display", ("BaseDate", date));
 
 }
