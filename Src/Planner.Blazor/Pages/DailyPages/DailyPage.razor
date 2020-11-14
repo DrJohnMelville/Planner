@@ -23,8 +23,8 @@
             <tr>
                 <td><span class="@ClassFromStatus(task.Status)" aria-hidden="true"></span></td>
                 <td>@task.PriorityDisplay</td>
-                <td>@task.Name</td>
-            </tr>
+                <td><a href="/TaskDetail/@RelativeDateString(0)/@task.Key">@task.Name</a></td>
+            </tr> 
         }
     }
 

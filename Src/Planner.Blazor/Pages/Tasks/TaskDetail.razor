@@ -1,0 +1,31 @@
+﻿@page "/TaskDetail/{DateString}/{KeyString}"
+@using NodaTime
+@using Planner.Models.Repositories
+@using Planner.Models.Tasks
+@using Planner.Models.Time
+@inject ILocalRepository<PlannerTask> taskStore;
+
+@if (dailyList != null && plannerTask != null)
+{
+    <h3>@plannerTask.Name</h3>
+}
+@code {
+    [Parameter] public string DateString { get; set; }
+    [Parameter] public string KeyString { get; set; }
+
+    private LocalDate date;
+    private IListPendingCompletion<PlannerTask>? dailyList;
+    private PlannerTask? plannerTask;
+    protected override async Task OnInitializedAsync()
+    {
+        if (!(TimeOperations.TryParseLocalDate(DateString, out date) &&
+              Guid.TryParse(KeyString, out var key)))
+        {
+            throw new InvalidOperationException("wrong params");
+        }
+        dailyList = taskStore.ItemsForDate(date);
+        await dailyList.CompleteList();
+        plannerTask = dailyList.FirstOrDefault(i => i.Key == key);
+    }
+
+}
