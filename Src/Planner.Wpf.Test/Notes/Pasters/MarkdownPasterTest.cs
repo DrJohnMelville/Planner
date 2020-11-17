@@ -1,9 +1,6 @@
 ﻿using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
-using Windows.Media.MediaProperties;
-using Melville.MVVM.Wpf.Clipboards;
 using Moq;
 using NodaTime;
 using Planner.Models.Blobs;

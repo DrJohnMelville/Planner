@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows.Input;
-using Windows.ApplicationModel.Calls.Background;
-using Windows.UI.Xaml;
-using Melville.MVVM.AdvancedLists;
 using Melville.MVVM.RunShellCommands;
 using Melville.TestHelpers.InpcTesting;
 using Melville.TestHelpers.MockConstruction;

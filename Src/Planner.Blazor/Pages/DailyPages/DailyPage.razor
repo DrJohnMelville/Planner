@@ -18,7 +18,7 @@
 <table class="TaskTable">
     @if (tasks != null)
     {
-        @foreach (var task in tasks)
+        @foreach (var task in tasks.OrderBy(i=>i))
         {
             <tr>
                 <td><span class="@ClassFromStatus(task.Status)" aria-hidden="true"></span></td>
