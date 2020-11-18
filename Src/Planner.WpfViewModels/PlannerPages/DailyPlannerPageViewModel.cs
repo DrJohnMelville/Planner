@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using CefSharp;
 using Melville.INPC;
 using Melville.MVVM.Wpf.RootWindows;
 using NodaTime;
@@ -13,13 +15,16 @@ namespace Planner.WpfViewModels.PlannerPages
 {
     public partial class DailyPlannerPageViewModel:IAcceptNavigationNotifications
     {
-        private readonly INotesServer noteServer;
         private readonly IPlannerNavigator navigator;
         private readonly INoteUrlGenerator urlGen;
         private readonly IEventBroadcast<NoteEditRequestEventArgs> noteEditRequest;
         public NoteCreator NoteCreator { get; }
         public DailyTaskListViewModel TodayTaskList { get; }
         private readonly LocalDate currentDate;
+
+        //This variable has to live here because we want it created inside the window's context so that it picks up
+        // the NoteEditRequest EventBroadcast object that is scoped to this window.  The view uses this directly.
+        public IRequestHandler RequestHandler { get; } 
 
         public LocalDate CurrentDate
         {
@@ -33,16 +38,19 @@ namespace Planner.WpfViewModels.PlannerPages
             public DailyPlannerPageViewModel(
             LocalDate currentDate,
             Func<LocalDate, DailyTaskListViewModel> taskListFactory, 
-            INotesServer noteServer,
+            INotesServer noteServer, // we don't use this, we just need it to exist.  Asking for it forces it to exist.
             NoteCreator noteCreator, 
             IPlannerNavigator navigator, 
-            INoteUrlGenerator urlGen, IEventBroadcast<NoteEditRequestEventArgs> noteEditRequest)
+            INoteUrlGenerator urlGen, 
+            IEventBroadcast<NoteEditRequestEventArgs> noteEditRequest, 
+            IRequestHandler requestHandler)
         {
-            this.noteServer = noteServer;
+            
             this.navigator = navigator;
             NoteCreator = noteCreator;
             this.urlGen = urlGen;
             this.noteEditRequest = noteEditRequest;
+            RequestHandler = requestHandler;
             this.currentDate = currentDate; 
             TodayTaskList = taskListFactory(currentDate);
         }
@@ -73,4 +81,5 @@ namespace Planner.WpfViewModels.PlannerPages
             navigator.NavigateToDate(segment.Match.Groups, CurrentDate);
         }
     }
+
 }

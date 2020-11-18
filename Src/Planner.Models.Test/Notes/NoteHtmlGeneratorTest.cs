@@ -37,7 +37,6 @@ namespace Planner.Models.Test.Notes
             sut = new NoteHtmlGenerator(new List<ITryNoteHtmlGenerator>()
                 {
                     new StaticFileGenerator(),
-                    new EditNoteNotificationGenerator(repo.Object, broadcast.Object),
                     new BlobGenerator(blobRepo.Object, blobStore.Object),
                     new DailyJournalPageGenerator(
                         i=> new JournalItemRenderer(i, d=>new MarkdownTranslator(d), urlGen.Object),

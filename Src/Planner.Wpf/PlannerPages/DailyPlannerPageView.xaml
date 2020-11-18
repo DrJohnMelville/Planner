@@ -40,7 +40,7 @@
             <viewFrames:ViewFrame Content="{Binding TodayTaskList}" Margin="0 0 5 5"/>
             <Grid Grid.RowSpan="2" easyGrids:GridOperations.ColsAndRows="*/*,auto,auto">
                 <plannerPages1:NoteBrowser Address="{Binding NotesUrl, Mode=OneWay}" x:Name="Browser"
-                                         RequestHandler="{diParameterSources:DIBinding }"/>
+                        BoundRequestHandler="{Binding RequestHandler}"/>
                 <TextBox Grid.Row="1" Text="{Binding NoteCreator.Title, UpdateSourceTrigger=PropertyChanged}"
                          TextWrapping="Wrap"/>
                 <TextBlock Foreground="DarkGray" Grid.Row="1" HorizontalAlignment="Center" 

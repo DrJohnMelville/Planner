@@ -49,7 +49,7 @@ namespace Planner.WpfViewModels.Notes
 
         private string TrimPrefixFromUrl(HttpListenerContext context)
         {
-            var uriString = context.Request.Url.OriginalString;
+            var uriString = context.Request.Url?.OriginalString??"";
             var match = extractQuery.Match(uriString);
             return match.Success?match.Groups[1].Value:uriString;
         }
