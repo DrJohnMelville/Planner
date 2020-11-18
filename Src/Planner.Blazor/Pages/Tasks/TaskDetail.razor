@@ -4,18 +4,50 @@
 @using Planner.Models.Tasks
 @using Planner.Models.Time
 @inject ILocalRepository<PlannerTask> taskStore;
+@inject IAppNavigation navigation 
 
 @if (dailyList != null && plannerTask != null)
 {
+    <h3>Task Detail</h3>
     <input @bind="@plannerTask.Name"/>
+    <h4>Task Status</h4>
+    <ul>
+        <li><a href="#" @onclick="()=> SetTaskStatus(PlannerTaskStatus.Incomplete)">Incomplete</a></li>
+        <li><a href="#" @onclick="()=> SetTaskStatus(PlannerTaskStatus.Done)">Completed</a></li>
+        <li><a href="#" @onclick="()=> SetTaskStatus(PlannerTaskStatus.Canceled)">Cancelled</a></li>
+        <li><a href="#" @onclick="()=> SetTaskStatus(PlannerTaskStatus.Pending)">Pending</a></li>
+        <li><a href="#" @onclick="()=> displayType = DisplayType.Delegation">Delegated</a></li>
+        @if (displayType == DisplayType.Delegation)
+        {
+            <div>Delegate Task To:</div>
+            <input @bind="@plannerTask.StatusDetail"/>
+            <a href="#" @onclick="()=> SetTaskStatus(PlannerTaskStatus.Delegated)">Complete Delegation</a>
+        }
+    </ul>
+    <h4>Defer To</h4>
+    <ul>
+        <li><a href="#" @onclick="()=> DeferTo(1)">Tomorrow</a></li>
+        <li><a href="#" @onclick="()=> DeferTo(2)">@date.PlusDays(2).ToString("dddd",null)</a></li>
+        <li><a href="#" @onclick="()=> DeferTo(3)">@date.PlusDays(3).ToString("dddd",null)</a></li>
+        <li><a href="#" @onclick="()=> DeferTo(4)">@date.PlusDays(4).ToString("dddd",null)</a></li>
+        <li><a href="#" @onclick="()=> DeferTo(5)">@date.PlusDays(5).ToString("dddd",null)</a></li>
+        <li><a href="#" @onclick="()=> DeferTo(6)">@date.PlusDays(6).ToString("dddd",null)</a></li>
+        <li><a href="#" @onclick="()=> DeferTo(7)">@date.PlusDays(7).ToString("dddd",null)</a></li>
+    </ul>
 }
 @code {
-    [Parameter] public string DateString { get; set; }  = "";
-    [Parameter] public string KeyString { get; set; } = "";
+
+    [Parameter]
+    public string DateString { get; set; } = "";
+
+    [Parameter]
+    public string KeyString { get; set; } = "";
 
     private LocalDate date;
+    private DisplayType displayType;
     private IListPendingCompletion<PlannerTask>? dailyList;
     private PlannerTask? plannerTask;
+
     protected override async Task OnInitializedAsync()
     {
         if (!(TimeOperations.TryParseLocalDate(DateString, out date) &&
@@ -28,4 +60,24 @@
         plannerTask = dailyList.FirstOrDefault(i => i.Key == key);
     }
 
+    private void SetTaskStatus(PlannerTaskStatus newStatus)
+    {
+        if (plannerTask == null) return;
+        plannerTask.Status = newStatus;
+        navigation.ToPlannerPage(date);
+    }
+
+    private void DeferTo(int offset) => DeferTo(date.PlusDays(offset));
+
+    private void DeferTo(LocalDate newDate)
+    {
+        taskStore.DeferToDate(plannerTask ?? new PlannerTask(), newDate);
+        navigation.ToPlannerPage(date);
+    }
+
+    private enum DisplayType
+    {
+        Standard,
+        Delegation
+    }
 }

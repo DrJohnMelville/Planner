@@ -43,5 +43,13 @@ namespace Planner.Models.Repositories
             await list.CompleteList();
             return list.FirstOrDefault(i => i.Key == guidKey);
         }
+
+        public static void DeferToDate(this ILocalRepository<PlannerTask> tasks, PlannerTask task,
+            LocalDate newDate)
+        {
+            tasks.CreateTask(task.Name, newDate);
+            task.Status = PlannerTaskStatus.Deferred;
+            task.StatusDetail = newDate.ToString("D", null);
+        }
     }
 }

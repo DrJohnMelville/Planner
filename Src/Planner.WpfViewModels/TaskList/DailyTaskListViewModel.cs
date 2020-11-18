@@ -93,9 +93,7 @@ namespace Planner.WpfViewModels.TaskList
 
         private void DeferTaskToDate(PlannerTask task, LocalDate targetDate)
         {
-            taskRepository.CreateTask(task.Name, targetDate);
-            task.Status = PlannerTaskStatus.Deferred;
-            task.StatusDetail = targetDate.ToString("D", null);
+            taskRepository.DeferToDate(task, targetDate);
         }
 
         public void DeferToDate(PlannerTaskViewModel item)
