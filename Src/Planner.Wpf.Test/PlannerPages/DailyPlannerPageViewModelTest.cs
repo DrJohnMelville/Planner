@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using CefSharp;
 using Melville.MVVM.Wpf.RootWindows;
 using Moq;
 using NodaTime;
@@ -43,7 +44,8 @@ namespace Planner.Wpf.Test.PlannerPages
                      notes.Object, 
                          noteCreator,
                         navigation.Object, 
-                urlGen.Object, requestEdit
+                urlGen.Object, requestEdit,
+                Mock.Of<IRequestHandler>()
                 );
         }
 

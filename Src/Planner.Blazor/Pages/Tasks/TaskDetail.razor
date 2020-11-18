@@ -7,7 +7,7 @@
 
 @if (dailyList != null && plannerTask != null)
 {
-    <h3>@plannerTask.Name</h3>
+    <input @bind="@plannerTask.Name"/>
 }
 @code {
     [Parameter] public string DateString { get; set; }  = "";

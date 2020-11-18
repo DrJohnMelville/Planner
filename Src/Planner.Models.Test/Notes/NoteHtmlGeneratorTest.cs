@@ -25,9 +25,7 @@ namespace Planner.Models.Test.Notes
         private readonly Mock<INoteUrlGenerator> urlGen = new Mock<INoteUrlGenerator>();
         private readonly Mock<ILocalRepository<Blob>> blobRepo = new Mock<ILocalRepository<Blob>>();
         private readonly Mock<IBlobContentStore> blobStore = new Mock<IBlobContentStore>();
-        private readonly Mock<IEventBroadcast<NoteEditRequestEventArgs>> broadcast =
-            new Mock<IEventBroadcast<NoteEditRequestEventArgs>>();
-        
+
 
         private readonly LocalDate date = new LocalDate(1975,07,28);
 
@@ -138,19 +136,6 @@ namespace Planner.Models.Test.Notes
             Assert.Contains("2.</a>", OutputAsString);
         }
         
-        [Fact]
-        public async Task SendNoteEditRequest()
-        {
-            var guid = Guid.NewGuid();
-            var note = new Note() {Key = guid};
-            notes.Add(note);
-            
-            await sut.GenerateResponse($"{date:yyyy-M-d}/{guid}", output);
-            
-            broadcast.Verify(i=>i.Fire(It.IsAny<object>(), It.Is<NoteEditRequestEventArgs>(i=>
-                i.Note == note && i.DailyList == notes)), Times.Once());
-        }
-
         [Theory]
         [InlineData("1975-7-28/3.2_1")]
         [InlineData("1975-7-28/show/3.2_1")]
