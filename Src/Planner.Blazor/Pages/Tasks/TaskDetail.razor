@@ -1,10 +1,13 @@
 ﻿@page "/TaskDetail/{DateString}/{KeyString}"
 @using NodaTime
+@using Planner.Blazor.Pages.DailyPages
 @using Planner.Models.Repositories
 @using Planner.Models.Tasks
 @using Planner.Models.Time
 @inject ILocalRepository<PlannerTask> taskStore;
 @inject IAppNavigation navigation 
+@inject ModalService ModalService
+
 
 @if (dailyList != null && plannerTask != null)
 {
@@ -33,7 +36,15 @@
         <li><a href="#" @onclick="()=> DeferTo(5)">@date.PlusDays(5).ToString("dddd",null)</a></li>
         <li><a href="#" @onclick="()=> DeferTo(6)">@date.PlusDays(6).ToString("dddd",null)</a></li>
         <li><a href="#" @onclick="()=> DeferTo(7)">@date.PlusDays(7).ToString("dddd",null)</a></li>
+        <li><a href="#" @onclick="DeferToDate">Another Date</a></li>
     </ul>
+    <h4>Task Priority</h4>
+    <ul>
+        @foreach (var priority in dailyList.CreatePriorityMenu())
+        {
+            <li><a href="#" @onclick="()=>SetPriority(priority)">@priority.Display</a></li>
+        }
+    </ul> 
 }
 @code {
 
@@ -72,6 +83,18 @@
     private void DeferTo(LocalDate newDate)
     {
         taskStore.DeferToDate(plannerTask ?? new PlannerTask(), newDate);
+        navigation.ToPlannerPage(date);
+    }
+
+    private void DeferToDate() => ModalService.Show<PickDate>("Defer Task To", ("BaseDate", date),
+        ("PickAction", (Action<LocalDate>)DeferTo));
+
+    private void SetPriority(PriorityKey priorityKey)
+    {
+        if (dailyList != null  && plannerTask != null)
+        {
+            dailyList.ChangeTaskPriority(plannerTask, priorityKey.Priority, priorityKey.Order);
+        }
         navigation.ToPlannerPage(date);
     }
 

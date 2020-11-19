@@ -1,22 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using Planner.Models.Tasks;
 
-namespace Planner.WpfViewModels.TaskList
+namespace Planner.Models.Tasks
 {
-    public class PriorityKey
+    public record PriorityKey(char Priority, int Order)
     {
-        public char Priority { get; }
-        public int Order { get; }
         public string Display => Order > 0? $"{Priority}{Order}":"Remove Priority";
-
-        public PriorityKey(char priority, int order)
-        {
-            Priority = priority;
-            Order = order;
-        }
     }
-
+    
     public static class PriortyKeyListFactory
     {
         public static IEnumerable<PriorityKey> CreatePriorityMenu(this IList<PlannerTask> tasks)
