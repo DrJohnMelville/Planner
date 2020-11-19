@@ -7,6 +7,7 @@ using NodaTime.Serialization.SystemTextJson;
 using Planner.Blazor.ModalComponent;
 using Planner.Blazor.Pages;
 using Planner.Models.Blobs;
+using Planner.Models.HtmlGeneration;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
@@ -59,6 +60,7 @@ namespace Planner.Blazor.CompositionRoot
 
         private void RegisterRepositories ()
         {
+            services.AddSingleton(typeof(IEventBroadcast<>), typeof(EventBroadcast<>));
             services.AddTransient<IJsonWebService, JsonWebService>();
             services.AddSingleton<IBlobContentStore, WebBlobContentStore>();
             RegisterWebRepository<PlannerTask>("/Task");

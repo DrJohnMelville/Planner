@@ -1,10 +1,28 @@
+@using Planner.Models.Repositories
+@using Planner.Models.HtmlGeneration
+@using NodaTime
+@using Planner.Blazor.Pages
+@using Planner.Models.Time
 @inherits LayoutComponentBase
+@inject  IEventBroadcast<ClearCachesEventArgs> clearCaches;
+@inject IClock clock;
+@inject IAppNavigation AppNavigation
 
 <Modal/>
 <div class="page">
     <div >
-        Today
+        <a href="#" @clock="RefreshToToday">Today</a>
     </div>
 
    <div>@Body</div>
 </div>
+
+@code {
+
+    public void RefreshToToday()
+    {
+        clearCaches.Fire(this, new ClearCachesEventArgs());
+        AppNavigation.ToPlannerPage(clock.CurrentDate());
+    }
+
+}
