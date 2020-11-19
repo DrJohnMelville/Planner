@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using NodaTime;
+using Planner.Models.HtmlGeneration;
 
 namespace Planner.Models.Repositories
 {
+    public class ClearCachesEventArgs: EventArgs{}
+    
     public interface ICachedRepositorySource<T> : ILocalRepository<T> where T : PlannerItemWithDate
     {
     }
@@ -12,14 +15,18 @@ namespace Planner.Models.Repositories
     public class CachedRepository<T> : ILocalRepository<T> where T : PlannerItemWithDate
     {
         private readonly Dictionary<LocalDate, WeakReference<IListPendingCompletion<T>>> cache =
-            new Dictionary<LocalDate, WeakReference<IListPendingCompletion<T>>>();
+            new();
 
         private readonly ILocalRepository<T> source;
 
-        public CachedRepository(ICachedRepositorySource<T> source)
+        public CachedRepository(ICachedRepositorySource<T> source, 
+            IEventBroadcast<ClearCachesEventArgs> clearCacheSignal)
         {
             this.source = source;
+            clearCacheSignal.Fired += ClearCache;
         }
+
+        private void ClearCache(object? sender, ClearCachesEventArgs e) => cache.Clear();
 
         public T CreateItem(LocalDate date, Action<T> initialize)
         {

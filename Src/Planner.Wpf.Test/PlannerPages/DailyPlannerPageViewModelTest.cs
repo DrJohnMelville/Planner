@@ -169,5 +169,14 @@ namespace Planner.Wpf.Test.PlannerPages
                 match));
             navigation.Verify(i=>i.ToDate(new LocalDate(1980,1,2)));
         }
+
+        [Fact]
+        public void ReloadCachesTest()
+        {
+            Mock<IEventBroadcast<ClearCachesEventArgs>> signal = new();
+            sut.ReloadCaches(signal.Object);
+            signal.Verify(i=>i.Fire(sut, It.IsAny<ClearCachesEventArgs>()), Times.Once);
+        }
+
     }
 }

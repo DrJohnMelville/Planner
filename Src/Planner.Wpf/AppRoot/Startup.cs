@@ -42,6 +42,7 @@ namespace Planner.Wpf.AppRoot
         protected override void RegisterWithIocContainer(IBindableIocService service)
         {
             service.AddLogging();
+            RegisterReloadEvents(service);
             RegisterMainWindowWithView(service);
             RegisterNodaTimeClock(service);
             SetupConfiguration(service);
@@ -89,6 +90,17 @@ namespace Planner.Wpf.AppRoot
             service.Bind<IRequestHandler>().To<WebNavigationRouter>();
         }
 
+        private static void RegisterReloadEvents(IBindableIocService service)
+        {
+            service.Bind<IEventBroadcast<ClearCachesEventArgs>>()
+                .To<EventBroadcast<ClearCachesEventArgs>>()
+                .AsSingleton();
+            service.Bind<IEventBroadcast<ClearCachesEventArgs>>()
+                .To<DelayedEventBroadcast<ClearCachesEventArgs>>()
+                .AsSingleton()
+                .WhenConstructingType<ReloadingNavigator>();
+        }
+
         private void SetupJsonSerialization(IBindableIocService service)
         {
             var options = new JsonSerializerOptions();
@@ -117,9 +129,12 @@ namespace Planner.Wpf.AppRoot
             service.Bind<IViewMappingConvention>().To<MapViewsToOwnAssembly>().AsSingleton();
             service.RegisterHomeViewModel<LoginViewModel>();
             service.Bind<INavigationWindow>().To<NavigationWindow>().AsScoped();
-            service.Bind<IPlannerNavigator>().To<PlannerNavigator>().AsScoped();
             service.Bind<IPlannerNavigator>().To<NewWindowPlannerNavigator>()
                 .AsScoped().BlockSelfInjection();
+            service.Bind<IPlannerNavigator>().To<ReloadingNavigator>().AsScoped()
+                .WhenConstructingType<NewWindowPlannerNavigator>();
+            service.Bind<IPlannerNavigator>().To<PlannerNavigator>().AsScoped()
+                .WhenConstructingType<ReloadingNavigator>();
             service.Bind<IRootNavigationWindow>()
                 .And<Window>()
                 .To<RootNavigationWindow>()

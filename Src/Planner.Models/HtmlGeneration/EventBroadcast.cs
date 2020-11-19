@@ -1,4 +1,5 @@
 ﻿using System;
+using Melville.MVVM.Time;
 
 namespace Planner.Models.HtmlGeneration
 {
@@ -11,5 +12,22 @@ namespace Planner.Models.HtmlGeneration
     {
         public event EventHandler<T>? Fired;
         public void Fire(object? sender, T args) => Fired?.Invoke(sender, args);
+    }
+
+    public class DelayedEventBroadcast<TSource> : EventBroadcast<TSource>
+      where TSource:EventArgs
+    {
+        private readonly IWallClock clock;
+        public DelayedEventBroadcast(IEventBroadcast<TSource> source, IWallClock clock)
+        {
+            this.clock = clock;
+            source.Fired += WaitAndForward;
+        }
+
+        private async void WaitAndForward(object? sender, TSource e)
+        {
+            await clock.Wait(TimeSpan.FromSeconds(0.5));
+            Fire(sender, e);
+        }
     }
 }

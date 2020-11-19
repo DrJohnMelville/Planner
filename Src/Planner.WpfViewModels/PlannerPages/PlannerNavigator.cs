@@ -1,7 +1,10 @@
 ﻿using System;
+using System.ComponentModel.Design.Serialization;
+using Melville.MVVM.Time;
 using Melville.MVVM.Wpf.RootWindows;
 using NodaTime;
 using Planner.Models.HtmlGeneration;
+using Planner.Models.Repositories;
 using Planner.WpfViewModels.Notes;
 
 namespace Planner.WpfViewModels.PlannerPages
@@ -31,4 +34,36 @@ namespace Planner.WpfViewModels.PlannerPages
         public void ToDate(LocalDate date) => win.NavigateTo(plannerPageFactory(date));
         public void ToEditNote(NoteEditRequestEventArgs args) => win.NavigateTo(editorFactory(args));
     }
+
+    public sealed class ReloadingNavigator : IPlannerNavigator, IDisposable
+    {
+        private readonly IPlannerNavigator target;
+        private readonly IEventBroadcast<ClearCachesEventArgs> reloadEvent;
+
+        public ReloadingNavigator(IPlannerNavigator target, 
+            IEventBroadcast<ClearCachesEventArgs> reloadEvent)
+        {
+            this.target = target;
+            this.reloadEvent = reloadEvent;
+            reloadEvent.Fired += DoReload;
+        }
+
+        public void Dispose() => reloadEvent.Fired -= DoReload;
+
+        private void DoReload(object? sender, ClearCachesEventArgs e) =>
+            reloadAction?.Invoke();
+
+        private Action? reloadAction;
+        private void DoAction(Action action)
+        {
+            reloadAction = action;
+            action();
+        }
+
+        public void ToDate(LocalDate date) => DoAction(()=>target.ToDate(date));
+
+        public void ToEditNote(NoteEditRequestEventArgs args) => 
+            DoAction(()=>target.ToEditNote(args));
+    }
+    
 }

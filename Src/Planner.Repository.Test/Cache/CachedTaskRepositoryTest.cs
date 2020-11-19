@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Moq;
 using NodaTime;
+using Planner.Models.HtmlGeneration;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
@@ -15,10 +16,11 @@ namespace Planner.Repository.Test.Cache
             new Mock<ICachedRepositorySource<Note>>();
         private readonly CachedRepository<Note> sut;
         private readonly LocalDate baseDate = new LocalDate(1975,7,28);
+        private readonly EventBroadcast<ClearCachesEventArgs> message = new ();
 
         public CachedRepositoryTest2()
         {
-            sut = new CachedRepository<Note>(repo.Object);
+            sut = new CachedRepository<Note>(repo.Object, message);
         }
 
         [Fact]
@@ -44,19 +46,28 @@ namespace Planner.Repository.Test.Cache
     }
     public class CachedTaskRepositoryTest
     {
-        private readonly TemporaryPTF source = new TemporaryPTF();
+        private readonly TemporaryPTF source = new();
         private readonly CachedRepository<PlannerTask> sut;
-        private readonly LocalDate baseDate = new LocalDate(1975,7,28);
+        private readonly LocalDate baseDate = new(1975,7,28);
+        private readonly EventBroadcast<ClearCachesEventArgs> message = new ();
 
         public CachedTaskRepositoryTest()
         {
-            sut = new CachedRepository<PlannerTask>(source);
+            sut = new CachedRepository<PlannerTask>(source, message);
         }
 
         [Fact]
         public void ReturnCachedList()
         {
             Assert.Same(sut.ItemsForDate(baseDate), sut.ItemsForDate(baseDate));
+        }
+        [Fact]
+        public void ClearCaches()
+        {
+            var preClearItem = sut.ItemsForDate(baseDate);
+            message.Fire(this, new());
+            var postCleatItem = sut.ItemsForDate(baseDate);
+            Assert.NotSame(preClearItem, postCleatItem);
         }
         [Fact]
         public void UniqueListPerDay()

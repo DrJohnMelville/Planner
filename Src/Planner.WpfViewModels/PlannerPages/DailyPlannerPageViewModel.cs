@@ -5,9 +5,11 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using CefSharp;
 using Melville.INPC;
+using Melville.MVVM.Wpf.DiParameterSources;
 using Melville.MVVM.Wpf.RootWindows;
 using NodaTime;
 using Planner.Models.HtmlGeneration;
+using Planner.Models.Repositories;
 using Planner.Models.Tasks;
 using Planner.WpfViewModels.TaskList;
 
@@ -79,6 +81,11 @@ namespace Planner.WpfViewModels.PlannerPages
         {
             if (segment.Match == null) return;
             navigator.NavigateToDate(segment.Match.Groups, CurrentDate);
+        }
+
+        public void ReloadCaches([FromServices]IEventBroadcast<ClearCachesEventArgs> signalObject)
+        {
+            signalObject.Fire(this, new ClearCachesEventArgs());
         }
     }
 
