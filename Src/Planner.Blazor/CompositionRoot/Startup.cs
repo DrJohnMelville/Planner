@@ -14,6 +14,7 @@ using Planner.Models.Notes;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
 using Planner.Repository.Web;
+using Tewr.Blazor.FileReader;
 
 namespace Planner.Blazor.CompositionRoot
 {
@@ -40,6 +41,8 @@ namespace Planner.Blazor.CompositionRoot
         {
             services.AddSingleton<Func<LocalDate, IMarkdownTranslator>>(
                 ld => new MarkdownTranslator(ld));
+            services.AddFileReaderService(o => o.UseWasmSharedBuffer = true);
+            services.AddTransient<IBlobCreator, BlobCreator>();
         }
 
         private void RegisterNavigation()

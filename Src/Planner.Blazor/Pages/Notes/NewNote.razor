@@ -1,0 +1,59 @@
+﻿@page "/NewNote/{DateString}"
+@using NodaTime
+@using Planner.Models.Blobs
+@using Planner.Models.Notes
+@using Planner.Models.Repositories
+@using Planner.Models.Time
+@using Tewr.Blazor.FileReader
+@using System.IO
+@inject ILocalRepository<Note> noteStore
+@inject IClock Clock;
+@inject IAppNavigation AppNavigation
+@inject IFileReaderService fileReader;
+@inject IBlobCreator BlobCreator; 
+<div class="GridRoot">
+    <input @bind="newNoteTitle" placeholder="New Note Title">
+    <textarea @bind="newNoteText" placeholder="New Note Text"></textarea>
+    <a @onclick="AddNote">Add Note</a>
+    <input type="file" @ref="UploadFileCtrl"  accept="image/**" capture @onchange="AcceptPhoto"/>
+</div>
+
+
+@code {
+
+    [Parameter]
+    public string DateString { get; set; } = "";
+    private ElementReference UploadFileCtrl;
+    private string newNoteTitle = "";
+    private string newNoteText = "";
+
+    private void AddNote()
+    {
+        if (!TimeOperations.TryParseLocalDate(DateString, out var date)) return;
+        noteStore.CreateItem(date, newNote =>
+        {
+            newNote.Title = newNoteTitle;
+            newNote.Text = newNoteText;
+            newNote.TimeCreated = Clock.GetCurrentInstant();
+        });
+        AppNavigation.ToPlannerPage(date);
+    }
+
+    private async Task AcceptPhoto()
+    {
+        if (!TimeOperations.TryParseLocalDate(DateString, out var date) ||
+            !(await PhotoAsStream() is {} photo)) return;
+        var tag = " " + await BlobCreator.MarkdownForNewImage("Camera.jpg", "image/jpg", date, 
+            photo);
+        Console.WriteLine(tag);
+        newNoteText += tag;
+    }
+
+    private async Task<MemoryStream?> PhotoAsStream()
+    {
+        var streams = await fileReader.CreateReference(UploadFileCtrl).EnumerateFilesAsync();
+        return await (streams.Select(i => i.CreateMemoryStreamAsync()).FirstOrDefault() ?? 
+               Task.FromResult<MemoryStream>(null));
+    }
+
+}

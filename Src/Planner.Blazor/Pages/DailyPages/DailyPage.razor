@@ -8,12 +8,14 @@
 @using Planner.Models.Notes
 @using Planner.Models.Time
 @using Markdig.Renderers.Html
+@using Tewr.Blazor.FileReader
 @inject ILocalRepository<PlannerTask> taskStore
 @inject ILocalRepository<Note> noteStore
 @inject ModalService ModalService
 @inject IAppNavigation AppNavigation
 @inject IClock Clock
 @inject Func<LocalDate, IMarkdownTranslator> MarkdownTranslatorFactory
+
 
 <div class="CenterWithSides">
     <a href="/DailyPage/@RelativeDateString(-1)">
@@ -47,7 +49,7 @@
             <td></td>
             <td>
                 <div>
-                    <input required @bind="newTaskName"/>
+                    <input required @bind="newTaskName" placeholder="New Task Name"/>
                     <a class="ShowIfValid" @onclick="CreatePlannerTask">Create Task</a>
                 </div>
             </td>
@@ -68,6 +70,7 @@
         }
     </ol>
 }
+<a href="/NewNote/@date.ToString("yyyy-MM-dd", null)">New Note</a>
 
 @code {
 
@@ -79,6 +82,7 @@
 
     private IListPendingCompletion<PlannerTask>? tasks;
     private IListPendingCompletion<Note>? notes;
+    
     protected override Task OnParametersSetAsync() => OnInitializedAsync();
 
     protected override Task OnInitializedAsync()

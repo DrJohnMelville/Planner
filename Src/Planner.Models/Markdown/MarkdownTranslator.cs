@@ -3,7 +3,6 @@ using System.Xml.Schema;
 using Markdig;
 using NodaTime;
 using Planner.Models.Markdown.PlannerLinks;
-
 namespace Planner.Models.Markdown
 {
     public interface IMarkdownTranslator

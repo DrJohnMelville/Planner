@@ -1,0 +1,17 @@
+﻿.GridRoot {
+    display: grid;
+    grid-gap: 3px;
+    grid-template-rows: auto auto 1fr;
+    grid-template-columns: 1fr auto;
+    grid-template-areas: 
+            "title title"
+            "photo post"
+            "text text";
+    position: fixed;
+    width: 95%;
+    height: 92%;
+}
+.GridRoot input:first-child{grid-area: title}
+.GridRoot textarea {grid-area: text} 
+.GridRoot input:nth-child(4) {grid-area: photo} 
+.GridRoot a {grid-area: post} 

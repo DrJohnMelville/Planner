@@ -1,6 +1,7 @@
 ﻿input {width: 100%}
 
 input:invalid + a.ShowIfValid{display: none;}
+input:invalid + div{display: none;}
 
 .TaskTable {
     border-collapse:collapse;
@@ -16,3 +17,5 @@ input:invalid + a.ShowIfValid{display: none;}
 .TaskTable td:last-child {
     width: 99%;
 }
+
+.NoteTextDiv a {width: 100%}
