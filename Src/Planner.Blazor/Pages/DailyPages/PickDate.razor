@@ -22,7 +22,7 @@
             @for (int i = 0; i < 7; i++)
             {
                 var day = week.PlusDays(i);
-                <td><a href="#" @onclick="()=>DateSelected(day)">@day.Day</a></td>
+                <td><a @onclick="()=>DateSelected(day)">@day.Day</a></td>
             }
         </tr>
     }

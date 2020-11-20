@@ -33,3 +33,8 @@ html, body {
 .TaskTable td:last-child {
     width: 99%;
 }
+
+a {
+    color: blue;
+    text-decoration: underline;
+}

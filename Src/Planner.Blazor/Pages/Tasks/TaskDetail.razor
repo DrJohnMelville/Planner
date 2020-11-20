@@ -15,34 +15,41 @@
     <input @bind="@plannerTask.Name"/>
     <h4>Task Status</h4>
     <ul>
-        <li><a href="#" @onclick="()=> SetTaskStatus(PlannerTaskStatus.Incomplete)">Incomplete</a></li>
-        <li><a href="#" @onclick="()=> SetTaskStatus(PlannerTaskStatus.Done)">Completed</a></li>
-        <li><a href="#" @onclick="()=> SetTaskStatus(PlannerTaskStatus.Canceled)">Cancelled</a></li>
-        <li><a href="#" @onclick="()=> SetTaskStatus(PlannerTaskStatus.Pending)">Pending</a></li>
-        <li><a href="#" @onclick="()=> displayType = DisplayType.Delegation">Delegated</a></li>
+        <li><a @onclick="()=> SetTaskStatus(PlannerTaskStatus.Incomplete)">Incomplete</a></li>
+        <li><a @onclick="()=> SetTaskStatus(PlannerTaskStatus.Done)">Completed</a></li>
+        <li><a @onclick="()=> SetTaskStatus(PlannerTaskStatus.Canceled)">Cancelled</a></li>
+        <li><a @onclick="()=> SetTaskStatus(PlannerTaskStatus.Pending)">Pending</a></li>
+        <li><a @onclick="()=> displayType = DisplayType.Delegation">Delegated</a></li>
         @if (displayType == DisplayType.Delegation)
         {
             <div>Delegate Task To:</div>
             <input @bind="@plannerTask.StatusDetail"/>
-            <a href="#" @onclick="()=> SetTaskStatus(PlannerTaskStatus.Delegated)">Complete Delegation</a>
+            <a @onclick="()=> SetTaskStatus(PlannerTaskStatus.Delegated)">Complete Delegation</a>
         }
+        <li><a @onclick="()=> displayType = DisplayType.DeleteTask">Delete</a></li>
+        @if (displayType == DisplayType.DeleteTask)
+        {
+            <div>
+                <a @onclick="DeleteTask">Confirm Deletion</a>
+            </div>
+        }        
     </ul>
     <h4>Defer To</h4>
     <ul>
-        <li><a href="#" @onclick="()=> DeferTo(1)">Tomorrow</a></li>
-        <li><a href="#" @onclick="()=> DeferTo(2)">@date.PlusDays(2).ToString("dddd",null)</a></li>
-        <li><a href="#" @onclick="()=> DeferTo(3)">@date.PlusDays(3).ToString("dddd",null)</a></li>
-        <li><a href="#" @onclick="()=> DeferTo(4)">@date.PlusDays(4).ToString("dddd",null)</a></li>
-        <li><a href="#" @onclick="()=> DeferTo(5)">@date.PlusDays(5).ToString("dddd",null)</a></li>
-        <li><a href="#" @onclick="()=> DeferTo(6)">@date.PlusDays(6).ToString("dddd",null)</a></li>
-        <li><a href="#" @onclick="()=> DeferTo(7)">@date.PlusDays(7).ToString("dddd",null)</a></li>
-        <li><a href="#" @onclick="DeferToDate">Another Date</a></li>
+        <li><a @onclick="()=> DeferTo(1)">Tomorrow</a></li>
+        <li><a @onclick="()=> DeferTo(2)">@date.PlusDays(2).ToString("dddd",null)</a></li>
+        <li><a @onclick="()=> DeferTo(3)">@date.PlusDays(3).ToString("dddd",null)</a></li>
+        <li><a @onclick="()=> DeferTo(4)">@date.PlusDays(4).ToString("dddd",null)</a></li>
+        <li><a @onclick="()=> DeferTo(5)">@date.PlusDays(5).ToString("dddd",null)</a></li>
+        <li><a @onclick="()=> DeferTo(6)">@date.PlusDays(6).ToString("dddd",null)</a></li>
+        <li><a @onclick="()=> DeferTo(7)">@date.PlusDays(7).ToString("dddd",null)</a></li>
+        <li><a @onclick="DeferToDate">Another Date</a></li>
     </ul>
     <h4>Task Priority</h4>
     <ul>
         @foreach (var priority in dailyList.CreatePriorityMenu())
         {
-            <li><a href="#" @onclick="()=>SetPriority(priority)">@priority.Display</a></li>
+            <li><a @onclick="()=>SetPriority(priority)">@priority.Display</a></li>
         }
     </ul> 
 }
@@ -98,9 +105,19 @@
         navigation.ToPlannerPage(date);
     }
 
+    private void DeleteTask()
+    {
+        if (dailyList != null  && plannerTask != null)
+        {
+            dailyList.Remove(plannerTask);
+        }
+        navigation.ToPlannerPage(date);
+    }
+
     private enum DisplayType
     {
         Standard,
-        Delegation
+        Delegation,
+        DeleteTask
     }
 }
