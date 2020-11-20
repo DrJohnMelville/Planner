@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using Melville.MVVM.Time;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
@@ -8,6 +9,7 @@ using Planner.Blazor.ModalComponent;
 using Planner.Blazor.Pages;
 using Planner.Models.Blobs;
 using Planner.Models.HtmlGeneration;
+using Planner.Models.Markdown;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
@@ -29,11 +31,18 @@ namespace Planner.Blazor.CompositionRoot
             RegisterModalComponents();
             RegisterClocks();
             RegisterRepositories();
-            RegisterPages();
+            RegisterNavigation();
             SetupJsonSerialization();
+            RegisterNoteRendering();
         }
 
-        private void RegisterPages()
+        private void RegisterNoteRendering()
+        {
+            services.AddSingleton<Func<LocalDate, IMarkdownTranslator>>(
+                ld => new MarkdownTranslator(ld));
+        }
+
+        private void RegisterNavigation()
         {
             services.AddTransient<IAppNavigation, AppNavigation>();
         }

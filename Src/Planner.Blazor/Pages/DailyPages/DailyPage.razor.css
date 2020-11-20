@@ -1,3 +1,18 @@
 ﻿input {width: 100%}
 
 input:invalid + a.ShowIfValid{display: none;}
+
+.TaskTable {
+    border-collapse:collapse;
+    border:1px solid lightgray;
+    width: 100%;
+}
+
+.TaskTable td{
+    border:1px solid lightgray;
+    padding: 1px 2px;
+}
+
+.TaskTable td:last-child {
+    width: 99%;
+}

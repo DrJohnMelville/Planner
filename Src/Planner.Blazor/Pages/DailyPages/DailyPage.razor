@@ -4,27 +4,43 @@
 @using Planner.Models.Tasks
 @using NodaTime
 @using Planner.Blazor.ModalComponent
+@using Planner.Models.Markdown
+@using Planner.Models.Notes
 @using Planner.Models.Time
-@inject ILocalRepository<PlannerTask> taskStore;
+@using Markdig.Renderers.Html
+@inject ILocalRepository<PlannerTask> taskStore
+@inject ILocalRepository<Note> noteStore
 @inject ModalService ModalService
 @inject IAppNavigation AppNavigation
 @inject IClock Clock
+@inject Func<LocalDate, IMarkdownTranslator> MarkdownTranslatorFactory
 
 <div class="CenterWithSides">
-<a href="/DailyPage/@RelativeDateString(-1)"><span class="oi oi-caret-left" aria-hidden="true"></span></a>
-<a @onclick="ShowDatePicker"><h3>@date</h3></a> 
-<a href="/DailyPage/@RelativeDateString(1)"><span class="oi oi-caret-right" aria-hidden="true"></span></a>
+    <a href="/DailyPage/@RelativeDateString(-1)">
+        <span class="oi oi-caret-left" aria-hidden="true"></span>
+    </a>
+    <a @onclick="ShowDatePicker">
+        <h3>@date</h3>
+    </a>
+    <a href="/DailyPage/@RelativeDateString(1)">
+        <span class="oi oi-caret-right" aria-hidden="true"></span>
+    </a>
 </div>
+<h4>Tasks</h4>
 <table class="TaskTable">
     @if (tasks != null)
     {
-        @foreach (var task in tasks.OrderBy(i=>i))
+        @foreach (var task in tasks.OrderBy(i => i))
         {
             <tr>
-                <td><span class="@ClassFromStatus(task.Status)" aria-hidden="true"></span></td>
+                <td>
+                    <span class="@ClassFromStatus(task.Status)" aria-hidden="true"></span>
+                </td>
                 <td>@task.PriorityDisplay</td>
-                <td><a href="/TaskDetail/@RelativeDateString(0)/@task.Key">@task.Name</a></td>
-            </tr> 
+                <td>
+                    <a href="/TaskDetail/@RelativeDateString(0)/@task.Key">@task.Name</a>
+                </td>
+            </tr>
         }
         <tr>
             <td></td>
@@ -37,8 +53,21 @@
             </td>
         </tr>
     }
-
 </table>
+
+<h4>Notes</h4>
+@if (notes != null)
+{
+    <ol>
+        @foreach (var note in notes.OrderBy(i => i.TimeCreated))
+        {
+            <li>
+                @((MarkupString) (markdownTranslator?.RenderLine(note.Title) ?? ""))
+                @((MarkupString) (markdownTranslator?.Render(note.Text) ?? ""))
+            </li>
+        }
+    </ol>
+}
 
 @code {
 
@@ -46,15 +75,19 @@
     public string DateString { get; set; } = "";
 
     private LocalDate date;
-    
+    private IMarkdownTranslator? markdownTranslator;
+
     private IListPendingCompletion<PlannerTask>? tasks;
+    private IListPendingCompletion<Note>? notes;
     protected override Task OnParametersSetAsync() => OnInitializedAsync();
 
     protected override Task OnInitializedAsync()
     {
         SetDate();
         tasks = taskStore.ItemsForDate(date);
-        return tasks.CompleteList();
+        notes = noteStore.ItemsForDate(date);
+        markdownTranslator = MarkdownTranslatorFactory(date);
+        return Task.WhenAll(tasks.CompleteList(), notes.CompleteList());
     }
 
     private void SetDate()
@@ -68,6 +101,7 @@
             date = Clock.CurrentDate();
         }
     }
+
     private bool DateIsUnset() => date == new LocalDate();
 
     private string ClassFromStatus(PlannerTaskStatus status) =>
@@ -86,7 +120,7 @@
     }
 
     private void ShowDatePicker() => ModalService.Show<PickDate>("Date To Display", ("BaseDate", date),
-        ("PickAction", (Action<LocalDate>)NavigateToNewDate));
+        ("PickAction", (Action<LocalDate>) NavigateToNewDate));
 
     private void NavigateToNewDate(LocalDate newDate) => AppNavigation.ToPlannerPage(newDate);
 
@@ -98,4 +132,5 @@
         taskStore.CreateItem(date, i => i.Name = newTaskName);
         newTaskName = "";
     }
+
 }

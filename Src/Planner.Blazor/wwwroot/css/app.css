@@ -19,22 +19,9 @@ html, body {
     align-items: center;
 }
 
-.TaskTable {
-    border-collapse:collapse;
-    border:1px solid lightgray;
-    width: 100%;
-}
-
-.TaskTable td{
-    border:1px solid lightgray;
-    padding: 1px 2px;
-}
-
-.TaskTable td:last-child {
-    width: 99%;
-}
-
 a {
     color: blue;
     text-decoration: underline;
 }
+
+h1,h2,h3,h4,h5,h6 {margin: 0px}

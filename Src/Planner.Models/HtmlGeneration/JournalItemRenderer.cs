@@ -64,10 +64,10 @@ namespace Planner.Models.HtmlGeneration
             destination.Write(".");
             destination.Write("</a>");
             destination.Write(" ");
-            destination.Write(markdownTranslator.RenderLine(note.Title, note.Date));
+            destination.Write(markdownTranslator.RenderLine(note.Title));
             destination.Write("</h3>");
             destination.Write("<div>");
-            destination.Write(markdownTranslator.Render(note.Text, note.Date));
+            destination.Write(markdownTranslator.Render(note.Text));
             destination.Write("</div>");
         }
     }

@@ -55,10 +55,10 @@ namespace Planner.Models.Repositories
         private void RegisterItemRemovalNotification(ThreadSafeBindableCollection<T> ret) => 
             ret.CollectionChanged += CollectionChanged;
 
-        private void CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Remove)
-                RemoveItems(e.OldItems.OfType<T>());
+                RemoveItems(e.OldItems?.OfType<T>()??Array.Empty<T>());
         }
 
         private void RemoveItems(IEnumerable<T> oldTasks)

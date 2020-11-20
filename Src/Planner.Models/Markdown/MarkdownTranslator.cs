@@ -8,8 +8,8 @@ namespace Planner.Models.Markdown
 {
     public interface IMarkdownTranslator
     {
-        public string Render(string markdown, LocalDate date);
-        public string RenderLine(string markdown, LocalDate date);
+        public string Render(string markdown);
+        public string RenderLine(string markdown);
     }
     public class MarkdownTranslator:IMarkdownTranslator
     {
@@ -24,11 +24,11 @@ namespace Planner.Models.Markdown
                     .Build();
         }
 
-        public string Render(string markdown, LocalDate date) => Markdig.Markdown.ToHtml(markdown, translator);
+        public string Render(string markdown) => Markdig.Markdown.ToHtml(markdown, translator);
         
         private static readonly Regex paragraphFinder = new Regex(@"\</?p\>");
-        public string RenderLine(string markdown, LocalDate date) => 
-            paragraphFinder.Replace(Render(markdown, date), "");
+        public string RenderLine(string markdown) => 
+            paragraphFinder.Replace(Render(markdown), "");
     }
     
     
