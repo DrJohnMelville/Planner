@@ -26,6 +26,16 @@
                 <td><a href="/TaskDetail/@RelativeDateString(0)/@task.Key">@task.Name</a></td>
             </tr> 
         }
+        <tr>
+            <td></td>
+            <td></td>
+            <td>
+                <div>
+                    <input required @bind="newTaskName"/>
+                    <a class="ShowIfValid" href="#" @onclick="CreatePlannerTask">Create Task</a>
+                </div>
+            </td>
+        </tr>
     }
 
 </table>
@@ -80,5 +90,12 @@
 
     private void NavigateToNewDate(LocalDate newDate) => AppNavigation.ToPlannerPage(newDate);
 
+    private string newTaskName = "";
 
+    private void CreatePlannerTask()
+    {
+        if (string.IsNullOrWhiteSpace(newTaskName)) return;
+        taskStore.CreateItem(date, i => i.Name = newTaskName);
+        newTaskName = "";
+    }
 }
