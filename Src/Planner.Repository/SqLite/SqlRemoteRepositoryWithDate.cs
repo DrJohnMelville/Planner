@@ -14,14 +14,10 @@ namespace Planner.Repository.SqLite
         {
         }
 
-        public async IAsyncEnumerable<T> TasksForDate(LocalDate date)
+        public IAsyncEnumerable<T> TasksForDate(LocalDate date)
         {
-            await using var ctx = contextFactory();
-            // enumerate to make sure that the implicit dispose block is correct
-            await foreach (var item in PlannerTaskByDateQuery(ctx, date))
-            {
-                yield return item;
-            }
+            var ctx = contextFactory();
+            return new DisposeWithAsyncEnumerable<T>(PlannerTaskByDateQuery(ctx, date), ctx);
         }
 
         private static IAsyncEnumerable<T> PlannerTaskByDateQuery(

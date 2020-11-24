@@ -51,7 +51,6 @@ namespace Planner.Repository.Test.SqLite
             var note2 = ctx2.Notes.First();
             Assert.Equal(note.Title, note2.Title);
             Assert.Equal(note.Text, note2.Text);
-            
         }
     }
 }
