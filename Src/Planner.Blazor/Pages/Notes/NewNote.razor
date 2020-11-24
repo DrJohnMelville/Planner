@@ -53,7 +53,7 @@
     {
         var streams = await fileReader.CreateReference(UploadFileCtrl).EnumerateFilesAsync();
         return await (streams.Select(i => i.CreateMemoryStreamAsync()).FirstOrDefault() ?? 
-               Task.FromResult<MemoryStream>(null));
+               Task.FromResult<MemoryStream?>(null));
     }
 
 }

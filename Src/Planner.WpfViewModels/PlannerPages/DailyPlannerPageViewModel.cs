@@ -11,6 +11,7 @@ using NodaTime;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
+using Planner.Models.Time;
 using Planner.WpfViewModels.TaskList;
 
 namespace Planner.WpfViewModels.PlannerPages
@@ -86,6 +87,11 @@ namespace Planner.WpfViewModels.PlannerPages
         public void ReloadCaches([FromServices]IEventBroadcast<ClearCachesEventArgs> signalObject)
         {
             signalObject.Fire(this, new ClearCachesEventArgs());
+        }
+
+        public void GoToToday([FromServices] IClock clock)
+        {
+            navigator.ToDate(clock.CurrentDate());
         }
     }
 

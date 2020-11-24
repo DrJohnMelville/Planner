@@ -9,7 +9,6 @@
              xmlns:eventBindings="clr-namespace:Melville.MVVM.Wpf.EventBindings;assembly=Melville.MVVM.Wpf"
              xmlns:taskList="clr-namespace:Planner.Wpf.TaskList"
              xmlns:taskList1="clr-namespace:Planner.WpfViewModels.TaskList;assembly=Planner.WpfViewModels"
-             xmlns:wpf1="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
              xmlns:wpfHacks="clr-namespace:Melville.MVVM.Wpf.WpfHacks;assembly=Melville.MVVM.Wpf"
              xmlns:diParameterSources="clr-namespace:Melville.MVVM.Wpf.DiParameterSources;assembly=Melville.MVVM.Wpf"
              xmlns:pasters="clr-namespace:Planner.WpfViewModels.Notes.Pasters;assembly=Planner.WpfViewModels"
@@ -17,7 +16,7 @@
              d:DataContext="{d:DesignData {x:Type plannerPages:DailyPlannerPageViewModel}}"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
-    <easyGrids:EasyGrid easyGrids:GridOperations.ColsAndRows="auto,*,auto,auto/auto,*">
+    <easyGrids:EasyGrid easyGrids:GridOperations.ColsAndRows="auto,*,auto,auto,auto/auto,*">
         <easyGrids:EasyGrid.Resources>
             <Style x:Key="BigButton">
                 <Setter Property="TextBlock.FontFamily" Value="Marlett"/>
@@ -34,12 +33,15 @@
                 </ControlTemplate>
             </ToggleButton.Template>
         </ToggleButton>
+        <Button Style="{StaticResource BigButton}" FontFamily="Webdings"
+                Margin="0 0 15 0"
+                Click="{eventBindings:EventBinding GoToToday}" Content="¦"/>
         <Button Style="{StaticResource BigButton}" FontFamily="Wingdings 3"
                 Margin="0 0 15 0"
                 Click="{eventBindings:EventBinding ReloadCaches}" Content="P"/>
         <Button Click="{eventBindings:EventBinding  ForwardOneDay}"
                 Style="{StaticResource BigButton}">4</Button>
-        <easyGrids:EasyGrid Grid.ColumnSpan="4" easyGrids:GridOperations.ColsAndRows="*,*/*,*">
+        <easyGrids:EasyGrid Grid.ColumnSpan="5" easyGrids:GridOperations.ColsAndRows="*,*/*,*">
             <viewFrames:ViewFrame Content="{Binding TodayTaskList}" Margin="0 0 5 5"/>
             <Grid Grid.RowSpan="2" easyGrids:GridOperations.ColsAndRows="*/*,auto,auto">
                 <plannerPages1:NoteBrowser Address="{Binding NotesUrl, Mode=OneWay}" x:Name="Browser"

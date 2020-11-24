@@ -178,5 +178,16 @@ namespace Planner.Wpf.Test.PlannerPages
             signal.Verify(i=>i.Fire(sut, It.IsAny<ClearCachesEventArgs>()), Times.Once);
         }
 
+        [Fact]
+        public void GoToTodayTest()
+        {
+            var clock = new Mock<IClock>();
+            var dateTimeZone = DateTimeZoneProviders.Tzdb.GetSystemDefault();
+            clock.Setup(i => i.GetCurrentInstant()).Returns(
+                new LocalDateTime(1974, 08, 18, 1, 2, 1)
+                    .InZoneLeniently(DateTimeZoneProviders.Tzdb.GetSystemDefault()).ToInstant());
+            sut.GoToToday(clock.Object);
+            navigation.Verify(i=>i.ToDate(new LocalDate(1974,08,18)), Times.Once);
+        }
     }
 }
