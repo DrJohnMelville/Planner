@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Windows.Data;
-using Melville.MVVM.Wpf.Bindings;
 using NodaTime;
 
 namespace Planner.WpfViewModels.TaskList
@@ -22,8 +20,5 @@ namespace Planner.WpfViewModels.TaskList
         }
 
         public void DoDeferral() => supplyDate(SelectedDate);
-
-        public static readonly IValueConverter DateConv = LambdaConverter.Create(
-            (LocalDate ld)=>ld.ToDateTimeUnspecified(), LocalDate.FromDateTime);
     }
 }

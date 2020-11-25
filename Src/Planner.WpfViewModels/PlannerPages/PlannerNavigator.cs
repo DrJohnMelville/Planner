@@ -6,6 +6,7 @@ using NodaTime;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Repositories;
 using Planner.WpfViewModels.Notes;
+using Planner.WpfViewModels.NotesSearchResults;
 
 namespace Planner.WpfViewModels.PlannerPages
 {
@@ -13,6 +14,7 @@ namespace Planner.WpfViewModels.PlannerPages
     {
         void ToDate(LocalDate date);
         void ToEditNote(NoteEditRequestEventArgs args);
+        void ToNoteSearchPage();
     }
 
     public class PlannerNavigator : IPlannerNavigator
@@ -20,19 +22,23 @@ namespace Planner.WpfViewModels.PlannerPages
         private readonly INavigationWindow win;
         private readonly Func<LocalDate, DailyPlannerPageViewModel> plannerPageFactory;
         private readonly Func<NoteEditRequestEventArgs, NoteEditorViewModel> editorFactory;
+        private readonly Func<NotesSearchViewModel> notesSearchFactory;
 
         public PlannerNavigator(
             INavigationWindow win, 
             Func<LocalDate, DailyPlannerPageViewModel> plannerPageFactory, 
-            Func<NoteEditRequestEventArgs, NoteEditorViewModel> editorFactory)
+            Func<NoteEditRequestEventArgs, NoteEditorViewModel> editorFactory,
+            Func<NotesSearchViewModel> notesSearchFactory)
         {
             this.win = win;
             this.plannerPageFactory = plannerPageFactory;
             this.editorFactory = editorFactory;
+            this.notesSearchFactory = notesSearchFactory;
         }
 
         public void ToDate(LocalDate date) => win.NavigateTo(plannerPageFactory(date));
         public void ToEditNote(NoteEditRequestEventArgs args) => win.NavigateTo(editorFactory(args));
+        public void ToNoteSearchPage() => win.NavigateTo(notesSearchFactory());
     }
 
     public sealed class ReloadingNavigator : IPlannerNavigator, IDisposable
@@ -64,6 +70,9 @@ namespace Planner.WpfViewModels.PlannerPages
 
         public void ToEditNote(NoteEditRequestEventArgs args) => 
             DoAction(()=>target.ToEditNote(args));
+
+        public void ToNoteSearchPage() =>
+            DoAction(() => target.ToNoteSearchPage());
     }
     
 }

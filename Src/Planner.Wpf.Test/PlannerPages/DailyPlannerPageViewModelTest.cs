@@ -189,5 +189,12 @@ namespace Planner.Wpf.Test.PlannerPages
             sut.GoToToday(clock.Object);
             navigation.Verify(i=>i.ToDate(new LocalDate(1974,08,18)), Times.Once);
         }
+
+        [Fact]
+        public void SearchJournalCommand()
+        {
+            sut.SearchJournal();
+            navigation.Verify(i=>i.ToNoteSearchPage(), Times.Once);
+        }
     }
 }

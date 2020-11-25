@@ -93,6 +93,8 @@ namespace Planner.WpfViewModels.PlannerPages
         {
             navigator.ToDate(clock.CurrentDate());
         }
+
+        public void SearchJournal() => navigator.ToNoteSearchPage();
     }
 
 }

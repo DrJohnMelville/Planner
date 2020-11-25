@@ -26,9 +26,9 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type taskList:PickDeferDate}">
             <StackPanel>
-                <Calendar DisplayDateStart="{Binding BeginDay, Mode=OneWay, Converter={x:Static taskList:PickDeferDate.DateConv}}"
+                <Calendar DisplayDateStart="{Binding BeginDay, Mode=OneWay, Converter={x:Static taskList:DateConverter.Instance}}"
                           SelectedDate="{Binding SelectedDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,
-                      Converter={x:Static taskList:PickDeferDate.DateConv}}"
+                      Converter={x:Static taskList:DateConverter.Instance}}"
                           local:CalendarHelper.SingleClickDefocus="true" 
                           MouseDoubleClick="{eventBindings:EventBinding DoDeferral}"/>
                 <Button Click="{eventBindings:EventBinding DoDeferral}">Defer Task</Button>

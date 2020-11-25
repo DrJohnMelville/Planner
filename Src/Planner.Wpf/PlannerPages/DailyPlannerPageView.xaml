@@ -46,13 +46,19 @@
             <Grid Grid.RowSpan="2" easyGrids:GridOperations.ColsAndRows="*/*,auto,auto">
                 <plannerPages1:NoteBrowser Address="{Binding NotesUrl, Mode=OneWay}" x:Name="Browser"
                         BoundRequestHandler="{Binding RequestHandler}"/>
-                <TextBox Grid.Row="1" Text="{Binding NoteCreator.Title, UpdateSourceTrigger=PropertyChanged}"
-                         TextWrapping="Wrap"/>
-                <TextBlock Foreground="DarkGray" Grid.Row="1" HorizontalAlignment="Center" 
-                           IsHitTestVisible="False" 
-                         wpfHacks:VisibilityHack.CollapseUnlessWhitespace="{Binding NoteCreator.Title}">
-                    New Journal Item Title
-                </TextBlock>
+                <Grid Grid.Row="1" easyGrids:GridOperations.ColsAndRows="*,auto/auto">
+                    <TextBox Text="{Binding NoteCreator.Title, UpdateSourceTrigger=PropertyChanged}"
+                             TextWrapping="Wrap"/>
+                    <TextBlock Foreground="DarkGray" HorizontalAlignment="Center" 
+                               IsHitTestVisible="False" 
+                               wpfHacks:VisibilityHack.CollapseUnlessWhitespace="{Binding NoteCreator.Title}">
+                        New Journal Item Title
+                    </TextBlock>
+                    <Button Grid.Column="1" 
+                            wpfHacks:VisibilityHack.CollapseUnlessWhitespace="{Binding NoteCreator.Title}"
+                            Click="{eventBindings:EventBinding SearchJournal}"
+                            Margin="5 0">Search Journal</Button>
+                </Grid>
                 <TextBox MinHeight="50" Grid.Row="2" AcceptsReturn="True"
                          Text="{Binding NoteCreator.Text}"
                          pasters:TextBoxPasteEnhancement.MarkdownPaster="{diParameterSources:DIBinding}"
@@ -78,9 +84,9 @@
         <Popup IsOpen="{Binding PopupOpen}" StaysOpen="False" Placement="Bottom"
                PlacementTarget="{Binding ElementName=BigDate}">
             <Border BorderThickness="1" BorderBrush="Black" Background="Silver">
-                <Calendar DisplayDateStart="{Binding BeginDay, Mode=OneWay, Converter={x:Static taskList1:PickDeferDate.DateConv}}"
+                <Calendar DisplayDateStart="{Binding BeginDay, Mode=OneWay, Converter={x:Static taskList1:DateConverter.Instance}}"
                           SelectedDate="{Binding CurrentDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,
-                      Converter={x:Static taskList1:PickDeferDate.DateConv}}"
+                      Converter={x:Static taskList1:DateConverter.Instance}}"
                           taskList:CalendarHelper.SingleClickDefocus="true" />
             </Border>
         </Popup>

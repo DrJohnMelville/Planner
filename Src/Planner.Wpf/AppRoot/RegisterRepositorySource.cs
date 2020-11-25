@@ -28,6 +28,7 @@ namespace Planner.Wpf.AppRoot
             RegisterWebRepository<PlannerTask>("/Task");
             RegisterWebRepository<Note>("/Note");
             RegisterWebRepository<Blob>("/Blob");
+            container.Bind<INoteSearcher>().To<WebNoteSearcher>();
             container.Bind<IBlobContentStore>().To<WebBlobContentStore>()
                 .WithParameters(authenticatedClient)
                 .AsSingleton();
@@ -46,6 +47,7 @@ namespace Planner.Wpf.AppRoot
             container.Bind<IDirectory>().ToConstant(new MemoryDirectory("c:\\sss")).WhenConstructingType<BlobContentContentStore>();
             container.Bind<IBlobContentStore>().And<IDeletableBlobContentStore>()
                 .To<BlobContentContentStore>().AsSingleton();
+            container.Bind<INoteSearcher>().To<SqlNoteSearcher>();
         }
     }
 }

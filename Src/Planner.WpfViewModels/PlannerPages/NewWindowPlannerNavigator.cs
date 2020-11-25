@@ -45,5 +45,7 @@ namespace Planner.WpfViewModels.PlannerPages
 
         public void ToEditNote(NoteEditRequestEventArgs args) => 
             staWorker.Run(()=>Target().ToEditNote(args));
+
+        public void ToNoteSearchPage() => staWorker.Run(() => Target().ToNoteSearchPage());
     }
 }
