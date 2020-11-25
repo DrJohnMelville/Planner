@@ -22,20 +22,20 @@ namespace Planner.Repository.Test.SqLite
 
         private void FillWithSampleNotes(PlannerDataContext ctx)
         {
-            CreateDat(ctx, 20, "TFoo20", "Foo20");
-            CreateDat(ctx, 21, "TFoo21", "BFoo21");
-            CreateDat(ctx, 22, "TFoo22", "BFoo22");
-            CreateDat(ctx, 23, "TFoo23", "BFoo23");
-            CreateDat(ctx, 24, "TFoo24", "BFoo24");
-            CreateDat(ctx, 25, "TFoo25", "BFoo25");
-            CreateDat(ctx, 26, "TFoo26", "BFoo26");
-            CreateDat(ctx, 27, "TFoo27", "BFoo27");
-            CreateDat(ctx, 28, "TFoo28", "BFoo28");
-            CreateDat(ctx, 29, "Foo29", "BFoo29");
+            CreateData(ctx, 20, "TFoo20", "Foo20");
+            CreateData(ctx, 21, "TFoo21", "BFoo21");
+            CreateData(ctx, 22, "TFoo22", "BFoo22");
+            CreateData(ctx, 23, "TFoo23", "BFoo23");
+            CreateData(ctx, 24, "TFoo24", "BFoo24");
+            CreateData(ctx, 25, "TFoo25", "BFoo25");
+            CreateData(ctx, 26, "TFoo26", "BFoo26");
+            CreateData(ctx, 27, "TFoo27", "BFoo27");
+            CreateData(ctx, 28, "TFoo28", "BFoo28");
+            CreateData(ctx, 29, "Foo29", "BFoo29");
             ctx.SaveChanges();
         }
 
-        private static void CreateDat(PlannerDataContext ctx, int day, string title, string text)
+        private static void CreateData(PlannerDataContext ctx, int day, string title, string text)
         {
             ctx.Notes.Add(new Note()
             {
