@@ -51,7 +51,7 @@ namespace Planner.Wpf.Test.Notes
         }
 
         [Fact]
-        public void DisplayUrlTest()
+        public void NoteUrlIsDifferentEachTimeYouCallIt()
         {
             Assert.Equal($"url://0/{note.Date:yyyy-M-d}/show/{note.Key}", sut.NoteUrl);
             Assert.Equal($"url://1/{note.Date:yyyy-M-d}/show/{note.Key}", sut.NoteUrl);

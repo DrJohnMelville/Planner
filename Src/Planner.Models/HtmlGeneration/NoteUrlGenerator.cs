@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using NodaTime;
 using Planner.Models.Notes;
 
@@ -17,6 +19,7 @@ namespace Planner.Models.HtmlGeneration
         string EditNoteUrl(Note note) => EditNoteUrl(note.Date, note.Key);
         string ShowNoteUrl(LocalDate date, Guid key);
         string ShowNoteUrl(Note note) => ShowNoteUrl(note.Date, note.Key);
+        string ArbitraryNoteView(IEnumerable<Guid> noteKeys);
     }
     public class NoteUrlGenerator:INoteUrlGenerator
     {
@@ -32,5 +35,9 @@ namespace Planner.Models.HtmlGeneration
 
         public string EditNoteUrl(LocalDate date, Guid key) => DailyUrl(date)+key;
         public string ShowNoteUrl(LocalDate date, Guid key) => DailyUrl(date)+"show/"+key;
+
+        public string ArbitraryNoteView(IEnumerable<Guid> noteKeys) =>
+            string.Join("/", noteKeys.Select(i => i.ToString()).Prepend(Prefix() + "List"));
+
     }
 }

@@ -19,7 +19,7 @@
                 </Style>
             </easyGrids:EasyGrid.Resources>
             <TextBlock>Search For: </TextBlock>
-            <TextBox Text="{Binding SearchString}"/>
+            <TextBox Text="{Binding SearchString, UpdateSourceTrigger=PropertyChanged}"/>
             <Button Grid.ColumnSpan="2" HorizontalAlignment="Right" Margin="10 0 0 0" IsDefault="True"
                     Click="{eventBindings:EventBinding DoSearch}">Search</Button>
             <TextBlock>Start Date: </TextBlock>
@@ -29,12 +29,15 @@
             <DatePicker SelectedDate="{Binding EndDate, Converter={x:Static taskList:DateConverter.Instance}}" 
                         Grid.ColumnSpan="2"/>
             <DataGrid ItemsSource="{Binding Results}" AutoGenerateColumns="False" HorizontalScrollBarVisibility="Disabled"
-                      IsReadOnly="True" Grid.ColumnSpan="3" filteredDataGrids:FilteredDataGrid.UseFilter="True">
+                      IsReadOnly="True" Grid.ColumnSpan="3" filteredDataGrids:FilteredDataGrid.UseFilter="True"
+                      SelectionUnit="FullRow" SelectionMode="Extended" 
+                      SelectionChanged="{eventBindings:EventBinding NewItemsSelected, Parameters=$this.SelectedItems}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Date" Binding="{Binding Date}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Title" Width="*" Binding="{Binding Title}"></DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </easyGrids:EasyGrid>
+        <TextBlock Grid.Column="1" Text="{Binding DisplayUrl}"></TextBlock>
     </Grid>
 </UserControl>
