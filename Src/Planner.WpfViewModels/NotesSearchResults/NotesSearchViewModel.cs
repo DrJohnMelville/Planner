@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Linq;
 using System.Threading.Tasks;
+using CefSharp;
 using Melville.INPC;
 using Melville.MVVM.AdvancedLists;
 using Melville.MVVM.WaitingServices;
@@ -14,9 +15,12 @@ namespace Planner.WpfViewModels.NotesSearchResults
 {
     public partial class NotesSearchViewModel
     {
-        public NotesSearchViewModel(INoteUrlGenerator urlGen)
+        private readonly INoteUrlGenerator urlGen;
+        public IRequestHandler RequestHandler { get; } 
+        public NotesSearchViewModel(INoteUrlGenerator urlGen, IRequestHandler requestHandler)
         {
             this.urlGen = urlGen;
+            RequestHandler = requestHandler;
             displayUrl = urlGen.ArbitraryNoteView(Array.Empty<Guid>());
         }
 
@@ -25,7 +29,6 @@ namespace Planner.WpfViewModels.NotesSearchResults
         [AutoNotify] private string searchString = "";
         [AutoNotify] private LocalDate beginDate = new LocalDate(1900, 01, 01);
         [AutoNotify] private LocalDate endDate = new LocalDate(3000, 01, 01);
-        private readonly INoteUrlGenerator urlGen;
 
         public async Task DoSearch([FromServices] INoteSearcher searcher,
              IWaitingService waiter)

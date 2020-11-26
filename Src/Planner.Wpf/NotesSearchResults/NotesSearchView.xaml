@@ -9,6 +9,7 @@
              xmlns:eventBindings="clr-namespace:Melville.MVVM.Wpf.EventBindings;assembly=Melville.MVVM.Wpf"
              xmlns:notes="clr-namespace:Planner.Models.Notes;assembly=Planner.Models"
              xmlns:filteredDataGrids="clr-namespace:Melville.WpfControls.FilteredDataGrids;assembly=Melville.WpfControls"
+             xmlns:plannerPages="clr-namespace:Planner.Wpf.PlannerPages"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid easyGrids:GridOperations.ColsAndRows="*,*/*">
@@ -38,6 +39,7 @@
                 </DataGrid.Columns>
             </DataGrid>
         </easyGrids:EasyGrid>
-        <TextBlock Grid.Column="1" Text="{Binding DisplayUrl}"></TextBlock>
+        <plannerPages:NoteBrowser Address="{Binding DisplayUrl, Mode=OneWay}" Grid.Column="1"
+                                   BoundRequestHandler="{Binding RequestHandler}"/>
     </Grid>
 </UserControl>

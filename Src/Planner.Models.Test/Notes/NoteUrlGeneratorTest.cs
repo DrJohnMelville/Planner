@@ -51,8 +51,5 @@ namespace Planner.Models.Test.Notes
             Assert.Equal("BaseUrl/1/List/5c844a5a-2474-4d62-be12-6ac700934bea/5c844a5a-2474-4d62-be12-6ac700934bea",
                 sut.ArbitraryNoteView(new []{guid, guid}));
         }
-
-
-
     }
 }

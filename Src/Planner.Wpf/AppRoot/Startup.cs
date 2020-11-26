@@ -79,6 +79,7 @@ namespace Planner.Wpf.AppRoot
             service.Bind<ITryNoteHtmlGenerator>().To<StaticFileGenerator>();
             service.Bind<ITryNoteHtmlGenerator>().To<BlobGenerator>();
             service.Bind<ITryNoteHtmlGenerator>().To<DailyJournalPageGenerator>();
+            service.Bind<ITryNoteHtmlGenerator>().To<SearchResultPageGenerator>();
             service.Bind<ITryNoteHtmlGenerator>().To<DefaultTextGenerator>();
             
             service.Bind<INotesServer>().To<NotesServer>().FixResult(i=>i.Launch()).AsSingleton();
