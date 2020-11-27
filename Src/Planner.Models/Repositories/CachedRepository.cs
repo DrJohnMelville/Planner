@@ -134,10 +134,10 @@ namespace Planner.Models.Repositories
         private IListPendingCompletion<T> CombineLists(IListPendingCompletion<T> localItems, 
             IListPendingCompletion<T> remoteItems)
         {
-            localItems.SetCompletionTask(localItems.CompleteList().ContinueWith(CopyBToA));
+            localItems.SetCompletionTask(remoteItems.CompleteList().ContinueWith(CopyRemoteToLocal));
             return localItems;
 
-            void CopyBToA(Task<IListPendingCompletion<T>> obj)
+            void CopyRemoteToLocal(Task<IListPendingCompletion<T>> obj)
             {
                 localItems.AddRange(remoteItems);
             }

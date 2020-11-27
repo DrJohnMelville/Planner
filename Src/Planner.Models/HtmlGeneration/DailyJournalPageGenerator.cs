@@ -35,7 +35,7 @@ namespace Planner.Models.HtmlGeneration
         {
             await using var writer = new StreamWriter(destination);
             var items = await noteRepository.ItemsForDate(date).CompleteList();
-            rendererFactory(writer).WriteJournalList(items, items.FirstOrDefault(
+            rendererFactory(writer).WriteJournalList(items, (i,j)=>i.ToString(), items.FirstOrDefault(
                 i=>note.HasValue && note == i.Key));
         }
     }

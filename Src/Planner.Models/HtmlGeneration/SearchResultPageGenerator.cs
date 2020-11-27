@@ -12,10 +12,13 @@ namespace Planner.Models.HtmlGeneration
     public class SearchResultPageGenerator : TryNoteHtmlGenerator
     {
         private readonly ILocalRepository<Note> notesRepository; 
-        public SearchResultPageGenerator(ILocalRepository<Note> notesRepository) : base(
+        private readonly Func<TextWriter, IJournalItemRenderer> rendererFactory;
+        public SearchResultPageGenerator(ILocalRepository<Note> notesRepository, 
+            Func<TextWriter, IJournalItemRenderer> rendererFactory) : base(
             new Regex("^List.*", RegexOptions.Singleline))
         {
             this.notesRepository = notesRepository;
+            this.rendererFactory = rendererFactory;
         }
 
         private static readonly Regex guidFinder =
@@ -23,9 +26,10 @@ namespace Planner.Models.HtmlGeneration
         protected override async Task? TryRespond(Match match, Stream destination)
         {
             var guids = guidFinder.Matches(match.Value).Select(i => Guid.Parse((string) i.Value));
-            var notes = await notesRepository.ItemsByKeys(guids).CompleteList();
-            await destination.WriteAsync(Encoding.UTF8.GetBytes("Display Notes:"+
-               string.Join("\r\n", notes.Select(i=>i.Title)))).AsTask();
+            var notes = (await notesRepository.ItemsByKeys(guids).CompleteList())
+                .OrderBy(i=>i.Date).ThenBy(i=>i.TimeCreated);
+            await using var writer = new StreamWriter(destination);
+            rendererFactory(writer).WriteJournalList(notes.ToList(), (_,n)=>n.Date.ToString("d",null));
         }
     }
 }

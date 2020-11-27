@@ -55,8 +55,7 @@ namespace Planner.Repository.Test.Cache
             repo.Verify(i=>i.ItemsForDate(baseDate), Times.Once);
             repo.VerifyNoOtherCalls();
         }
-
-
+        
         [Fact]
         public async Task DuplicateKeyQueryReturnsSameObject()
         {
@@ -70,6 +69,16 @@ namespace Planner.Repository.Test.Cache
             tcs.SetResult(1);
             Assert.Equal((await sut.ItemsByKeys(new []{k1, Guid.NewGuid()}).CompleteList()).First(),
                 (await sut.ItemsForDate(baseDate).CompleteList()).First());
+        }
+        [Fact]
+        public async Task SameObjectReverse()
+        {
+            tcs.SetResult(1);
+            var byDate = (await sut.ItemsForDate(baseDate).CompleteList());
+            var byIndex = await sut.ItemsByKeys(new []{k1, Guid.NewGuid()}).CompleteList();
+            Assert.Equal(byDate.First(), byIndex.First());
+            Assert.Equal(2, byIndex.Count);
+            
         }
         [Fact]
         public async Task NewKeyQueryReturnsDifferentObject()

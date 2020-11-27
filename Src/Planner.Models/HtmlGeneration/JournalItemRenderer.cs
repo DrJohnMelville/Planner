@@ -8,7 +8,12 @@ using Planner.Models.Notes;
 
 namespace Planner.Models.HtmlGeneration
 {
-    public class JournalItemRenderer 
+    public interface IJournalItemRenderer
+    {
+        void WriteJournalList(IList<Note> notes, Func<int, Note, string> identifer, Note? desiredNote = null);
+    }
+
+    public class JournalItemRenderer : IJournalItemRenderer
     {
         private readonly TextWriter destination;
         private readonly Func<LocalDate, IMarkdownTranslator> markdown;
@@ -21,7 +26,7 @@ namespace Planner.Models.HtmlGeneration
             this.urlGenerator = urlGenerator;
         }
 
-        public void WriteJournalList(IList<Note> notes, Note? desiredNote = null)
+        public void WriteJournalList(IList<Note> notes, Func<int, Note, string> identifer, Note? desiredNote = null)
         {
             WritePrologue();
             if (notes.Count > 0)
@@ -31,7 +36,8 @@ namespace Planner.Models.HtmlGeneration
                 foreach (var note in notes.OrderBy(i => i.TimeCreated))
                 {
                     TryRenderHorizontalRule(desiredNote, position);
-                    if (ShouldRenderThisNote(desiredNote, note)) GenerateNote(note, position, renderMarkdown);
+                    if (ShouldRenderThisNote(desiredNote, note)) GenerateNote(note, 
+                        identifer(position, note), renderMarkdown);
                     position++;
                 }
             }
@@ -56,7 +62,7 @@ namespace Planner.Models.HtmlGeneration
             "<html><head><link rel=\"stylesheet\" href=\"/0/journal.css\"></head><body>");
         
         
-        private void GenerateNote(Note note, int itemNumber, IMarkdownTranslator markdownTranslator)
+        private void GenerateNote(Note note, string itemNumber, IMarkdownTranslator markdownTranslator)
         {
             destination.Write("<h3>");
             destination.Write($"<a href=\"{urlGenerator.EditNoteUrl(note)}\">");

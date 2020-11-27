@@ -34,12 +34,12 @@
                       SelectionUnit="FullRow" SelectionMode="Extended" 
                       SelectionChanged="{eventBindings:EventBinding NewItemsSelected, Parameters=$this.SelectedItems}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Date" Binding="{Binding Date}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Date" Binding="{Binding Date, StringFormat=d}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Title" Width="*" Binding="{Binding Title}"></DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </easyGrids:EasyGrid>
         <plannerPages:NoteBrowser Address="{Binding DisplayUrl, Mode=OneWay}" Grid.Column="1"
-                                   BoundRequestHandler="{Binding RequestHandler}"/>
+                                   BoundRequestHandler="{Binding RequestHandler, PresentationTraceSources.TraceLevel=High}"/>
     </Grid>
 </UserControl>

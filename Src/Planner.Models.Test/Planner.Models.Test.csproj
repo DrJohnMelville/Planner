@@ -4,7 +4,7 @@
         <TargetFramework>net5.0</TargetFramework>
         <LangVersion>preview</LangVersion>
         <IsPackable>false</IsPackable>
-        <Nullable></Nullable>
+        <Nullable>annotations</Nullable>
     </PropertyGroup>
 
     <ItemGroup>

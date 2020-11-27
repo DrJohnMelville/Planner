@@ -22,7 +22,24 @@ namespace Planner.Models.Test.Notes
 
         public SearchResultPageGeneratorTest()
         {
-            sut = new SearchResultPageGenerator(repo.Object);
+            sut = new SearchResultPageGenerator(repo.Object,
+                CreateWriterMock);
+        }
+
+        private IJournalItemRenderer CreateWriterMock(TextWriter arg)
+        {
+            var ret = new Mock<IJournalItemRenderer>();
+            ret.Setup(i => i.WriteJournalList(It.IsAny<IList<Note>>(),
+                It.IsAny<Func<int,Note, string>>(), null)).Callback(
+                (IList<Note> l, Func<int,Note, string>f, Note n) =>
+                {
+                    arg.WriteLine("Display Notes");
+                    foreach (var note in l)
+                    {
+                        arg.WriteLine(note.Title);
+                    }
+                });
+            return ret.Object;
         }
 
         [Fact]
