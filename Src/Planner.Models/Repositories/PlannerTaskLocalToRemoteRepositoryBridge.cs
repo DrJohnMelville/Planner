@@ -45,13 +45,12 @@ namespace Planner.Models.Repositories
                 remote.Update(plannerTask).FireAndForget();
         }
 
-        public IListPendingCompletion<T> ItemsForDate(LocalDate date)
-        {
-            var ret = new ItemList<T>();
-            RegisterItemRemovalNotification(ret);
-            ret.SetCompletionTask(LoadItemsForDate(date, ret));
-            return ret;
-        }
+        public IListPendingCompletion<T> ItemsForDate(LocalDate date) => 
+            LoadItems(remote.TasksForDate(date));
+        public IListPendingCompletion<T> ItemsByKeys(IEnumerable<Guid> keys) => 
+            LoadItems(remote.ItemsFromKeys(keys));
+
+
         private void RegisterItemRemovalNotification(ThreadSafeBindableCollection<T> ret) => 
             ret.CollectionChanged += CollectionChanged;
 
@@ -69,9 +68,16 @@ namespace Planner.Models.Repositories
             }
         }
 
-        private async Task LoadItemsForDate(LocalDate date, IList<T> ret)
+        private IListPendingCompletion<T> LoadItems(IAsyncEnumerable<T> tasksForDate)
         {
-            await foreach (var task in remote.TasksForDate(date))
+            var ret = new ItemList<T>();
+            RegisterItemRemovalNotification(ret);
+            ret.SetCompletionTask(FillResultList(tasksForDate, ret));
+            return ret;
+        }
+        private async Task FillResultList(IAsyncEnumerable<T> itemsToAdd, IList<T> ret)
+        {
+            await foreach (var task in itemsToAdd)
             {
                 RegisterPropertyChangeNotifications(task);
                 ret.Add(task);

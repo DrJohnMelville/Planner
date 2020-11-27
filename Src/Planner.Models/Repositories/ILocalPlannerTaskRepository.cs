@@ -13,6 +13,7 @@ namespace Planner.Models.Repositories
     {
          T CreateItem(LocalDate date, Action<T> initialize);
          IListPendingCompletion<T> ItemsForDate(LocalDate date);
+         IListPendingCompletion<T> ItemsByKeys(IEnumerable<Guid> keys);
     }
 
     public static class PlannerTaskLocalRepoOperations

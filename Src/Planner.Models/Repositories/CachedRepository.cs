@@ -44,5 +44,11 @@ namespace Planner.Models.Repositories
             cache[date] = new WeakReference<IListPendingCompletion<T>>(ret);
             return ret;
         }
+
+        public IListPendingCompletion<T> ItemsByKeys(IEnumerable<Guid> keys)
+        {
+            #warning Cache theses   
+            return source.ItemsByKeys(keys);
+        }
     }
 }

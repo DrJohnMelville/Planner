@@ -97,6 +97,19 @@ namespace Planner.Models.Test.Repositories
             await ((IListPendingCompletion<PlannerTask>) list).CompleteList();
             Assert.Single(list);
         }
-        
+        [Fact]
+        public async Task LoadByKeys()
+        {
+            var tcs = new TaskCompletionSource<int>();
+            var newGuid = Guid.NewGuid();
+            var query = new[] {newGuid};
+            var task = new PlannerTask(newGuid);
+            repo.Setup(i => i.ItemsFromKeys(query)).Returns(AsyncEnum(tcs.Task, task));
+            var list = sut.ItemsByKeys(query);
+            Assert.Empty(list);
+            tcs.SetResult(1);
+            await ((IListPendingCompletion<PlannerTask>) list).CompleteList();
+            Assert.Single(list);
+        }
     }
 }
