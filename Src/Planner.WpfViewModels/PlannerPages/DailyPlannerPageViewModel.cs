@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Text.RegularExpressions;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 using CefSharp;
 using Melville.INPC;
 using Melville.MVVM.Wpf.DiParameterSources;
@@ -16,11 +12,25 @@ using Planner.WpfViewModels.TaskList;
 
 namespace Planner.WpfViewModels.PlannerPages
 {
-    public partial class DailyPlannerPageViewModel:IAcceptNavigationNotifications
+    public abstract class PageWithEditNotifications : IAcceptNavigationNotifications
+    {
+        private readonly IEventBroadcast<NoteEditRequestEventArgs> noteEditRequest;
+
+        protected PageWithEditNotifications(IEventBroadcast<NoteEditRequestEventArgs> noteEditRequest)
+        {
+            this.noteEditRequest = noteEditRequest;
+        }
+
+        public void NavigatedTo() => noteEditRequest.Fired += DoEditNoteRequest;
+        public void NavigatedAwayFrom() => noteEditRequest.Fired -= DoEditNoteRequest;
+
+        protected abstract void DoEditNoteRequest(object? sender, NoteEditRequestEventArgs e);
+
+    }
+    public partial class DailyPlannerPageViewModel:PageWithEditNotifications
     {
         private readonly IPlannerNavigator navigator;
         private readonly INoteUrlGenerator urlGen;
-        private readonly IEventBroadcast<NoteEditRequestEventArgs> noteEditRequest;
         public NoteCreator NoteCreator { get; }
         public DailyTaskListViewModel TodayTaskList { get; }
         private readonly LocalDate currentDate;
@@ -46,13 +56,12 @@ namespace Planner.WpfViewModels.PlannerPages
             IPlannerNavigator navigator, 
             INoteUrlGenerator urlGen, 
             IEventBroadcast<NoteEditRequestEventArgs> noteEditRequest, 
-            IRequestHandler requestHandler)
+            IRequestHandler requestHandler): base(noteEditRequest)
         {
             
             this.navigator = navigator;
             NoteCreator = noteCreator;
             this.urlGen = urlGen;
-            this.noteEditRequest = noteEditRequest;
             RequestHandler = requestHandler;
             this.currentDate = currentDate; 
             TodayTaskList = taskListFactory(currentDate);
@@ -71,11 +80,8 @@ namespace Planner.WpfViewModels.PlannerPages
         // value and refresh the webbrowser.
         private void ReloadNotesDisplay() => 
             ((IExternalNotifyPropertyChanged) this).OnPropertyChanged(nameof(NotesUrl));
-        
-        public void NavigatedTo() => noteEditRequest.Fired += DoEditNoteRequest;
-        public void NavigatedAwayFrom() => noteEditRequest.Fired -= DoEditNoteRequest;
 
-        private void DoEditNoteRequest(object? sender, NoteEditRequestEventArgs e) =>
+        protected override void DoEditNoteRequest(object? sender, NoteEditRequestEventArgs e) =>
             navigator.ToEditNote(e);
 
         public void PlannerPageLinkClicked(Segment<TaskTextType> segment)

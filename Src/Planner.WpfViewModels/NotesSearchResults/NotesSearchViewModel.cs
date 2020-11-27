@@ -10,17 +10,21 @@ using Melville.MVVM.Wpf.DiParameterSources;
 using NodaTime;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Notes;
+using Planner.WpfViewModels.PlannerPages;
 
 namespace Planner.WpfViewModels.NotesSearchResults
 {
-    public partial class NotesSearchViewModel
+    public partial class NotesSearchViewModel: PageWithEditNotifications
     {
         private readonly INoteUrlGenerator urlGen;
+        private readonly IPlannerNavigator navigator;
         public IRequestHandler RequestHandler { get; } 
-        public NotesSearchViewModel(INoteUrlGenerator urlGen, IRequestHandler requestHandler)
+        public NotesSearchViewModel(INoteUrlGenerator urlGen, IRequestHandler requestHandler,
+            IEventBroadcast<NoteEditRequestEventArgs> notifier, IPlannerNavigator navigator) : base(notifier)
         {
             this.urlGen = urlGen;
             RequestHandler = requestHandler;
+            this.navigator = navigator;
             displayUrl = urlGen.ArbitraryNoteView(Array.Empty<Guid>());
         }
 
@@ -43,5 +47,8 @@ namespace Planner.WpfViewModels.NotesSearchResults
 
         public void NewItemsSelected(IList selected) => 
             DisplayUrl = urlGen.ArbitraryNoteView(selected.OfType<NoteTitle>().Select(i=>i.Key));
+
+        protected override void DoEditNoteRequest(object? sender, NoteEditRequestEventArgs e) =>
+            navigator.ToDate(e.Note.Date);
     }
 }
