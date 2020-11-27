@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Moq;
 using NodaTime;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
-using Planner.Models.Tasks;
 using Xunit;
 
 namespace Planner.Repository.Test.Cache
@@ -13,22 +15,74 @@ namespace Planner.Repository.Test.Cache
     public class CachedRepositoryTest2
     {
         private readonly Mock<ICachedRepositorySource<Note>> repo =
-            new Mock<ICachedRepositorySource<Note>>();
+            new();
+
         private readonly CachedRepository<Note> sut;
-        private readonly LocalDate baseDate = new LocalDate(1975,7,28);
-        private readonly EventBroadcast<ClearCachesEventArgs> message = new ();
+        private readonly LocalDate baseDate = new(1975, 7, 28);
+        private readonly EventBroadcast<ClearCachesEventArgs> message = new();
+        private readonly TaskCompletionSource<int> tcs = new();
+        private readonly Guid k1 = Guid.NewGuid();
+        private readonly Guid k2 = Guid.NewGuid();
 
         public CachedRepositoryTest2()
         {
             sut = new CachedRepository<Note>(repo.Object, message);
+            repo.Setup(i => i.ItemsForDate(It.IsAny<LocalDate>())).Returns((LocalDate _) =>
+            {
+                var ret = new ItemList<Note>() {new(){Key =k1 }, new(){Key=k2}};
+                ret.SetCompletionTask(tcs.Task);
+                return ret;
+            });
+            repo.Setup(i => i.ItemsByKeys(It.IsAny<IEnumerable<Guid>>())).Returns((IEnumerable<Guid> keys) =>
+            {
+                var ret = new ItemList<Note>();
+                foreach (var key in keys)
+                {
+                    ret.Add(new Note(){Key = key});
+                }
+                ret.SetCompletionTask(tcs.Task);
+                return ret;
+            });
         }
 
         [Fact]
-        public async Task TestMethod()
+        public async Task SearchingForCachedItemDoesNotHitDatabase()
         {
-            var tcs = new TaskCompletionSource<int>();
-            repo.Setup(i => i.ItemsForDate(baseDate)).Returns(
-                (LocalDate d)=>NewList(tcs));
+            tcs.SetResult(1);
+            var date = await sut.ItemsForDate(baseDate).CompleteList();
+            var byKey = await sut.ItemsByKeys(new[] {date[0].Key}).CompleteList();
+            Assert.Equal(byKey[0], date[0]);
+            repo.Verify(i=>i.ItemsForDate(baseDate), Times.Once);
+            repo.VerifyNoOtherCalls();
+        }
+
+
+        [Fact]
+        public async Task DuplicateKeyQueryReturnsSameObject()
+        {
+            tcs.SetResult(1);
+            Assert.Equal((await sut.ItemsByKeys(new []{k1, k2}).CompleteList()).First(),
+                (await sut.ItemsByKeys(new []{k1, k2}).CompleteList()).First());
+        }
+        [Fact]
+        public async Task SameObjectTwoWays()
+        {
+            tcs.SetResult(1);
+            Assert.Equal((await sut.ItemsByKeys(new []{k1, Guid.NewGuid()}).CompleteList()).First(),
+                (await sut.ItemsForDate(baseDate).CompleteList()).First());
+        }
+        [Fact]
+        public async Task NewKeyQueryReturnsDifferentObject()
+        {
+            tcs.SetResult(1);
+            Assert.NotEqual((await sut.ItemsByKeys(new []{k1, Guid.NewGuid()}).CompleteList()).Last(),
+                (await sut.ItemsByKeys(new []{k1, Guid.NewGuid()}).CompleteList()).Last());
+        }
+
+
+        [Fact]
+        public async Task AwaitForCompletionOnTheReturnedList()
+        {
             var l1 = sut.ItemsForDate(baseDate);
             var t1 = sut.ItemsForDate(baseDate).CompleteList();
             Assert.False(t1.IsCompleted);
@@ -37,38 +91,21 @@ namespace Planner.Repository.Test.Cache
             Assert.Equal(l1, l2);
         }
 
-        private static ItemList<Note> NewList(TaskCompletionSource<int> tcs)
-        {
-            var ret = new ItemList<Note>();
-            ret.SetCompletionTask(tcs.Task);
-            return ret;
-        }
-    }
-    public class CachedTaskRepositoryTest
-    {
-        private readonly TemporaryPTF source = new();
-        private readonly CachedRepository<PlannerTask> sut;
-        private readonly LocalDate baseDate = new(1975,7,28);
-        private readonly EventBroadcast<ClearCachesEventArgs> message = new ();
-
-        public CachedTaskRepositoryTest()
-        {
-            sut = new CachedRepository<PlannerTask>(source, message);
-        }
-
         [Fact]
         public void ReturnCachedList()
         {
             Assert.Same(sut.ItemsForDate(baseDate), sut.ItemsForDate(baseDate));
         }
+
         [Fact]
         public void ClearCaches()
         {
             var preClearItem = sut.ItemsForDate(baseDate);
-            message.Fire(this, new());
+            message.Fire(this, new ClearCachesEventArgs());
             var postCleatItem = sut.ItemsForDate(baseDate);
             Assert.NotSame(preClearItem, postCleatItem);
         }
+
         [Fact]
         public void UniqueListPerDay()
         {
@@ -79,26 +116,9 @@ namespace Planner.Repository.Test.Cache
         public void AddTaskToProperDay()
         {
             var list = sut.ItemsForDate(baseDate);
-            Assert.Equal(4, list.Count);
-            sut.CreateTask("Foo", baseDate);
-            Assert.Equal(5, list.Count);
-        }
-
-        [Fact]
-        public void AbandonTaskUponGC()
-        {
-            CreateItemInSeparateMethod();
-            GC.Collect(2, GCCollectionMode.Forced, true, true);
-            GC.WaitForPendingFinalizers();
-            GC.Collect(2, GCCollectionMode.Forced, true, true);
-            Assert.Equal(4, sut.ItemsForDate(baseDate).Count);
-        }
-
-        private void CreateItemInSeparateMethod()
-        {
-            var list = sut.ItemsForDate(baseDate);
-            sut.CreateTask("Foo", baseDate);
-            Assert.Equal(5, list.Count);
+            Assert.Equal(2, list.Count);
+            sut.CreateItem(baseDate, note => note.Title = "Hello");
+            Assert.Equal(3, list.Count);
         }
     }
 }
