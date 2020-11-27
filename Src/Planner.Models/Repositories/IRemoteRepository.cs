@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using NodaTime;
 
@@ -11,14 +12,17 @@ namespace Planner.Models.Repositories
         Task Add(T task);
         Task Update(T task);
         Task Delete(T task);
+        IAsyncEnumerable<T> ItemsFromKeys(IEnumerable<Guid> keys);
+        
     }
     public interface IDatedRemoteRepository<T>: IRemoteRepository<T> where T: PlannerItemWithDate
     {
         IAsyncEnumerable<T> TasksForDate(LocalDate date);
     }
 
-    public interface IItemByKeyRepository<T> where T : PlannerItemBase
+    public static class RemoteRepositoryOperations
     {
-        Task<T?> ItemByKey(Guid key);
+        public static ValueTask<T?> ItemByKey<T>(this IRemoteRepository<T> repo, Guid key) =>
+             repo.ItemsFromKeys(new[] {key}).FirstOrDefaultAsync();
     }
 }

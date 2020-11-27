@@ -73,6 +73,20 @@ namespace Planner.Repository.Test.Web
             Assert.Equal("My Birthday", list[0].Name);
             Assert.Equal("Second Task", list[1].Name);
         }
+        [Fact]
+        public async Task QueryByKeys()
+        {
+            httpSource.Setup(i=>i.EndsWith("Task/Query"), HttpMethod.Get).
+                ReturnsJson("[{\"Date\":\"1975-07-28\",\"Name\":\"My Birthday\",\"Priority\":\" \",\"Order\":0,\"Status\":0,\"StatusDetail\":\"\"}," +
+                            "{\"Date\":\"1975-07-28\",\"Name\":\"Second Task\",\"Priority\":\" \",\"Order\":0,\"Status\":0,\"StatusDetail\":\"\"}]");
+            var list = await sut.ItemsFromKeys(new []
+            {
+                Guid.Empty, Guid.Empty
+            }).ToListAsync();
+            Assert.Equal(2, list.Count);
+            Assert.Equal("My Birthday", list[0].Name);
+            Assert.Equal("Second Task", list[1].Name);
+        }
 
         [Fact]
         public async Task DeleteTask()

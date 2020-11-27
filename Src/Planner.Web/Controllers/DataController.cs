@@ -24,6 +24,11 @@ namespace Planner.Web.Controllers
         public IAsyncEnumerable<TDatum> TasksForDate(LocalDate date) =>
             source.TasksForDate(date);
 
+        [Route("Query")]
+        [HttpGet]
+        public IAsyncEnumerable<TDatum> TasksForDate([FromBody] Guid[] keys) =>
+            source.ItemsFromKeys(keys);
+
         [Route("")]
         [HttpPut]
         public Task Update([FromBody] TDatum task) => source.Update(task);

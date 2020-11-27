@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CefSharp;
 using Melville.MVVM.WaitingServices;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using Moq;
@@ -25,7 +26,7 @@ namespace Planner.Wpf.Test.NotesSearchResults
         {
             urlGen.Setup(i => i.ArbitraryNoteView(It.IsAny<IEnumerable<Guid>>())).Returns(
                 (IEnumerable<Guid> l) => l.Count().ToString());
-            sut = new NotesSearchViewModel(urlGen.Object);
+            sut = new NotesSearchViewModel(urlGen.Object, Mock.Of<IRequestHandler>());
         }
 
         [Fact]

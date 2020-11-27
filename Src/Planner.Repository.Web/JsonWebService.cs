@@ -8,6 +8,7 @@ namespace Planner.Repository.Web
     public interface IJsonWebService
     {
         public Task<T> Get<T>(string url);
+        public Task<T> Get<TBody, T>(string url, TBody body );
         public Task Delete(string url);
         public Task Put<T>(string url, T body);
         public Task Post<T>(string url, T body);
@@ -23,9 +24,14 @@ namespace Planner.Repository.Web
             this.serializerOptions = serializerOptions;
         }
 
-        public async Task<T> Get<T>( string url)
+        public async Task<T> Get<T>( string url) => 
+            await ParseGetResponse<T>(await client.GetAsync(url));
+        public async Task<T> Get<TBody, T>( string url, TBody body) => 
+            await ParseGetResponse<T>(await client.SendAsync(
+                new HttpRequestMessage(HttpMethod.Get, url){Content = ObjectAsJsonByteArray(body)}));
+
+        private async Task<T> ParseGetResponse<T>(HttpResponseMessage response)
         {
-            var response = await client.GetAsync(url);
             response.EnsureSuccessStatusCode();
             return ObjectFromJsonByteArray<T>(await response.Content.ReadAsByteArrayAsync());
         }
@@ -38,6 +44,7 @@ namespace Planner.Repository.Web
         private T ObjectFromJsonByteArray<T>(byte[] text) => 
             JsonSerializer.Deserialize<T>(text, serializerOptions) ??
             throw new InvalidOperationException("Failed to deserialize json to expected object");
+
         private ByteArrayContent ObjectAsJsonByteArray<T>(T body)
         {
             var ret =  new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(body, serializerOptions));

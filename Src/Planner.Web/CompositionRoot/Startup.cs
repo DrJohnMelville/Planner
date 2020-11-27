@@ -43,7 +43,6 @@ namespace Planner.Web.CompositionRoot
             services.AddScoped<IDatedRemoteRepository<Blob>>(sp=>
                 new CompopsiteBlobRemoteRepository(sp.GetRequiredService<SqlRemoteRepositoryWithDate<Blob>>(),
                     sp.GetRequiredService<IDeletableBlobContentStore>()));
-            services.AddScoped(typeof(IItemByKeyRepository<>), typeof(SqlItemByKeyRepository<>));
             services.AddScoped<INoteSearcher, SqlNoteSearcher>();
             
             services.AddControllersWithViews().AddJsonOptions(ConfigureJsonSerialization);

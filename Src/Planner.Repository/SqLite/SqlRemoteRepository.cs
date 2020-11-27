@@ -1,14 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Planner.Models.Repositories;
 
 namespace Planner.Repository.SqLite
 {
-    public class SqlRemoteRepository<T>: IRemoteRepository<T> where T:class
+    public class SqlRemoteRepository<T>: IRemoteRepository<T> where T:PlannerItemBase
     {
-        protected Func<PlannerDataContext> contextFactory;
+        protected readonly Func<PlannerDataContext> contextFactory;
  
         public SqlRemoteRepository(Func<PlannerDataContext> contextFactory)
         {
@@ -38,5 +41,19 @@ namespace Planner.Repository.SqLite
                 throw new InvalidOperationException("Invalid GUID");
         }
 
+        public IAsyncEnumerable<T> ItemsFromKeys(IEnumerable<Guid> keys)
+        {
+            var capturedKeys = keys.ToList();
+            return SimpleQuery(i => capturedKeys.Contains(i.Key));
+        }
+
+        protected IAsyncEnumerable<T> SimpleQuery(Expression<Func<T, bool>> predicate)
+        {
+            var ctx = contextFactory();
+            return new DisposeWithAsyncEnumerable<T>(ctx.Set<T>()
+                .AsNoTracking()
+                .Where(predicate)
+                .AsAsyncEnumerable(), ctx);
+        }
     }
 }

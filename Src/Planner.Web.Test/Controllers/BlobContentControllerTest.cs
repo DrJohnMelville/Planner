@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,8 +16,8 @@ namespace Planner.Web.Test.Controllers
 {
     public class BlobContentControllerTest
     {
-        private readonly Mock<IBlobContentStore> storage = new Mock<IBlobContentStore>();
-        private readonly Mock<IItemByKeyRepository<Blob>> repo = new Mock<IItemByKeyRepository<Blob>>();
+        private readonly Mock<IBlobContentStore> storage = new();
+        private readonly Mock<IRemoteRepository<Blob>> repo = new();
         
         
         private readonly BlobContentController sut;
@@ -28,7 +31,8 @@ namespace Planner.Web.Test.Controllers
         public async Task ReadBlob()
         {
             var blob = new Blob() {Key = Guid.NewGuid(), MimeType = "image/png"};
-            repo.Setup(i => i.ItemByKey(blob.Key)).ReturnsAsync(blob);
+            repo.Setup(i => i.ItemsFromKeys(It.Is<IEnumerable<Guid>>(i => i.Single() == blob.Key))).Returns(
+                new[] {blob}.ToAsyncEnumerable());
             var stream = new MemoryStream();
             storage.Setup(i => i.Read(blob)).ReturnsAsync(stream);
 
