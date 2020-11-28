@@ -59,7 +59,7 @@
 <h4>Notes</h4>
 @if (notes != null)
 {
-    <ol>
+    <ol class="NotesList">
         @foreach (var note in notes.OrderBy(i => i.TimeCreated))
         {
             <li>
