@@ -39,7 +39,7 @@ namespace Planner.Blazor.CompositionRoot
 
         private void RegisterNoteRendering()
         {
-            services.AddSingleton<IMarkdownTranslator>(new MarkdownTranslator("/DailyPage/"));
+            services.AddSingleton<IMarkdownTranslator>(new MarkdownTranslator("/DailyPage/","/Images/"));
             services.AddFileReaderService(o => o.UseWasmSharedBuffer = true);
             services.AddTransient<IBlobCreator, BlobCreator>();
         }

@@ -11,7 +11,7 @@ namespace Planner.Models.Test.Markdown
 
         public MarkdownTranslatorTest()
         {
-            sut = new MarkdownTranslator("/PageRoot/");
+            sut = new MarkdownTranslator("/PageRoot/", "/ImageBase/");
         }
 
         [Theory]
@@ -19,20 +19,19 @@ namespace Planner.Models.Test.Markdown
         [InlineData("(3.2.1)", 1976, "/PageRoot/1976-3-2")]
         [InlineData("(3.2.80.1)", 1976, "/PageRoot/1980-3-2")]
         [InlineData("(3.2.2080.1)", 1976, "/PageRoot/2080-3-2")]
-        public void DailyPageRootRespectsDailyPage(string link, int year, string output)
-        {
-            var ret = sut.Render(new LocalDate(year, 7, 28), link);
-            Assert.Contains(output, ret);
-        }
+        public void DailyPageRootRespectsDailyPage(string link, int year, string output) => 
+            Assert.Contains(output, sut.Render(new LocalDate(year, 7, 28), link));
 
         [Fact]
         public void ImplicitParagraphs()
         {
             Assert.Equal("<p>Text</p>\n", sut.Render(baseDate, "Text"));
             Assert.Equal("Text", sut.RenderLine(baseDate, "Text"));
-            
         }
 
-
+        [Fact]
+        public void RenderImageLink() =>
+            Assert.Equal("<img src=\"/ImageBase/1975-7-28/7.28_1\" alt=\"Alt Text\" />", 
+                sut.RenderLine(baseDate, "![Alt Text](7.28_1)"));
     }
 }

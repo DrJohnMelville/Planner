@@ -37,7 +37,7 @@ namespace Planner.Models.Test.Notes
                     new StaticFileGenerator(),
                     new BlobGenerator(blobRepo.Object, blobStore.Object),
                     new DailyJournalPageGenerator(
-                        i=> new JournalItemRenderer(i, new MarkdownTranslator("/PageRoot/"), urlGen.Object),
+                        i=> new JournalItemRenderer(i, new MarkdownTranslator("/PageRoot/","/ImageBase/"), urlGen.Object),
                         repo.Object),
                     new DefaultTextGenerator()
                 });

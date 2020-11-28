@@ -22,11 +22,13 @@ namespace Planner.Models.Markdown
     public class MarkdownTranslator:IMarkdownTranslator
     {
         private readonly string dailyPageRoot;
+        private readonly string imageRoot;
         private readonly MarkdownPipeline translator;
 
-        public MarkdownTranslator(string dailyPageRoot)
+        public MarkdownTranslator(string dailyPageRoot, string imageRoot)
         {
             this.dailyPageRoot = dailyPageRoot;
+            this.imageRoot = imageRoot;
             translator =
                 new MarkdownPipelineBuilder()
                     .UseAdvancedExtensions()
@@ -37,21 +39,25 @@ namespace Planner.Models.Markdown
         public string Render(LocalDate baseDate, string markdown, bool supressParagraph = false)
         {
             var writer = new StringWriter();
-            RenderToTextWriter(markdown, supressParagraph, writer, ParserContext(baseDate));
+            RenderToTextWriter(markdown,
+                ParserContext(baseDate), 
+                CreateHtmlRenderer(writer, supressParagraph, baseDate));
             writer.Flush();
             return writer.ToString();
         }
 
         private void RenderToTextWriter(
-            string markdown, bool supressParagraph, StringWriter writer, MarkdownParserContext context) => 
-            CreateHtmlRenderer(supressParagraph, writer)
+            string markdown, MarkdownParserContext context, HtmlRenderer renderer) => 
+            renderer
                 .Render(MarkdownParser.Parse(markdown, translator, context));
 
-        private HtmlRenderer CreateHtmlRenderer(bool supressParagraph, StringWriter writer)
+        private HtmlRenderer CreateHtmlRenderer(StringWriter writer, bool supressParagraph, 
+            LocalDate localDate)
         {
             var renderer = new HtmlRenderer(writer)
             {
-                ImplicitParagraph = supressParagraph
+                ImplicitParagraph = supressParagraph,
+                LinkRewriter = s=>$"{imageRoot}{localDate:yyyy-M-d}/{s}"
             };
             translator.Setup(renderer);
             return renderer;
