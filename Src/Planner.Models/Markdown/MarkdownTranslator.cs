@@ -36,10 +36,25 @@ namespace Planner.Models.Markdown
 
         public string Render(LocalDate baseDate, string markdown, bool supressParagraph = false)
         {
-            var (writer, renderer) = CreateRenderer(supressParagraph);
-            renderer.Render(MarkdownParser.Parse(markdown, translator, ParserContext(baseDate)));
+            var writer = new StringWriter();
+            RenderToTextWriter(markdown, supressParagraph, writer, ParserContext(baseDate));
             writer.Flush();
             return writer.ToString();
+        }
+
+        private void RenderToTextWriter(
+            string markdown, bool supressParagraph, StringWriter writer, MarkdownParserContext context) => 
+            CreateHtmlRenderer(supressParagraph, writer)
+                .Render(MarkdownParser.Parse(markdown, translator, context));
+
+        private HtmlRenderer CreateHtmlRenderer(bool supressParagraph, StringWriter writer)
+        {
+            var renderer = new HtmlRenderer(writer)
+            {
+                ImplicitParagraph = supressParagraph
+            };
+            translator.Setup(renderer);
+            return renderer;
         }
 
         private MarkdownParserContext ParserContext(LocalDate baseDate)
@@ -48,17 +63,6 @@ namespace Planner.Models.Markdown
             context.Properties.Add(PlannerLinkParser.NoteDateKey, baseDate);
             context.Properties.Add(PlannerLinkParser.DailyPageRootKey, dailyPageRoot);
             return context;
-        }
-
-        private (StringWriter writer, HtmlRenderer renderer) CreateRenderer(bool supressParagraph)
-        {
-            var writer = new StringWriter();
-            var renderer = new HtmlRenderer(writer)
-            {
-                ImplicitParagraph = supressParagraph
-            };
-            translator.Setup(renderer);
-            return (writer, renderer);
         }
     }
     
