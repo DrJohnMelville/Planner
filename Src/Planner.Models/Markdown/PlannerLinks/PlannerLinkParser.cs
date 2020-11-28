@@ -16,11 +16,11 @@ namespace Planner.Models.Markdown.PlannerLinks
 {
     public static class PlannerLinkExtensionOperations {
         public static MarkdownPipelineBuilder UsePlannerLinks(
-            this MarkdownPipelineBuilder builder, Func<LocalDate> date, string dailyPageRoot)
+            this MarkdownPipelineBuilder builder)
         {
             if (!builder.Extensions.Contains<PlannerLinkExtension>())
             {
-                builder.Extensions.Add(new PlannerLinkExtension(date, dailyPageRoot));
+                builder.Extensions.Add(new PlannerLinkExtension());
             }
 
             return builder;
@@ -28,20 +28,11 @@ namespace Planner.Models.Markdown.PlannerLinks
     }
     public class PlannerLinkExtension : IMarkdownExtension
     {
-        private readonly Func<LocalDate> baseDate;
-        private readonly string dailyPageRoot;
-
-        public PlannerLinkExtension(Func<LocalDate> baseDate, string dailyPageRoot)
-        {
-            this.baseDate = baseDate;
-            this.dailyPageRoot = dailyPageRoot;
-        }
-
         public void Setup(MarkdownPipelineBuilder pipeline)
         {
             if (!pipeline.InlineParsers.Contains<PlannerLinkParser>())
             {
-                pipeline.InlineParsers.Add(new PlannerLinkParser(baseDate));
+                pipeline.InlineParsers.Add(new PlannerLinkParser());
             }
         }
 
@@ -51,28 +42,22 @@ namespace Planner.Models.Markdown.PlannerLinks
                 htmlRenderer.ObjectRenderers is {} objRenderer &&
                 !objRenderer.Contains<PlannerLinkRenderer>())
             {
-                objRenderer.Add(new PlannerLinkRenderer(dailyPageRoot));
+                objRenderer.Add(new PlannerLinkRenderer());
             }
         }
     }
     public class PlannerLink : LeafInline
     {
-        public LocalDate Target { get; set; }
-        public StringSlice LiteralString { get; set; }
+        public LocalDate Target { get; init; }
+        public StringSlice LiteralString { get; init; }
+        public string PageLinkBase { get; init; } = "";
     }
 
     public class PlannerLinkRenderer : HtmlObjectRenderer<PlannerLink>
     {
-        private readonly string dailyPageRoot;
-
-        public PlannerLinkRenderer(string dailyPageRoot)
-        {
-            this.dailyPageRoot = dailyPageRoot;
-        }
-
         protected override void Write(HtmlRenderer renderer, PlannerLink obj)
         {
-            WriteIfHtmlActive(renderer, $"<a href='{dailyPageRoot}{obj.Target:yyyy-M-d}'>");
+            WriteIfHtmlActive(renderer, $"<a href='{obj.PageLinkBase}{obj.Target:yyyy-M-d}'>");
             renderer.Write(obj.LiteralString);
             WriteIfHtmlActive(renderer, $"</a>");
         }
@@ -88,10 +73,8 @@ namespace Planner.Models.Markdown.PlannerLinks
 
     public class PlannerLinkParser: InlineParser
     {
-        private Func<LocalDate> baseDate;
-        public PlannerLinkParser(Func<LocalDate> baseDate)
+        public PlannerLinkParser()
         {
-            this.baseDate = baseDate;
             OpeningCharacters = new[]{'('};
         }
 
@@ -114,8 +97,8 @@ namespace Planner.Models.Markdown.PlannerLinks
             slice.NextChar();
             LocalDate? date = ints.Count switch
             {
-                3 => ContextualDateParser.SelectedDate(-1, ints[0], ints[1], baseDate()),
-                4 => ContextualDateParser.SelectedDate(ints[2], ints[0], ints[1], baseDate()),
+                3 => ContextualDateParser.SelectedDate(-1, ints[0], ints[1], GetNoteDate(processor.Context)),
+                4 => ContextualDateParser.SelectedDate(ints[2], ints[0], ints[1], GetNoteDate(processor.Context)),
                 _=> null
             };
             if (!date.HasValue) return false;
@@ -123,6 +106,7 @@ namespace Planner.Models.Markdown.PlannerLinks
             {
                 Target = date.Value,
                 LiteralString = new StringSlice(slice.Text, start, end),
+                PageLinkBase = GetDailyPageRoot(processor.Context),
                 Span =
                 {
                     Start = inlineStart,
@@ -151,5 +135,13 @@ namespace Planner.Models.Markdown.PlannerLinks
 
             return ret;
         }
+        
+        public static readonly object NoteDateKey = new object();
+        private LocalDate GetNoteDate(MarkdownParserContext context) =>
+            (LocalDate) context.Properties[NoteDateKey];
+
+        public static readonly object DailyPageRootKey = new object();
+        private string GetDailyPageRoot(MarkdownParserContext context) =>
+            (string) context.Properties[DailyPageRootKey];
     }
 }
