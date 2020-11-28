@@ -30,7 +30,8 @@ namespace Planner.Repository.SqLite
                     "select * from Notes where ((Title like {0} collate NOCASE) or (Text like {0} collate NOCASE))",
                     $"%{query}%")
                 .Where(i=>i.Date >= minDate && i.Date <= maxDate)
-                .OrderBy(i => i.Date).ThenBy(i => i.TimeCreated)
+                .OrderByDescending(i => i.Date).ThenBy(i => i.TimeCreated)
+                .Take(300)
                 .Select(i => new NoteTitle(i.Title, i.Key, i.Date))
                 .AsAsyncEnumerable();
     }

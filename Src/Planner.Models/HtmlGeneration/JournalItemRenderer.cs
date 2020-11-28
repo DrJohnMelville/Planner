@@ -31,13 +31,12 @@ namespace Planner.Models.HtmlGeneration
             WritePrologue();
             if (notes.Count > 0)
             {
-                var renderMarkdown = markdown(notes[0].Date);
                 int position = 1;
                 foreach (var note in notes.OrderBy(i => i.TimeCreated))
                 {
                     TryRenderHorizontalRule(desiredNote, position);
-                    if (ShouldRenderThisNote(desiredNote, note)) GenerateNote(note, 
-                        identifer(position, note), renderMarkdown);
+                    if (ShouldRenderThisNote(desiredNote, note)) 
+                        GenerateNote(note, identifer(position, note));
                     position++;
                 }
             }
@@ -62,8 +61,9 @@ namespace Planner.Models.HtmlGeneration
             "<html><head><link rel=\"stylesheet\" href=\"/0/journal.css\"></head><body>");
         
         
-        private void GenerateNote(Note note, string itemNumber, IMarkdownTranslator markdownTranslator)
+        private void GenerateNote(Note note, string itemNumber)
         {
+            var markdownTranslator = markdown(note.Date);
             destination.Write("<h3>");
             destination.Write($"<a href=\"{urlGenerator.EditNoteUrl(note)}\">");
             destination.Write(itemNumber);

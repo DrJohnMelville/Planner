@@ -75,6 +75,7 @@ namespace Planner.Blazor.CompositionRoot
             services.AddSingleton(typeof(IEventBroadcast<>), typeof(EventBroadcast<>));
             services.AddTransient<IJsonWebService, JsonWebService>();
             services.AddSingleton<IBlobContentStore, WebBlobContentStore>();
+            services.AddTransient<INoteSearcher, WebNoteSearcher>();
             RegisterWebRepository<PlannerTask>("/Task");
             RegisterWebRepository<Note>("/Note");
             RegisterWebRepository<Blob>("/Blob");

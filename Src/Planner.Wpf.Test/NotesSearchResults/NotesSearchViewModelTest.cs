@@ -1,32 +1,34 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CefSharp;
 using Melville.MVVM.WaitingServices;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using Moq;
 using NodaTime;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Notes;
 using Planner.WpfViewModels.NotesSearchResults;
+using Planner.WpfViewModels.PlannerPages;
 using Xunit;
 
 namespace Planner.Wpf.Test.NotesSearchResults
 {
     public class NotesSearchViewModelTest
     {
-        private readonly Mock<INoteUrlGenerator> urlGen = new Mock<INoteUrlGenerator>();
-        private readonly Mock<INoteSearcher> source = new Mock<INoteSearcher>();
-        private readonly LocalDate date = new LocalDate(1975, 07, 28);
+        private readonly Mock<INoteUrlGenerator> urlGen = new();
+        private readonly Mock<INoteSearcher> source = new();
+        private readonly LocalDate date = new(1975, 07, 28);
         private readonly NotesSearchViewModel sut;
-
+        private readonly EventBroadcast<NoteEditRequestEventArgs> broadcast = new();
+        private readonly Mock<IPlannerNavigator> nav = new();
+        
         public NotesSearchViewModelTest()
         {
             urlGen.Setup(i => i.ArbitraryNoteView(It.IsAny<IEnumerable<Guid>>())).Returns(
                 (IEnumerable<Guid> l) => l.Count().ToString());
-            sut = new NotesSearchViewModel(urlGen.Object, Mock.Of<IRequestHandler>());
+            sut = new NotesSearchViewModel(urlGen.Object, Mock.Of<IRequestHandler>(),
+                 broadcast, nav.Object);
         }
 
         [Fact]
@@ -37,7 +39,6 @@ namespace Planner.Wpf.Test.NotesSearchResults
             Assert.Equal(new LocalDate(3000,01,01), sut.EndDate);
             
         }
-
 
         [Fact] 
         public async Task DoSearch()
@@ -73,6 +74,14 @@ namespace Planner.Wpf.Test.NotesSearchResults
             Assert.Equal("2", sut.DisplayUrl);
         }
 
+        [Fact]
+        public void NavToDate()
+        {
+            sut.NavigatedTo();
+            broadcast.Fire(this, new NoteEditRequestEventArgs(Array.Empty<Note>(), new Note(){Date = date}));
+            nav.Verify(i=>i.ToDate(date));
+            nav.VerifyNoOtherCalls();
+        }
 
     }
 }

@@ -1,0 +1,39 @@
+﻿@page "/SearchNote"
+@using Planner.Models.Notes
+@using NodaTime
+@inject INoteSearcher Searcher
+<div class="PageRoot">
+    <h3>Search for a Note</h3>
+    <input @bind="searchString">
+    <a @onclick="DoSearch">Search</a>
+    @if (results.Count > 0)
+    {
+        <table>
+            <tr>
+                <th>Date</th>
+                <th>Title</th>
+            </tr>
+            @foreach (var item in results)
+            {
+                <tr>
+                    <td>
+                        <a href="/DailyPage/@item.Date.ToString("yyyy-M-d", null)">@item.Date.ToString("d", null)</a>
+                    </td>
+                    <td>@item.Title</td>
+                </tr>
+            }
+        </table>
+    }
+</div>
+
+@code {
+    private string searchString = "";
+
+    private IList<NoteTitle> results = Array.Empty<NoteTitle>();
+
+    private async Task DoSearch() => results = await Query().ToListAsync();
+
+    private IAsyncEnumerable<NoteTitle> Query() =>
+        Searcher.SearchFor(searchString, new LocalDate(1900, 1, 1), new LocalDate(3000, 1, 1));
+
+}

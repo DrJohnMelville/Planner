@@ -1,0 +1,15 @@
+﻿.PageRoot{
+    display: grid;
+    grid-template-rows: auto auto auto;
+    grid-template-columns: 1fr auto;
+    grid-template-areas: 
+      "title title"
+      "input button"
+      "results results";
+      width: 99%;
+}
+
+.PageRoot h3 {grid-area: title}
+.PageRoot input {grid-area: input}
+.PageRoot a {grid-area: button}
+.PageRoot table {grid-area: results}
