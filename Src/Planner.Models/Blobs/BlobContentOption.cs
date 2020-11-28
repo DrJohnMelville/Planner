@@ -14,9 +14,11 @@ namespace Planner.Models.Blobs
     {
         private readonly ILocalRepository<Blob> repository;
         private readonly IBlobContentStore store;
+        private static readonly Regex filter = new(
+            @"\/Images\/(\d{4}-\d{1,2}-\d{1,2})\/(\d+)\.(\d+)(?:\.(\d+))?_(\d+)", RegexOptions.IgnoreCase);
 
         public BlobGenerator(ILocalRepository<Blob> repository, IBlobContentStore store):
-            base(new Regex(@"(\d{4}-\d{1,2}-\d{1,2})(?:\/show)?\/(\d+)\.(\d+)(?:\.(\d+))?_(\d+)"))
+            base(filter)
         {
             this.repository = repository;
             this.store = store;

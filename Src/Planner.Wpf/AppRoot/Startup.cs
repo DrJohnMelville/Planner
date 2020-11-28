@@ -78,7 +78,7 @@ namespace Planner.Wpf.AppRoot
             service.BindGeneric(typeof(IEventBroadcast<>), typeof(EventBroadcast<>),
                 i=>i.AsSingleton());
 
-            service.Bind<IMarkdownTranslator>().ToConstant(new MarkdownTranslator("/navToPage/","/Images"));
+            service.Bind<IMarkdownTranslator>().ToConstant(new MarkdownTranslator("/navToPage/","/Images/"));
             service.Bind<ITryNoteHtmlGenerator>().To<StaticFileGenerator>();
             service.Bind<ITryNoteHtmlGenerator>().To<BlobGenerator>();
             service.Bind<ITryNoteHtmlGenerator>().To<DailyJournalPageGenerator>();
