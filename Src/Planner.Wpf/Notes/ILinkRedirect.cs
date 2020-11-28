@@ -14,10 +14,6 @@ using Planner.WpfViewModels.PlannerPages;
 
 namespace Planner.Wpf.Notes
 {
-    public interface ILinkRedirect
-    {
-        bool? DoRedirect(string url);
-    }
     public class CompositeLinkRedirect : ILinkRedirect
     {
         private IList<ILinkRedirect> children;

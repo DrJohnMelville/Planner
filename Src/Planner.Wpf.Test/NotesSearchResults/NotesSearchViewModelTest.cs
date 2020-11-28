@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CefSharp;
 using Melville.MVVM.WaitingServices;
 using Moq;
 using NodaTime;
@@ -27,8 +26,7 @@ namespace Planner.Wpf.Test.NotesSearchResults
         {
             urlGen.Setup(i => i.ArbitraryNoteView(It.IsAny<IEnumerable<Guid>>())).Returns(
                 (IEnumerable<Guid> l) => l.Count().ToString());
-            sut = new NotesSearchViewModel(urlGen.Object, Mock.Of<IRequestHandler>(),
-                 broadcast, nav.Object);
+            sut = new NotesSearchViewModel(urlGen.Object, broadcast, nav.Object, Mock.Of<ILinkRedirect>());
         }
 
         [Fact]

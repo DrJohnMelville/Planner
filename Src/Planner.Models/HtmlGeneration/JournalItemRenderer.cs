@@ -16,10 +16,10 @@ namespace Planner.Models.HtmlGeneration
     public class JournalItemRenderer : IJournalItemRenderer
     {
         private readonly TextWriter destination;
-        private readonly Func<LocalDate, IMarkdownTranslator> markdown;
+        private readonly IMarkdownTranslator markdown;
         private readonly INoteUrlGenerator urlGenerator;
 
-        public JournalItemRenderer(TextWriter destination, Func<LocalDate, IMarkdownTranslator> markdown, INoteUrlGenerator urlGenerator)
+        public JournalItemRenderer(TextWriter destination, IMarkdownTranslator markdown, INoteUrlGenerator urlGenerator)
         {
             this.destination = destination;
             this.markdown = markdown;
@@ -63,17 +63,16 @@ namespace Planner.Models.HtmlGeneration
         
         private void GenerateNote(Note note, string itemNumber)
         {
-            var markdownTranslator = markdown(note.Date);
             destination.Write("<h3>");
             destination.Write($"<a href=\"{urlGenerator.EditNoteUrl(note)}\">");
             destination.Write(itemNumber);
             destination.Write(".");
             destination.Write("</a>");
             destination.Write(" ");
-            destination.Write(markdownTranslator.RenderLine(note.Title));
+            destination.Write(markdown.RenderLine(note.Date, note.Title));
             destination.Write("</h3>");
             destination.Write("<div>");
-            destination.Write(markdownTranslator.Render(note.Text));
+            destination.Write(markdown.Render(note.Date, note.Text));
             destination.Write("</div>");
         }
     }

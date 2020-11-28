@@ -14,8 +14,7 @@
 @inject ModalService ModalService
 @inject IAppNavigation AppNavigation
 @inject IClock Clock
-@inject Func<LocalDate, IMarkdownTranslator> MarkdownTranslatorFactory
-
+@inject IMarkdownTranslator MarkdownTranslator
 
 <div class="CenterWithSides">
     <a href="/DailyPage/@RelativeDateString(-1)">
@@ -64,8 +63,8 @@
         @foreach (var note in notes.OrderBy(i => i.TimeCreated))
         {
             <li>
-                @((MarkupString) (markdownTranslator?.RenderLine(note.Title) ?? ""))
-                @((MarkupString) (markdownTranslator?.Render(note.Text) ?? ""))
+                @((MarkupString) MarkdownTranslator.RenderLine(note.Date, note.Title))
+                @((MarkupString) MarkdownTranslator.Render(note.Date, note.Text))
             </li>
         }
     </ol>
@@ -79,11 +78,10 @@
     public string DateString { get; set; } = "";
 
     private LocalDate date;
-    private IMarkdownTranslator? markdownTranslator;
 
     private IListPendingCompletion<PlannerTask>? tasks;
     private IListPendingCompletion<Note>? notes;
-    
+
     protected override Task OnParametersSetAsync() => OnInitializedAsync();
 
     protected override Task OnInitializedAsync()
@@ -91,7 +89,6 @@
         SetDate();
         tasks = taskStore.ItemsForDate(date);
         notes = noteStore.ItemsForDate(date);
-        markdownTranslator = MarkdownTranslatorFactory(date);
         return Task.WhenAll(tasks.CompleteList(), notes.CompleteList());
     }
 

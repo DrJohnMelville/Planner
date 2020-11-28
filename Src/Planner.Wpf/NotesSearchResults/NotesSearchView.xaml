@@ -10,6 +10,7 @@
              xmlns:notes="clr-namespace:Planner.Models.Notes;assembly=Planner.Models"
              xmlns:filteredDataGrids="clr-namespace:Melville.WpfControls.FilteredDataGrids;assembly=Melville.WpfControls"
              xmlns:plannerPages="clr-namespace:Planner.Wpf.PlannerPages"
+             xmlns:notes1="clr-namespace:Planner.Wpf.Notes"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid easyGrids:GridOperations.ColsAndRows="*,*/*">
@@ -40,6 +41,7 @@
             </DataGrid>
         </easyGrids:EasyGrid>
         <plannerPages:NoteBrowser Address="{Binding DisplayUrl, Mode=OneWay}" Grid.Column="1"
-                                   BoundRequestHandler="{Binding RequestHandler, PresentationTraceSources.TraceLevel=High}"/>
+                                   BoundRequestHandler="{Binding LinkRedirect,
+                                   Converter={x:Static notes1:WebNavigationRouter.FromLinkRedirect}}"/>
     </Grid>
 </UserControl>

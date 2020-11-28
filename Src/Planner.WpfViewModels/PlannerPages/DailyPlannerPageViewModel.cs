@@ -1,8 +1,6 @@
 ﻿using System;
-using CefSharp;
 using Melville.INPC;
 using Melville.MVVM.Wpf.DiParameterSources;
-using Melville.MVVM.Wpf.RootWindows;
 using NodaTime;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Repositories;
@@ -12,21 +10,11 @@ using Planner.WpfViewModels.TaskList;
 
 namespace Planner.WpfViewModels.PlannerPages
 {
-    public abstract class PageWithEditNotifications : IAcceptNavigationNotifications
+    public interface ILinkRedirect
     {
-        private readonly IEventBroadcast<NoteEditRequestEventArgs> noteEditRequest;
-
-        protected PageWithEditNotifications(IEventBroadcast<NoteEditRequestEventArgs> noteEditRequest)
-        {
-            this.noteEditRequest = noteEditRequest;
-        }
-
-        public void NavigatedTo() => noteEditRequest.Fired += DoEditNoteRequest;
-        public void NavigatedAwayFrom() => noteEditRequest.Fired -= DoEditNoteRequest;
-
-        protected abstract void DoEditNoteRequest(object? sender, NoteEditRequestEventArgs e);
-
+        bool? DoRedirect(string url);
     }
+    
     public partial class DailyPlannerPageViewModel:PageWithEditNotifications
     {
         private readonly IPlannerNavigator navigator;
@@ -35,9 +23,6 @@ namespace Planner.WpfViewModels.PlannerPages
         public DailyTaskListViewModel TodayTaskList { get; }
         private readonly LocalDate currentDate;
 
-        //This variable has to live here because we want it created inside the window's context so that it picks up
-        // the NoteEditRequest EventBroadcast object that is scoped to this window.  The view uses this directly.
-        public IRequestHandler RequestHandler { get; } 
 
         public LocalDate CurrentDate
         {
@@ -56,13 +41,12 @@ namespace Planner.WpfViewModels.PlannerPages
             IPlannerNavigator navigator, 
             INoteUrlGenerator urlGen, 
             IEventBroadcast<NoteEditRequestEventArgs> noteEditRequest, 
-            IRequestHandler requestHandler): base(noteEditRequest)
+            ILinkRedirect redirect): base(noteEditRequest, redirect)
         {
             
             this.navigator = navigator;
             NoteCreator = noteCreator;
             this.urlGen = urlGen;
-            RequestHandler = requestHandler;
             this.currentDate = currentDate; 
             TodayTaskList = taskListFactory(currentDate);
         }

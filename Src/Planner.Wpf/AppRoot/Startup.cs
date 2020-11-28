@@ -16,6 +16,7 @@ using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
 using Planner.Models.Blobs;
 using Planner.Models.HtmlGeneration;
+using Planner.Models.Markdown;
 using Planner.Models.Repositories;
 using Planner.Wpf.Notes;
 using Planner.Wpf.PlannerPages;
@@ -76,6 +77,8 @@ namespace Planner.Wpf.AppRoot
                 .To<EventBroadcast<PlannerNagivateRequestEventArgs>>().AsScoped();
             service.BindGeneric(typeof(IEventBroadcast<>), typeof(EventBroadcast<>),
                 i=>i.AsSingleton());
+
+            service.Bind<IMarkdownTranslator>().ToConstant(new MarkdownTranslator("/navToPage/"));
             service.Bind<ITryNoteHtmlGenerator>().To<StaticFileGenerator>();
             service.Bind<ITryNoteHtmlGenerator>().To<BlobGenerator>();
             service.Bind<ITryNoteHtmlGenerator>().To<DailyJournalPageGenerator>();
@@ -88,7 +91,6 @@ namespace Planner.Wpf.AppRoot
             service.Bind<ILinkRedirect>().To<PlannerNavigateNotification>();
             service.Bind<ILinkRedirect>().To<OpenLocalFile>(); 
             service.Bind<ILinkRedirect>().To<CompositeLinkRedirect>().BlockSelfInjection();
-            service.Bind<IRequestHandler>().To<WebNavigationRouter>();
         }
 
         private static void RegisterReloadEvents(IBindableIocService service)

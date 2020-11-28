@@ -13,6 +13,7 @@
              xmlns:diParameterSources="clr-namespace:Melville.MVVM.Wpf.DiParameterSources;assembly=Melville.MVVM.Wpf"
              xmlns:pasters="clr-namespace:Planner.WpfViewModels.Notes.Pasters;assembly=Planner.WpfViewModels"
              xmlns:plannerPages1="clr-namespace:Planner.Wpf.PlannerPages"
+             xmlns:notes="clr-namespace:Planner.Wpf.Notes"
              d:DataContext="{d:DesignData {x:Type plannerPages:DailyPlannerPageViewModel}}"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -45,7 +46,8 @@
             <viewFrames:ViewFrame Content="{Binding TodayTaskList}" Margin="0 0 5 5"/>
             <Grid Grid.RowSpan="2" easyGrids:GridOperations.ColsAndRows="*/*,auto,auto">
                 <plannerPages1:NoteBrowser Address="{Binding NotesUrl, Mode=OneWay}" x:Name="Browser"
-                        BoundRequestHandler="{Binding RequestHandler}"/>
+                        BoundRequestHandler="{Binding LinkRedirect, 
+                        Converter={x:Static notes:WebNavigationRouter.FromLinkRedirect}}"/>
                 <Grid Grid.Row="1" easyGrids:GridOperations.ColsAndRows="*,auto/auto">
                     <TextBox Text="{Binding NoteCreator.Title, UpdateSourceTrigger=PropertyChanged}"
                              TextWrapping="Wrap"/>

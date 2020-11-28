@@ -7,27 +7,36 @@ namespace Planner.Models.Markdown
 {
     public interface IMarkdownTranslator
     {
-        public string Render(string markdown);
-        public string RenderLine(string markdown);
+        public string Render(LocalDate baseDate, string markdown);
+    }
+
+    public static class MarkdownTranslatorOperations
+    {
+        private static readonly Regex paragraphFinder = new Regex(@"\</?p\>");
+
+        public static string RenderLine(this IMarkdownTranslator translator, LocalDate date, string markdown) =>
+            paragraphFinder.Replace(translator.Render(date, markdown), "");
     }
     public class MarkdownTranslator:IMarkdownTranslator
     {
         private readonly MarkdownPipeline translator;
+        private LocalDate baseDate = LocalDate.MinIsoValue;
 
-        public MarkdownTranslator(LocalDate date)
+        public MarkdownTranslator(string dailyPageRoot)
         {
             translator =
                 new MarkdownPipelineBuilder()
                     .UseAdvancedExtensions()
-                    .UsePlannerLinks(date)
+                    .UsePlannerLinks(()=>baseDate, dailyPageRoot)
                     .Build();
         }
 
-        public string Render(string markdown) => Markdig.Markdown.ToHtml(markdown, translator);
-        
-        private static readonly Regex paragraphFinder = new Regex(@"\</?p\>");
-        public string RenderLine(string markdown) => 
-            paragraphFinder.Replace(Render(markdown), "");
+        public string Render(LocalDate baseDate, string markdown)
+        {
+            this.baseDate = baseDate;
+            return Markdig.Markdown.ToHtml(markdown, translator);
+        }
+
     }
     
     

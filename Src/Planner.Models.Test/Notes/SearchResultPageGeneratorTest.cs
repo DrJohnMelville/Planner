@@ -56,7 +56,7 @@ namespace Planner.Models.Test.Notes
             "List/D7F0F0CF-A06F-4E0E-8D4C-6BC5B1E7C49A/D7F0F0CF-A06F-4E0E-8D4C-6BC5B1E7C49A",
                 output)!;
 
-            Assert.Equal("Display Notes:Title1\r\nTitle2", OutputAsString);
+            Assert.Equal("Display Notes\r\nTitle1\r\nTitle2\r\n", OutputAsString);
             
         }
 

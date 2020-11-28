@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Linq;
 using System.Threading.Tasks;
-using CefSharp;
 using Melville.INPC;
 using Melville.MVVM.AdvancedLists;
 using Melville.MVVM.WaitingServices;
@@ -18,12 +17,12 @@ namespace Planner.WpfViewModels.NotesSearchResults
     {
         private readonly INoteUrlGenerator urlGen;
         private readonly IPlannerNavigator navigator;
-        public IRequestHandler RequestHandler { get; } 
-        public NotesSearchViewModel(INoteUrlGenerator urlGen, IRequestHandler requestHandler,
-            IEventBroadcast<NoteEditRequestEventArgs> notifier, IPlannerNavigator navigator) : base(notifier)
+        public NotesSearchViewModel(INoteUrlGenerator urlGen,
+            IEventBroadcast<NoteEditRequestEventArgs> notifier, 
+            IPlannerNavigator navigator,
+            ILinkRedirect redirect) : base(notifier, redirect)
         {
             this.urlGen = urlGen;
-            RequestHandler = requestHandler;
             this.navigator = navigator;
             displayUrl = urlGen.ArbitraryNoteView(Array.Empty<Guid>());
         }

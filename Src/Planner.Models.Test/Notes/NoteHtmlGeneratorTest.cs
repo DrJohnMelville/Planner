@@ -37,7 +37,7 @@ namespace Planner.Models.Test.Notes
                     new StaticFileGenerator(),
                     new BlobGenerator(blobRepo.Object, blobStore.Object),
                     new DailyJournalPageGenerator(
-                        i=> new JournalItemRenderer(i, d=>new MarkdownTranslator(d), urlGen.Object),
+                        i=> new JournalItemRenderer(i, new MarkdownTranslator("/PageRoot/"), urlGen.Object),
                         repo.Object),
                     new DefaultTextGenerator()
                 });
@@ -97,9 +97,9 @@ namespace Planner.Models.Test.Notes
             Assert.DoesNotContain("<hr/>", OutputAsString);
         }
         [Theory]
-        [InlineData("(1.2.3)", "<a href='/navToPage/1975-1-2'>(1.2.3)</a>")]
-        [InlineData("(1.2.1975.3)", "<a href='/navToPage/1975-1-2'>(1.2.1975.3)</a>")]
-        [InlineData("(1.2.75.3)", "<a href='/navToPage/1975-1-2'>(1.2.75.3)</a>")]
+        [InlineData("(1.2.3)", "<a href='/PageRoot/1975-1-2'>(1.2.3)</a>")]
+        [InlineData("(1.2.1975.3)", "<a href='/PageRoot/1975-1-2'>(1.2.1975.3)</a>")]
+        [InlineData("(1.2.75.3)", "<a href='/PageRoot/1975-1-2'>(1.2.75.3)</a>")]
         public async Task DateLinkInText(string link, string expected)
         {
             notes.Add(new Note(){Title = "Title", Text="See "+link, Date = date});

@@ -1,9 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Data;
+using System.Windows.Forms;
 using CefSharp;
 using CefSharp.Handler;
 using Melville.MVVM.RunShellCommands;
+using Melville.MVVM.Wpf.Bindings;
+using Planner.WpfViewModels.PlannerPages;
 
 namespace Planner.Wpf.Notes
 {
@@ -23,6 +27,9 @@ namespace Planner.Wpf.Notes
             if ((!userGesture) || isRedirect) return false;
             return redirect.DoRedirect(request.Url) ?? false;
         }
+
+        public static readonly IValueConverter FromLinkRedirect = LambdaConverter.Create(
+            (ILinkRedirect ld) => new WebNavigationRouter(ld));
     }
 
 }

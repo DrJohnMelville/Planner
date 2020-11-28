@@ -1,20 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Mime;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Media;
-using CefSharp;
-using Melville.MVVM.Wpf.RootWindows;
 using Moq;
 using NodaTime;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
-using Planner.WpfViewModels.Notes;
-using Planner.WpfViewModels.Notes.Pasters;
 using Planner.WpfViewModels.PlannerPages;
 using Planner.WpfViewModels.TaskList;
 using Xunit;
@@ -45,7 +37,7 @@ namespace Planner.Wpf.Test.PlannerPages
                          noteCreator,
                         navigation.Object, 
                 urlGen.Object, requestEdit,
-                Mock.Of<IRequestHandler>()
+                Mock.Of<ILinkRedirect>()
                 );
         }
 

@@ -16,11 +16,11 @@ namespace Planner.Models.Markdown.PlannerLinks
 {
     public static class PlannerLinkExtensionOperations {
         public static MarkdownPipelineBuilder UsePlannerLinks(
-            this MarkdownPipelineBuilder builder, LocalDate date)
+            this MarkdownPipelineBuilder builder, Func<LocalDate> date, string dailyPageRoot)
         {
             if (!builder.Extensions.Contains<PlannerLinkExtension>())
             {
-                builder.Extensions.Add(new PlannerLinkExtension(date));
+                builder.Extensions.Add(new PlannerLinkExtension(date, dailyPageRoot));
             }
 
             return builder;
@@ -28,11 +28,13 @@ namespace Planner.Models.Markdown.PlannerLinks
     }
     public class PlannerLinkExtension : IMarkdownExtension
     {
-        private readonly LocalDate baseDate;
+        private readonly Func<LocalDate> baseDate;
+        private readonly string dailyPageRoot;
 
-        public PlannerLinkExtension(LocalDate baseDate)
+        public PlannerLinkExtension(Func<LocalDate> baseDate, string dailyPageRoot)
         {
             this.baseDate = baseDate;
+            this.dailyPageRoot = dailyPageRoot;
         }
 
         public void Setup(MarkdownPipelineBuilder pipeline)
@@ -49,7 +51,7 @@ namespace Planner.Models.Markdown.PlannerLinks
                 htmlRenderer.ObjectRenderers is {} objRenderer &&
                 !objRenderer.Contains<PlannerLinkRenderer>())
             {
-                objRenderer.Add(new PlannerLinkRenderer());
+                objRenderer.Add(new PlannerLinkRenderer(dailyPageRoot));
             }
         }
     }
@@ -61,9 +63,16 @@ namespace Planner.Models.Markdown.PlannerLinks
 
     public class PlannerLinkRenderer : HtmlObjectRenderer<PlannerLink>
     {
+        private readonly string dailyPageRoot;
+
+        public PlannerLinkRenderer(string dailyPageRoot)
+        {
+            this.dailyPageRoot = dailyPageRoot;
+        }
+
         protected override void Write(HtmlRenderer renderer, PlannerLink obj)
         {
-            WriteIfHtmlActive(renderer, $"<a href='/navToPage/{obj.Target:yyyy-M-d}'>");
+            WriteIfHtmlActive(renderer, $"<a href='{dailyPageRoot}{obj.Target:yyyy-M-d}'>");
             renderer.Write(obj.LiteralString);
             WriteIfHtmlActive(renderer, $"</a>");
         }
@@ -79,8 +88,8 @@ namespace Planner.Models.Markdown.PlannerLinks
 
     public class PlannerLinkParser: InlineParser
     {
-        private LocalDate baseDate;
-        public PlannerLinkParser(LocalDate baseDate)
+        private Func<LocalDate> baseDate;
+        public PlannerLinkParser(Func<LocalDate> baseDate)
         {
             this.baseDate = baseDate;
             OpeningCharacters = new[]{'('};
@@ -105,8 +114,8 @@ namespace Planner.Models.Markdown.PlannerLinks
             slice.NextChar();
             LocalDate? date = ints.Count switch
             {
-                3 => ContextualDateParser.SelectedDate(-1, ints[0], ints[1], baseDate),
-                4 => ContextualDateParser.SelectedDate(ints[2], ints[0], ints[1], baseDate),
+                3 => ContextualDateParser.SelectedDate(-1, ints[0], ints[1], baseDate()),
+                4 => ContextualDateParser.SelectedDate(ints[2], ints[0], ints[1], baseDate()),
                 _=> null
             };
             if (!date.HasValue) return false;
