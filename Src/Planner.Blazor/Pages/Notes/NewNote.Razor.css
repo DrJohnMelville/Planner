@@ -15,3 +15,4 @@
 .GridRoot textarea {grid-area: text} 
 .GridRoot input:nth-child(4) {grid-area: photo} 
 .GridRoot a {grid-area: post} 
+.Uploading {grid-area: post} 

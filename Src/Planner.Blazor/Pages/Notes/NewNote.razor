@@ -11,12 +11,20 @@
 @inject IAppNavigation AppNavigation
 @inject IFileReaderService fileReader;
 @inject IBlobCreator BlobCreator; 
-<div class="GridRoot">
-    <input @bind="newNoteTitle" placeholder="New Note Title">
-    <textarea @bind="newNoteText" placeholder="New Note Text"></textarea>
-    <a @onclick="AddNote">Add Note</a>
-    <input type="file" @ref="UploadFileCtrl"  accept="image/**" capture @onchange="AcceptPhoto"/>
-</div>
+
+    <div class="GridRoot">
+        <input @bind="newNoteTitle" placeholder="New Note Title">
+        <textarea @bind="newNoteText" placeholder="New Note Text"></textarea>
+        @if (uploading)
+        {
+          <div class="Uploading">Uploading</div>            
+        }
+        else
+        {
+            <a @onclick="AddNote">Add Note</a>
+        }
+        <input type="file" @ref="UploadFileCtrl" accept="image/**" capture @onchange="AcceptPhoto"/>
+    </div>
 
 
 @code {
@@ -26,6 +34,7 @@
     private ElementReference UploadFileCtrl;
     private string newNoteTitle = "";
     private string newNoteText = "";
+    private bool uploading;
 
     private void AddNote()
     {
@@ -41,12 +50,19 @@
 
     private async Task AcceptPhoto()
     {
-        if (!TimeOperations.TryParseLocalDate(DateString, out var date) ||
-            !(await PhotoAsStream() is {} photo)) return;
-        var tag = " " + await BlobCreator.MarkdownForNewImage("Camera.jpg", "image/jpg", date, 
-            photo);
-        Console.WriteLine(tag);
-        newNoteText += tag;
+        try
+        {
+            uploading = true;
+            if (!TimeOperations.TryParseLocalDate(DateString, out var date) ||
+                !(await PhotoAsStream() is {} photo)) return;
+            var tag = " " + await BlobCreator.MarkdownForNewImage("Camera.jpg", "image/jpg", date, 
+                photo);
+            newNoteText += tag;
+        }
+        finally
+        {
+            uploading = false;
+        }
     }
 
     private async Task<MemoryStream?> PhotoAsStream()
