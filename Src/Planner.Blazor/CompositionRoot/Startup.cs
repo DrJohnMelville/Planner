@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using Melville.MVVM.Time;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 using NodaTime.Extensions;
@@ -21,10 +22,12 @@ namespace Planner.Blazor.CompositionRoot
     public class Startup
     {
         private readonly IServiceCollection services;
+        private readonly IWebAssemblyHostEnvironment hostEnvironment;
 
-        public Startup(IServiceCollection services)
+        public Startup(IServiceCollection services, IWebAssemblyHostEnvironment hostEnvironment)
         {
             this.services = services;
+            this.hostEnvironment = hostEnvironment;
         }
 
         public void Configure()
@@ -39,7 +42,8 @@ namespace Planner.Blazor.CompositionRoot
 
         private void RegisterNoteRendering()
         {
-            services.AddSingleton<IMarkdownTranslator>(new MarkdownTranslator("/DailyPage/","/Images/"));
+            services.AddSingleton<IMarkdownTranslator>(
+                new MarkdownTranslator("/DailyPage/", hostEnvironment.BaseAddress+"BlobContent/"));
             services.AddFileReaderService(o => o.UseWasmSharedBuffer = true);
             services.AddTransient<IBlobCreator, BlobCreator>();
         }

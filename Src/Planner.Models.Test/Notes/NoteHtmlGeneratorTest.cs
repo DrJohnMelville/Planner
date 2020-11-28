@@ -35,7 +35,7 @@ namespace Planner.Models.Test.Notes
             sut = new NoteHtmlGenerator(new List<ITryNoteHtmlGenerator>()
                 {
                     new StaticFileGenerator(),
-                    new BlobGenerator(blobRepo.Object, blobStore.Object),
+                    new BlobGenerator(new BlobStreamExtractor(blobRepo.Object, blobStore.Object)),
                     new DailyJournalPageGenerator(
                         i=> new JournalItemRenderer(i, new MarkdownTranslator("/PageRoot/","/ImageBase/"), urlGen.Object),
                         repo.Object),
@@ -137,8 +137,7 @@ namespace Planner.Models.Test.Notes
         }
         
         [Theory]
-        [InlineData("1975-7-28/3.2_1")]
-        [InlineData("1975-7-28/show/3.2_1")]
+        [InlineData("/Images/1975-7-28/3.2_1")]
         public async Task RetrieveImage(string url)
         {
             var foundBlob = new Blob();

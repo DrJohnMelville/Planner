@@ -55,6 +55,5 @@ namespace Planner.Web.Test.Controllers
             storage.VerifyNoOtherCalls();
             repo.VerifyNoOtherCalls();
         }
-
     }
 }

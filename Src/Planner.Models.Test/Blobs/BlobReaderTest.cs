@@ -22,7 +22,7 @@ namespace Planner.Models.Test.Blobs
         {
             repo.Setup(i => i.ItemsForDate(date)).Returns(todaysBlobs);
             repo.Setup(i => i.ItemsForDate(date.PlusDays(1))).Returns(new ItemList<Blob>());
-            sut = new BlobGenerator(repo.Object, store.Object);
+            sut = new BlobGenerator(new BlobStreamExtractor(repo.Object, store.Object));
         }
 
         [Theory]

@@ -45,6 +45,8 @@ namespace Planner.Web.CompositionRoot
                     sp.GetRequiredService<IDeletableBlobContentStore>()));
             services.AddScoped<IRemoteRepository<Blob>>(sp => sp.GetRequiredService<IDatedRemoteRepository<Blob>>());
             services.AddScoped<INoteSearcher, SqlNoteSearcher>();
+            services.AddScoped<ILocalRepository<Blob>, LocalToRemoteRepositoryBridge<Blob>>();
+            services.AddScoped<BlobStreamExtractor>();
             
             services.AddControllersWithViews().AddJsonOptions(ConfigureJsonSerialization);
         }

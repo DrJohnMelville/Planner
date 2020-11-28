@@ -17,7 +17,7 @@ namespace Planner.Blazor
             builder.RootComponents.Add<App>("#app");
             
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            new Startup(builder.Services).Configure();
+            new Startup(builder.Services, builder.HostEnvironment).Configure();
             
             await builder.Build().RunAsync();
         }
