@@ -58,7 +58,7 @@ namespace Planner.Models.HtmlGeneration
             desiredNote == null || note == desiredNote;
 
         private void WritePrologue() => destination.Write(
-            "<html><head><link rel=\"stylesheet\" href=\"/0/journal.css\"></head><body>");
+            "<html><head><link rel=\"stylesheet\" href=\"/0/journal.css\"></head><body><div class =\"NotesList\">");
         
         
         private void GenerateNote(Note note, string itemNumber)
@@ -82,6 +82,7 @@ namespace Planner.Models.HtmlGeneration
         private static readonly List<(Func<string, bool> Predicate, string Epilogue)> providers =
             new List<(Func<string, bool> Predicate, string Epilogue)>
             {
+                (s=>true, "</div>"),
                 (s=>s.Contains("````mermaid"), 
                     "<script src=\"https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js\"></script><script>mermaid.initialize({startOnLoad:true});</script>"),
                 (s=>true, "</body></html>")

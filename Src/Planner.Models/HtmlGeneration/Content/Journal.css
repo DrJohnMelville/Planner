@@ -8,3 +8,7 @@ table{
 table td{
     border:1px solid lightgray;
 }
+
+.NotesList img {
+    max-width: 100%;
+}
