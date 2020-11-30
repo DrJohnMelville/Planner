@@ -9,7 +9,7 @@
     <ItemGroup>
       <PackageReference Include="Markdig" Version="0.22.0" />
       <PackageReference Include="Melville.INPC" Version="0.1.2" />
-      <PackageReference Include="Melville.Generators.INPC" Version="0.1.5" />
+      <PackageReference Include="Melville.Generators.INPC" Version="0.1.6" />
       <PackageReference Include="Melville.MVVM" Version="0.3.8" />
       <PackageReference Include="NodaTime" Version="3.0.3" />
       <PackageReference Include="System.Linq.Async" Version="5.0.0" />
