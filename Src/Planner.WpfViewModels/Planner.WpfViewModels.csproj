@@ -4,8 +4,10 @@
         <TargetFramework>net5.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
         <Nullable>enable</Nullable>
+        <CefSharpAnyCpuSupport>true</CefSharpAnyCpuSupport>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="CefSharp.Common" Version="85.3.130" />
         <PackageReference Include="CsvHelper" Version="16.0.0" />
         <PackageReference Include="Melville.Generators.INPC" Version="0.1.5" />
         <PackageReference Include="Melville.MVVM.Wpf" Version="0.3.10" />
