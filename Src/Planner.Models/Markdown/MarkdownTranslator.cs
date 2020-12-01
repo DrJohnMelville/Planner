@@ -54,13 +54,17 @@ namespace Planner.Models.Markdown
         private HtmlRenderer CreateHtmlRenderer(StringWriter writer, bool supressParagraph, 
             LocalDate localDate)
         {
+
             var renderer = new HtmlRenderer(writer)
             {
                 ImplicitParagraph = supressParagraph,
-                LinkRewriter = s=>$"{imageRoot}{localDate:yyyy-M-d}/{s}"
+                LinkRewriter = LinkRewriter
             };
             translator.Setup(renderer);
             return renderer;
+
+            string LinkRewriter(string s) => 
+                Regex.IsMatch(s,@"^\d{1,2}\.\d{1,2}(?:.\d{2,4})?_\d+$") ? $"{imageRoot}{localDate:yyyy-M-d}/{s}":s;
         }
 
         private MarkdownParserContext ParserContext(LocalDate baseDate)
