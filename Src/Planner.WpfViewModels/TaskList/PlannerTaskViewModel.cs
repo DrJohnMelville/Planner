@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -17,6 +18,7 @@ namespace Planner.WpfViewModels.TaskList
         public PlannerTaskViewModel(PlannerTask plannerTask)
         {
             PlannerTask = plannerTask;
+            this.DelegatePropertyChangeFrom(plannerTask, nameof(plannerTask.Order), nameof(DigitMenu));
             
             ((IExternalNotifyPropertyChanged)this)
                 .DelegatePropertyChangeFrom(PlannerTask, nameof(PlannerTask.PriorityDisplay),
@@ -28,6 +30,7 @@ namespace Planner.WpfViewModels.TaskList
         }
 
         [AutoNotify] private IEnumerable<PriorityKey> menus = Array.Empty<PriorityKey>();
+        [AutoNotify] public IEnumerable<PriorityKey> DigitMenu => this.Menus.Where(i => i.Priority == PlannerTask.Priority);
         
         public bool ShowPriorityButton => PlannerTask.Priority == ' ';
         public bool ShowOrderButtons => !ShowPriorityButton && PlannerTask.Order == 0;

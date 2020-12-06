@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 using Melville.INPC;
@@ -19,7 +21,6 @@ namespace Planner.WpfViewModels.TaskList
         public IList<PlannerTaskViewModel> TaskViewModels { get; }
         public string[] DeferToName { get; }
 
-        [AutoNotify] private bool isRankingTasks;
         [AutoNotify] private string newTaskName = "";
 
         private readonly ILocalRepository<PlannerTask> taskRepository;
@@ -36,6 +37,13 @@ namespace Planner.WpfViewModels.TaskList
             SourceList = taskRepository.ItemsForDate(date);
             TaskViewModels = SetupViewModelCollection(viewModelFactory);
             DeferToName = CreateDayNames();
+            UpdiatePriortyMenuOnItemsListChange();
+        }
+
+        private void UpdiatePriortyMenuOnItemsListChange()
+        {
+            if (SourceList is INotifyCollectionChanged nc)
+                nc.CollectionChanged += (s, e) => InitializePriorityMenu();
         }
 
         private SelectCollection<PlannerTask, PlannerTaskViewModel> SetupViewModelCollection(
@@ -64,14 +72,9 @@ namespace Planner.WpfViewModels.TaskList
         {
             SourceList.PickPriority(model.PlannerTask, button);
             SourceList.SetImpliedOrders();
-            CheckIfDonePrioritizing();
+            InitializePriorityMenu();
         }
-
-        private void CheckIfDonePrioritizing()
-        {
-            if (SourceList.CompletelyPrioritized()) IsRankingTasks = false;
-        }
-
+        
         public void NewTaskKeyDown(Key key)
         {
             if (key == Key.Enter) TryAddPlannerTask();
@@ -136,10 +139,19 @@ namespace Planner.WpfViewModels.TaskList
             SourceList.Remove(task.PlannerTask);
         }
 
-        public void InitializePriorityMenu(PlannerTaskViewModel model) => 
-            model.Menus = SourceList.CreatePriorityMenu();
+        private void InitializePriorityMenu()
+        {
+            var menu = SourceList.CreatePriorityMenu().ToList();
+            foreach (var taskViewModel in TaskViewModels)
+            {
+                taskViewModel.Menus = menu;
+            }
+        }
 
-        public void SetItemPriority(PlannerTaskViewModel viewModel, PriorityKey key) => 
+        public void SetItemPriority(PlannerTaskViewModel viewModel, PriorityKey key)
+        {
             SourceList.ChangeTaskPriority(viewModel.PlannerTask, key.Priority, key.Order);
+            InitializePriorityMenu();
+        }
     }
 }

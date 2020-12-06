@@ -57,7 +57,7 @@ namespace Planner.Wpf.Test.TaskList
         {
             Assert.True(itemVM.ShowPriorityButton);
             using var _ = INPCCounter.VerifyInpcFired(itemVM, 
-                i=>i.ShowPriorityButton, i=>i.ShowOrderButtons, 
+                i=>i.ShowPriorityButton, i=>i.ShowOrderButtons, i=>i.DigitMenu,
                 i=>i.ShowPriorityButton, i=>i.ShowOrderButtons);
             switch (pickButton)
             {
@@ -72,23 +72,8 @@ namespace Planner.Wpf.Test.TaskList
         }
 
         [Fact]
-        public void TurnOffSortingWhenDone()
-        {
-            sut.IsRankingTasks = true;
-            foreach (var model in sut.TaskViewModels.OfType<PlannerTaskViewModel>())
-            {
-                while (!model.PlannerTask.Prioritized)
-                {
-                    sut.ButtonA(model);
-                }
-            }
-            Assert.False(sut.IsRankingTasks);
-        }
-
-        [Fact]
         public void AutoOrder()
         {
-            sut.IsRankingTasks = true;
             var models = sut.TaskViewModels.OfType<PlannerTaskViewModel>().ToList();
             Assert.Equal(4, models.Count);
             
@@ -96,7 +81,7 @@ namespace Planner.Wpf.Test.TaskList
             sut.ButtonB(models[1]);
             sut.ButtonC(models[2]);
             sut.ButtonD(models[3]);
-            Assert.False(sut.IsRankingTasks);
+
             foreach (var model in models)
             {
                 Assert.Equal(1, model.PlannerTask.Order);
@@ -105,7 +90,6 @@ namespace Planner.Wpf.Test.TaskList
         [Fact]
         public void AutoOrderPartial()
         {
-            sut.IsRankingTasks = true;
             var models = sut.TaskViewModels.OfType<PlannerTaskViewModel>().ToList();
             Assert.Equal(4, models.Count);
             
@@ -113,7 +97,7 @@ namespace Planner.Wpf.Test.TaskList
             sut.ButtonB(models[1]);
             sut.ButtonB(models[2]);
             sut.ButtonD(models[3]);
-            Assert.True(sut.IsRankingTasks);
+
             Assert.Equal(1, models[0].PlannerTask.Order);
             Assert.Equal(0, models[1].PlannerTask.Order);
             Assert.Equal(0, models[2].PlannerTask.Order);
@@ -121,7 +105,6 @@ namespace Planner.Wpf.Test.TaskList
 
             sut.ButtonB(models[1]);
             
-            Assert.False(sut.IsRankingTasks);
             Assert.Equal(1, models[0].PlannerTask.Order);
             Assert.Equal(1, models[1].PlannerTask.Order);
             Assert.Equal(2, models[2].PlannerTask.Order);

@@ -11,6 +11,7 @@
              xmlns:mouseClicks="clr-namespace:Melville.MVVM.Wpf.MouseClicks;assembly=Melville.MVVM.Wpf"
              xmlns:hacks="clr-namespace:Melville.WpfControls.Hacks;assembly=Melville.WpfControls"
              xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:tasks="clr-namespace:Planner.Models.Tasks;assembly=Planner.Models"
              d:DataContext="{d:DesignData {x:Type taskList:DailyTaskListViewModel}}"
              mc:Ignorable="d" Grid.IsSharedSizeScope="True" x:Name="TopControl">
     <UserControl.Resources>
@@ -36,7 +37,6 @@
         </DataTemplate>
         <DataTemplate x:Key="TaskLineTemplate" DataType="{x:Type taskList:PlannerTaskViewModel}">
             <Grid Background="Transparent" 
-                  ContextMenuOpening="{eventBindings:EventBinding InitializePriorityMenu}"
                   ToolTip="{Binding PlannerTask.StatusDetail, 
                   Converter={x:Static taskList:PlannerTaskViewModel.ToolTipOnlyWithText}}"
                   Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type local:DailyTaskListView}}}">
@@ -140,8 +140,18 @@
                 <local:RichTextBlock Grid.Column="2" 
                          Text="{Binding PlannerTask.Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Margin="4 2"
                          Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type local:DailyTaskListView}}}"/>
-                <Button Grid.Column="2" Background="Transparent" Click="{eventBindings:EventBinding ButtonA}"
-                        wpfHacks:VisibilityHack.CollapseUnless="{Binding ShowOrderButtons}" />
+                <!--<Button Grid.Column="2" Background="Transparent" Click="{eventBindings:EventBinding ButtonA}"
+                        wpfHacks:VisibilityHack.CollapseUnless="{Binding ShowOrderButtons}" />-->
+                <ItemsControl Grid.Column="2" Background="Red"
+                              wpfHacks:VisibilityHack.CollapseUnless="{Binding ShowOrderButtons}"
+                              ItemsSource="{Binding Menus, PresentationTraceSources.TraceLevel=High}">
+                    <!--<ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type tasks:PriorityKey}">
+                           <Button Background="#77FFFFFF" Click="{eventBindings:EventBinding SetItemPriority}"
+                                   Content="{Binding Order}"/> 
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>-->
+                </ItemsControl>
                 <UniformGrid Columns="4" Grid.Column="2"
                              wpfHacks:VisibilityHack.CollapseUnless="{Binding ShowPriorityButton}">
                     <Button Background="#77FF0000" Content="A" Click="{eventBindings:EventBinding ButtonA}" />
