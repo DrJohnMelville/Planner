@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows.Data;
 using System.Windows.Input;
 using Melville.INPC;
 using Melville.MVVM.AdvancedLists.PersistentLinq;
 using Melville.MVVM.RunShellCommands;
+using Melville.MVVM.Wpf.Bindings;
 using Melville.MVVM.Wpf.DiParameterSources;
 using Melville.MVVM.Wpf.KeyboardFacade;
 using NodaTime;
@@ -141,6 +143,7 @@ namespace Planner.WpfViewModels.TaskList
 
         private void InitializePriorityMenu()
         {
+            Console.WriteLine("InitializePriorityMenu");
             var menu = SourceList.CreatePriorityMenu().ToList();
             foreach (var taskViewModel in TaskViewModels)
             {

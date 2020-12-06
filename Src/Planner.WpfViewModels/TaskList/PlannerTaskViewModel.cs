@@ -18,8 +18,6 @@ namespace Planner.WpfViewModels.TaskList
         public PlannerTaskViewModel(PlannerTask plannerTask)
         {
             PlannerTask = plannerTask;
-            this.DelegatePropertyChangeFrom(plannerTask, nameof(plannerTask.Order), nameof(DigitMenu));
-            
             ((IExternalNotifyPropertyChanged)this)
                 .DelegatePropertyChangeFrom(PlannerTask, nameof(PlannerTask.PriorityDisplay),
                     nameof(ShowPriorityButton), nameof(ShowOrderButtons));
@@ -30,7 +28,9 @@ namespace Planner.WpfViewModels.TaskList
         }
 
         [AutoNotify] private IEnumerable<PriorityKey> menus = Array.Empty<PriorityKey>();
-        [AutoNotify] public IEnumerable<PriorityKey> DigitMenu => this.Menus.Where(i => i.Priority == PlannerTask.Priority);
+        [AutoNotify] public IEnumerable<PriorityKey> DigitMenu => 
+            this.Menus.Where(i => i.Priority == PlannerTask.Priority)
+                .Reverse();
         
         public bool ShowPriorityButton => PlannerTask.Priority == ' ';
         public bool ShowOrderButtons => !ShowPriorityButton && PlannerTask.Order == 0;
@@ -79,5 +79,15 @@ namespace Planner.WpfViewModels.TaskList
 
         [AutoNotify] private ITaskPopUpContent popUpContent = new NullContext();
         [AutoNotify] private bool popupOpen;
+
+        public static IValueConverter PriortyBackground = LambdaConverter.Create(
+            (char priority) => priority switch
+            {
+                'A' =>  new SolidColorBrush(Color.FromArgb(127, 255, 0,0)),
+                'B' =>  new SolidColorBrush(Color.FromArgb(127, 255, 255,0)),
+                'C' =>  new SolidColorBrush(Color.FromArgb(127, 0, 255, 0)),
+                'D' =>  new SolidColorBrush(Color.FromArgb(127, 0,0, 255)),
+                _ =>  new SolidColorBrush(Color.FromArgb(127, 0, 0,0)),
+            });
     }
 }
