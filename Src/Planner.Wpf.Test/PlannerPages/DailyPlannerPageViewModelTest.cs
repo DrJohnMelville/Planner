@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Melville.MVVM.Wpf.KeyboardFacade;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Moq;
 using NodaTime;
 using Planner.Models.HtmlGeneration;
@@ -29,7 +31,9 @@ namespace Planner.Wpf.Test.PlannerPages
         {
             repo.Setup(i => i.ItemsForDate(It.IsAny<LocalDate>())).Returns(
                 (LocalDate d) => new ItemList<PlannerTask>());
-            Func<LocalDate, DailyTaskListViewModel> taskListFactory = d => new DailyTaskListViewModel(repo.Object, i=> new PlannerTaskViewModel(i), d);
+            Func<LocalDate, DailyTaskListViewModel> taskListFactory = 
+                d => new DailyTaskListViewModel(repo.Object, i=> new PlannerTaskViewModel(i),
+                    Mock.Of<IKeyboardQuery>(), d);
             var noteCreator = new NoteCreator(noteRepo.Object, clock.Object);
             sut = new DailyPlannerPageViewModel(new LocalDate(1975,07,28), 
                 taskListFactory,

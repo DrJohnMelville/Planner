@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
 using Melville.INPC;
 using Melville.MVVM.AdvancedLists.PersistentLinq;
 using Melville.MVVM.RunShellCommands;
 using Melville.MVVM.Wpf.DiParameterSources;
+using Melville.MVVM.Wpf.KeyboardFacade;
 using NodaTime;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
@@ -22,13 +24,15 @@ namespace Planner.WpfViewModels.TaskList
 
         private readonly ILocalRepository<PlannerTask> taskRepository;
         private readonly LocalDate date;
+        private readonly IKeyboardQuery keyboardQuery;
         public DailyTaskListViewModel(
             ILocalRepository<PlannerTask> taskRepository,
             Func<PlannerTask, PlannerTaskViewModel> viewModelFactory, 
-            LocalDate date)
+            IKeyboardQuery keyboardQuery, LocalDate date)
         {
             this.taskRepository = taskRepository;
             this.date = date;
+            this.keyboardQuery = keyboardQuery;
             SourceList = taskRepository.ItemsForDate(date);
             TaskViewModels = SetupViewModelCollection(viewModelFactory);
             DeferToName = CreateDayNames();
@@ -94,6 +98,15 @@ namespace Planner.WpfViewModels.TaskList
         private void DeferTaskToDate(PlannerTask task, LocalDate targetDate)
         {
             taskRepository.DeferToDate(task, targetDate);
+            TryCompleteAfterDefer(task);
+        }
+
+        private void TryCompleteAfterDefer(PlannerTask task)
+        {
+            if (keyboardQuery.Modifiers == ModifierKeys.Control)
+            {
+                task.Status = PlannerTaskStatus.Done;
+            }
         }
 
         public void DeferToDate(PlannerTaskViewModel item)

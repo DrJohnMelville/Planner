@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows.Input;
 using Melville.MVVM.RunShellCommands;
+using Melville.MVVM.Wpf.KeyboardFacade;
 using Melville.TestHelpers.InpcTesting;
 using Melville.TestHelpers.MockConstruction;
 using Moq;
@@ -15,7 +16,8 @@ namespace Planner.Wpf.Test.TaskList
 {
     public class DailyTaskListViewModelTest
     {
-        private readonly Mock<ILocalRepository<PlannerTask>> taskFactory = new Mock<ILocalRepository<PlannerTask>>();
+        private readonly Mock<IKeyboardQuery> keyboard = new();
+        private readonly Mock<ILocalRepository<PlannerTask>> taskFactory = new();
         private readonly DailyTaskListViewModel sut;
         private readonly PlannerTaskViewModel itemVM;
         private readonly LocalDate date = new LocalDate(1975, 07, 28);
@@ -33,7 +35,7 @@ namespace Planner.Wpf.Test.TaskList
             taskFactory.Setup(i => i.ItemsForDate(date)).Returns(
                 (Func<LocalDate, IListPendingCompletion<PlannerTask>>)GenerateDailyTaskList);
             sut = new DailyTaskListViewModel(taskFactory.Object, i=>new PlannerTaskViewModel(i),
-                date);
+                keyboard.Object, date);
             itemVM = sut.TaskViewModels.OfType<PlannerTaskViewModel>().First();
         }
         public IListPendingCompletion<PlannerTask> GenerateDailyTaskList(LocalDate date)
@@ -198,15 +200,23 @@ namespace Planner.Wpf.Test.TaskList
         }
 
         [Theory]
-        [InlineData(0)]
-        [InlineData(1)]
-        [InlineData(2)]
-        [InlineData(3)]
-        [InlineData(4)]
-        [InlineData(5)]
-        [InlineData(6)]
-        public void TestDefer(int deferIndex)
+        [InlineData(0, false, PlannerTaskStatus.Deferred)]
+        [InlineData(1, false, PlannerTaskStatus.Deferred)]
+        [InlineData(2, false, PlannerTaskStatus.Deferred)]
+        [InlineData(3, false, PlannerTaskStatus.Deferred)]
+        [InlineData(4, false, PlannerTaskStatus.Deferred)]
+        [InlineData(5, false, PlannerTaskStatus.Deferred)]
+        [InlineData(6, false, PlannerTaskStatus.Deferred)]
+        [InlineData(0, true, PlannerTaskStatus.Done)]
+        [InlineData(1, true, PlannerTaskStatus.Done)]
+        [InlineData(2, true, PlannerTaskStatus.Done)]
+        [InlineData(3, true, PlannerTaskStatus.Done)]
+        [InlineData(4, true, PlannerTaskStatus.Done)]
+        [InlineData(5, true, PlannerTaskStatus.Done)]
+        [InlineData(6, true, PlannerTaskStatus.Done)]
+        public void TestDefer(int deferIndex, bool ctrlDown, PlannerTaskStatus finalStatus)
         {
+            if (ctrlDown) keyboard.SetupGet(i => i.Modifiers).Returns(ModifierKeys.Control);
             var item = sut.TaskViewModels.OfType<PlannerTaskViewModel>().First();
             switch (deferIndex)
             {
@@ -218,16 +228,17 @@ namespace Planner.Wpf.Test.TaskList
                 case 5: sut.Defer5(item); break;
                 case 6: sut.Defer6(item); break;
             }
-
+            
             var targetDate = new LocalDate(1975, 07, 28).PlusDays(1 + deferIndex);
-            VerifyTaskDeferredToDate(targetDate, item.PlannerTask);
+            VerifyTaskDeferredToDate(targetDate, item.PlannerTask, finalStatus);
         }
 
-        private void VerifyTaskDeferredToDate(LocalDate targetDate, PlannerTask task)
+        private void VerifyTaskDeferredToDate(LocalDate targetDate, PlannerTask task,
+            PlannerTaskStatus finalStatus)
         {
             taskFactory.Verify(i => i.CreateItem(targetDate, 
                 It.IsAny<Action<PlannerTask>>()), Times.Once);
-            Assert.Equal(PlannerTaskStatus.Deferred, task.Status);
+            Assert.Equal(finalStatus, task.Status);
             Assert.Equal(targetDate.ToString("D", null), task.StatusDetail);
         }
 
@@ -247,7 +258,7 @@ namespace Planner.Wpf.Test.TaskList
             //pick a date
             po.SelectedDate = localDate;
             po.DoDeferral();
-            VerifyTaskDeferredToDate(localDate, item.PlannerTask);
+            VerifyTaskDeferredToDate(localDate, item.PlannerTask, PlannerTaskStatus.Done);
             Assert.False(item.PopupOpen);
         }
 
