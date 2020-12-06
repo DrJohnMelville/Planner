@@ -57,8 +57,8 @@ namespace Planner.Wpf.Test.TaskList
         {
             Assert.True(itemVM.ShowPriorityButton);
             using var _ = INPCCounter.VerifyInpcFired(itemVM, 
-                i=>i.ShowPriorityButton, i=>i.ShowBlankButton, 
-                i=>i.ShowPriorityButton, i=>i.ShowBlankButton);
+                i=>i.ShowPriorityButton, i=>i.ShowOrderButtons, 
+                i=>i.ShowPriorityButton, i=>i.ShowOrderButtons);
             switch (pickButton)
             {
                 case 0: sut.ButtonA(itemVM); break;

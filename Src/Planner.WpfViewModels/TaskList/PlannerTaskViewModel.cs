@@ -20,7 +20,7 @@ namespace Planner.WpfViewModels.TaskList
             
             ((IExternalNotifyPropertyChanged)this)
                 .DelegatePropertyChangeFrom(PlannerTask, nameof(PlannerTask.PriorityDisplay),
-                    nameof(ShowPriorityButton), nameof(ShowBlankButton));
+                    nameof(ShowPriorityButton), nameof(ShowOrderButtons));
             
             ((IExternalNotifyPropertyChanged)this).DelegatePropertyChangeFrom(PlannerTask,
                 nameof(PlannerTask.Status), nameof(StatusDisplayText), nameof(StatusDisplayFont));
@@ -30,8 +30,7 @@ namespace Planner.WpfViewModels.TaskList
         [AutoNotify] private IEnumerable<PriorityKey> menus = Array.Empty<PriorityKey>();
         
         public bool ShowPriorityButton => PlannerTask.Priority == ' ';
-        public bool ShowBlankButton => !ShowPriorityButton;
-
+        public bool ShowOrderButtons => !ShowPriorityButton && PlannerTask.Order == 0;
         public void MarkIncomplete() => PlannerTask.Status = PlannerTaskStatus.Incomplete;
         public void MarkDone() => PlannerTask.Status = PlannerTaskStatus.Done;
         public void MarkCanceled() => PlannerTask.Status = PlannerTaskStatus.Canceled;
