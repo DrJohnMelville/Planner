@@ -26,13 +26,13 @@ namespace Planner.Models.Test.Blobs
         }
 
         [Theory]
-        [InlineData("1975-07-28/7.28_1000", 0)]
-        [InlineData("1975-07-28/7.28_0", 0)]
-        [InlineData("1975-07-28/7.28_2", 0)]
-        [InlineData("1975-07-28/7.28_1", 3)]
-        [InlineData("1975-07-28/7.28.75_1", 3)]
-        [InlineData("1975-07-28/7.28.1975_1", 3)]
-        [InlineData("1975-07-28/7.29_1", 0)]
+        [InlineData("/Images/1975-07-28/7.28_1000", 0)]
+        [InlineData("/Images/1975-07-28/7.28_0", 0)]
+        [InlineData("/Images/1975-07-28/7.28_2", 0)]
+        [InlineData("/Images/1975-07-28/7.28_1", 3)]
+        [InlineData("/Images/1975-07-28/7.28.75_1", 3)]
+        [InlineData("/Images/1975-07-28/7.28.1975_1", 3)]
+        [InlineData("/Images/1975-07-28/7.29_1", 0)]
         public async Task NonExistantPropertyReturnsEmpty(string url, int len)
         {
             var dest = new MemoryStream();

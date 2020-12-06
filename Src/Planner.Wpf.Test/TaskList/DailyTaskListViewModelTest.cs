@@ -258,7 +258,7 @@ namespace Planner.Wpf.Test.TaskList
             //pick a date
             po.SelectedDate = localDate;
             po.DoDeferral();
-            VerifyTaskDeferredToDate(localDate, item.PlannerTask, PlannerTaskStatus.Done);
+            VerifyTaskDeferredToDate(localDate, item.PlannerTask, PlannerTaskStatus.Deferred);
             Assert.False(item.PopupOpen);
         }
 
