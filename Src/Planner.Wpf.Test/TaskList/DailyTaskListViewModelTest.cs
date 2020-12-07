@@ -57,8 +57,9 @@ namespace Planner.Wpf.Test.TaskList
         {
             Assert.True(itemVM.ShowPriorityButton);
             using var _ = INPCCounter.VerifyInpcFired(itemVM, 
-                i=>i.ShowPriorityButton, i=>i.ShowOrderButtons, i=>i.DigitMenu,
-                i=>i.ShowPriorityButton, i=>i.ShowOrderButtons);
+                i=>i.ShowPriorityButton, i=>i.ShowOrderButtons,
+                i=>i.Menus, i=>i.DigitMenu,
+                i=>i.ShowPriorityButton, i=>i.ShowOrderButtons, i=>i.Menus, i=>i.DigitMenu);
             switch (pickButton)
             {
                 case 0: sut.ButtonA(itemVM); break;
@@ -135,7 +136,6 @@ namespace Planner.Wpf.Test.TaskList
         {
             var model = sut.TaskViewModels.OfType<PlannerTaskViewModel>().First();
             Assert.Empty(model.Menus.OfType<object>());
-            sut.InitializePriorityMenu(model);
             Assert.Equal(5, model.Menus.OfType<object>().Count());
         }
 

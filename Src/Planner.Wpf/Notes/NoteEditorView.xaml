@@ -53,7 +53,7 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </Grid>
-            <TextBox AcceptsReturn="True"
+            <TextBox AcceptsReturn="True" TextWrapping="Wrap"
                      Text="{Binding Note.Text, UpdateSourceTrigger=PropertyChanged}"
                      pasters:TextBoxPasteEnhancement.MarkdownPaster="{DiBindings:DIBinding}"
                      pasters:TextBoxPasteEnhancement.PasterDate="{Binding Note.Date}" />
