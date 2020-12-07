@@ -135,7 +135,6 @@ namespace Planner.Wpf.Test.TaskList
         public void SetupPriorityMenu()
         {
             var model = sut.TaskViewModels.OfType<PlannerTaskViewModel>().First();
-            Assert.Empty(model.Menus.OfType<object>());
             Assert.Equal(5, model.Menus.OfType<object>().Count());
         }
 

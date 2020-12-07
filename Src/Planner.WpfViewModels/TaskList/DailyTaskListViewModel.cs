@@ -40,8 +40,9 @@ namespace Planner.WpfViewModels.TaskList
             TaskViewModels = SetupViewModelCollection(viewModelFactory);
             DeferToName = CreateDayNames();
             UpdiatePriortyMenuOnItemsListChange();
+            InitializePriorityMenu();
         }
-
+        
         private void UpdiatePriortyMenuOnItemsListChange()
         {
             if (SourceList is INotifyCollectionChanged nc)
