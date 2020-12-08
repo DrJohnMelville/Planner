@@ -15,6 +15,7 @@ namespace Planner.Models.Test.Blobs
         private readonly Mock<IDeletableBlobContentStore> store = new Mock<IDeletableBlobContentStore>();
         private readonly CompopsiteBlobRemoteRepository sut;
         private readonly Blob blob = new Blob() {Name = "Name", Key = Guid.NewGuid()};
+        private readonly DateTimeZone timeZone = DateTimeZone.Utc;
 
         public CompositeBlobRemoteRepositoryTest()
         {
@@ -52,8 +53,8 @@ namespace Planner.Models.Test.Blobs
         {
             var ret = Mock.Of<IAsyncEnumerable<Blob>>();
             var date = new LocalDate(1975, 7, 28);
-            repo.Setup(i => i.TasksForDate(date)).Returns(ret);
-            Assert.Equal(ret, sut.TasksForDate(date));
+            repo.Setup(i => i.TasksForDate(date, timeZone)).Returns(ret);
+            Assert.Equal(ret, sut.TasksForDate(date, timeZone));
         }
 
 

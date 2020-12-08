@@ -11,6 +11,7 @@ using Moq;
 using NodaTime;
 using Planner.Models.Blobs;
 using Planner.Models.Repositories;
+using Planner.Models.Time;
 using Planner.Web.Controllers;
 using Xunit;
 
@@ -18,12 +19,18 @@ namespace Planner.Web.Test.Controllers
 {
     public class BlobContentControllerTest
     {
+        private readonly Mock<IUsersClock> clock = new();
         private readonly Mock<IBlobContentStore> storage = new();
         private readonly Mock<IDatedRemoteRepository<Blob>> repo = new();
         private readonly BlobContentController sut = new BlobContentController();
 
+        public BlobContentControllerTest()
+        {
+            clock.Setup(i => i.CurrentUiTimeZone()).Returns(DateTimeZone.Utc);
+        }
+
         private BlobStreamExtractor CreateExtractor() =>
-            new(new LocalToRemoteRepositoryBridge<Blob>(repo.Object, Mock.Of<IWallClock>()), storage.Object);
+            new(new LocalToRemoteRepositoryBridge<Blob>(repo.Object, Mock.Of<IWallClock>(), clock.Object), storage.Object);
 
         [Fact]
         public async Task ReadBlob()
@@ -43,7 +50,7 @@ namespace Planner.Web.Test.Controllers
         public async Task ReadBlobByPosition()
         {
             var blob = new Blob() {Key = Guid.NewGuid(), MimeType = "image/png"};
-            repo.Setup(i => i.TasksForDate(new LocalDate(1975,7,1))).Returns(
+            repo.Setup(i => i.TasksForDate(new LocalDate(1975,7,1), DateTimeZone.Utc)).Returns(
                 new[] {blob}.ToAsyncEnumerable());
             var stream = new MemoryStream();
             storage.Setup(i => i.Read(blob)).ReturnsAsync(stream);

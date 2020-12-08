@@ -12,7 +12,7 @@ namespace Planner.Repository.SqLite
         {
         }
 
-        public IAsyncEnumerable<T> TasksForDate(LocalDate date)
+        public IAsyncEnumerable<T> TasksForDate(LocalDate date, DateTimeZone timeZone)
         {
             return SimpleQuery(i => i.Date == date);
         }

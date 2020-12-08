@@ -6,6 +6,7 @@ using Moq;
 using NodaTime;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
+using Planner.Models.Time;
 using Xunit;
 
 namespace Planner.Models.Test.Repositories
@@ -15,6 +16,7 @@ namespace Planner.Models.Test.Repositories
         private readonly Mock<IDatedRemoteRepository<PlannerTask>> repo = 
             new Mock<IDatedRemoteRepository<PlannerTask>>();
 
+        private readonly Mock<IUsersClock> usersClock = new();
         private readonly Mock<IWallClock> clock = new Mock<IWallClock>();
         private readonly LocalDate date = new LocalDate(1975,07,28);
 
@@ -22,7 +24,8 @@ namespace Planner.Models.Test.Repositories
 
         public PlannerTskLocalToRemoteRepositoryBridgeTest()
         {
-            sut = new LocalToRemoteRepositoryBridge<PlannerTask>(repo.Object, clock.Object);
+            usersClock.Setup(i => i.CurrentUiTimeZone()).Returns(DateTimeZone.Utc);
+            sut = new LocalToRemoteRepositoryBridge<PlannerTask>(repo.Object, clock.Object, usersClock.Object);
         }
         
         [Fact]
@@ -68,7 +71,7 @@ namespace Planner.Models.Test.Repositories
         public void ChangingALoadedTaskCausesAnUpdate()
         {
             var task = new PlannerTask(Guid.NewGuid());
-            repo.Setup(i => i.TasksForDate(date)).Returns(AsyncEnum(null, task));
+            repo.Setup(i => i.TasksForDate(date, DateTimeZone.Utc)).Returns(AsyncEnum(null, task));
             var list = sut.ItemsForDate(date);
             Assert.Single(list);
             list[0].Name = "Bar";
@@ -78,7 +81,7 @@ namespace Planner.Models.Test.Repositories
         public void RemovingTaskDeletesFromDatabase()
         {
             var task = new PlannerTask(Guid.NewGuid());
-            repo.Setup(i => i.TasksForDate(date)).Returns(AsyncEnum(null, task));
+            repo.Setup(i => i.TasksForDate(date, DateTimeZone.Utc)).Returns(AsyncEnum(null, task));
             var list = sut.ItemsForDate(date);
             Assert.Single(list);
             var item = list[0];
@@ -90,7 +93,7 @@ namespace Planner.Models.Test.Repositories
         {
             var tcs = new TaskCompletionSource<int>();
             var task = new PlannerTask(Guid.NewGuid());
-            repo.Setup(i => i.TasksForDate(date)).Returns(AsyncEnum(tcs.Task, task));
+            repo.Setup(i => i.TasksForDate(date, DateTimeZone.Utc)).Returns(AsyncEnum(tcs.Task, task));
             var list = sut.ItemsForDate(date);
             Assert.Empty(list);
             tcs.SetResult(1);

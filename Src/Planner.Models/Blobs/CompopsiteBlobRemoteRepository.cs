@@ -19,7 +19,8 @@ namespace Planner.Models.Blobs
 
         public Task Add(Blob task) => inner.Add(task);
         public Task Update(Blob task) => inner.Update(task);
-        public IAsyncEnumerable<Blob> TasksForDate(LocalDate date) => inner.TasksForDate(date);
+        public IAsyncEnumerable<Blob> TasksForDate(LocalDate date, DateTimeZone timeZone) => 
+            inner.TasksForDate(date, timeZone);
         public IAsyncEnumerable<Blob> ItemsFromKeys(IEnumerable<Guid> keys) => inner.ItemsFromKeys(keys);
 
         public Task Delete(Blob task)

@@ -65,10 +65,10 @@ namespace Planner.Repository.Test.Web
         [Fact]
         public async Task GetPlannerTasks()
         {
-            httpSource.Setup(i=>i.EndsWith("Task/1975-07-28"), HttpMethod.Get).
+            httpSource.Setup(i=>i.EndsWith($"Task/1975-07-28/{DateTimeZone.Utc.Id}"), HttpMethod.Get).
                 ReturnsJson("[{\"Date\":\"1975-07-28\",\"Name\":\"My Birthday\",\"Priority\":\" \",\"Order\":0,\"Status\":0,\"StatusDetail\":\"\"}," +
                             "{\"Date\":\"1975-07-28\",\"Name\":\"Second Task\",\"Priority\":\" \",\"Order\":0,\"Status\":0,\"StatusDetail\":\"\"}]");
-            var list = await sut.TasksForDate(date).ToListAsync();
+            var list = await sut.TasksForDate(date, DateTimeZone.Utc).ToListAsync();
             Assert.Equal(2, list.Count);
             Assert.Equal("My Birthday", list[0].Name);
             Assert.Equal("Second Task", list[1].Name);

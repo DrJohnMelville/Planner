@@ -24,13 +24,13 @@ namespace Planner.Web.Test.Controllers
         [Fact]
         public async Task GetItems()
         {
-            repo.Setup(i => i.TasksForDate(date)).Returns(new[]
+            repo.Setup(i => i.TasksForDate(date, DateTimeZone.Utc)).Returns(new[]
             {
                 new PlannerTask(Guid.Empty) {Name = "Foo"},
                 new PlannerTask(Guid.Empty) {Name = "Bar"},
             }.ToAsyncEnumerable());
 
-            var ret = await sut.TasksForDate(date).ToListAsync();
+            var ret = await sut.TasksForDate(date, DateTimeZone.Utc.Id).ToListAsync();
             Assert.Equal(2, ret.Count);
             Assert.Equal("Foo", ret[0].Name);
             Assert.Equal("Bar", ret[1].Name);

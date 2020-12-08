@@ -18,6 +18,7 @@ using Planner.WpfViewModels.PlannerPages;
 
 namespace Planner.WpfViewModels.Notes
 {
+    #warning refactor to rely on UsersClock for timeZome info for both note and blob creation times
     [AutoNotify]
     public partial class NoteEditorViewModel: IExternalNotifyPropertyChanged
     {

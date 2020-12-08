@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using NodaTime;
 using Planner.Models.Repositories;
 
@@ -29,9 +30,9 @@ namespace Planner.Repository.Web
             }
         }
 
-        public async IAsyncEnumerable<T> TasksForDate(LocalDate date)
+        public async IAsyncEnumerable<T> TasksForDate(LocalDate date, DateTimeZone zone)
         {
-            foreach (var task in await webService.Get<T[]>($"{prefix}/{date:yyyy-MM-dd}"))
+            foreach (var task in await webService.Get<T[]>($"{prefix}/{date:yyyy-MM-dd}/{HttpUtility.UrlEncode(zone.Id)}"))
             {
                 yield return task;
             }

@@ -8,6 +8,7 @@ using Melville.MVVM.CSharpHacks;
 using Melville.MVVM.Time;
 using NodaTime;
 using Planner.Models.Tasks;
+using Planner.Models.Time;
 
 namespace Planner.Models.Repositories
 {
@@ -15,12 +16,14 @@ namespace Planner.Models.Repositories
     {
         private readonly IDatedRemoteRepository<T> remote;
         private readonly IWallClock waiter;
+        private readonly IUsersClock usersClock;
 
         public LocalToRemoteRepositoryBridge(IDatedRemoteRepository<T> remote, 
-            IWallClock waiter)
+            IWallClock waiter, IUsersClock usersClock)
         {
             this.remote = remote;
             this.waiter = waiter;
+            this.usersClock = usersClock;
         }
 
         public T CreateItem(LocalDate date, Action<T> initialize)
@@ -46,7 +49,7 @@ namespace Planner.Models.Repositories
         }
 
         public IListPendingCompletion<T> ItemsForDate(LocalDate date) => 
-            LoadItems(remote.TasksForDate(date));
+            LoadItems(remote.TasksForDate(date, usersClock.CurrentUiTimeZone()));
         public IListPendingCompletion<T> ItemsByKeys(IEnumerable<Guid> keys) => 
             LoadItems(remote.ItemsFromKeys(keys));
 

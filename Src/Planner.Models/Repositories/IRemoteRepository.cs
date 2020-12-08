@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NodaTime;
+using NodaTime.TimeZones;
 
 namespace Planner.Models.Repositories
 {
@@ -17,7 +18,7 @@ namespace Planner.Models.Repositories
     }
     public interface IDatedRemoteRepository<T>: IRemoteRepository<T> where T: PlannerItemWithDate
     {
-        IAsyncEnumerable<T> TasksForDate(LocalDate date);
+        IAsyncEnumerable<T> TasksForDate(LocalDate date, DateTimeZone timeZone);
     }
 
     public static class RemoteRepositoryOperations

@@ -25,7 +25,7 @@ namespace Planner.Repository.Test.SqLite
         {
             var pt = new PlannerTask(Guid.NewGuid()) {Name = "Foo", Date = date1};
             await sut.Add(pt);
-            var list = await sut.TasksForDate(date1).ToListAsync();
+            var list = await sut.TasksForDate(date1, DateTimeZone.Utc).ToListAsync();
             Assert.Single(list);
             Assert.Equal("Foo", list[0].Name);
         }
@@ -36,7 +36,7 @@ namespace Planner.Repository.Test.SqLite
             await sut.Add(pt);
             pt.Name = "Bar";
             await sut.Update(pt);
-            var list = await sut.TasksForDate(date1).ToListAsync();
+            var list = await sut.TasksForDate(date1, DateTimeZone.Utc).ToListAsync();
             Assert.Single(list);
             Assert.Equal("Bar", list[0].Name);
         }
@@ -45,7 +45,7 @@ namespace Planner.Repository.Test.SqLite
         {
             var pt = new PlannerTask(Guid.NewGuid()) {Name = "Foo", Date = date1};
             await sut.Add(pt);
-            var list = await sut.TasksForDate(date2).ToListAsync();
+            var list = await sut.TasksForDate(date2, DateTimeZone.Utc).ToListAsync();
             Assert.Empty(list);
         }
         [Fact]
@@ -53,10 +53,10 @@ namespace Planner.Repository.Test.SqLite
         {
             var pt = new PlannerTask(Guid.NewGuid()) {Name = "Foo", Date = date1};
             await sut.Add(pt);
-            var list = await sut.TasksForDate(date1).ToListAsync();
+            var list = await sut.TasksForDate(date1, DateTimeZone.Utc).ToListAsync();
             Assert.Single(list);
             await sut.Delete(pt);
-            Assert.Empty(await sut.TasksForDate(date1).ToListAsync());
+            Assert.Empty(await sut.TasksForDate(date1,DateTimeZone.Utc).ToListAsync());
         }
     }
     

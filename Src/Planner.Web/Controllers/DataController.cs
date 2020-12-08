@@ -19,10 +19,12 @@ namespace Planner.Web.Controllers
             this.creator = creator;
         }
 
-        [Route("{date}")]
+        [Route("{date}/{timeZone}")]
         [HttpGet]
-        public IAsyncEnumerable<TDatum> TasksForDate(LocalDate date) =>
-            source.TasksForDate(date);
+        public IAsyncEnumerable<TDatum> TasksForDate(LocalDate date, string timeZone) =>
+            source.TasksForDate(date,
+                DateTimeZoneProviders.Tzdb.GetZoneOrNull(timeZone)??
+                DateTimeZoneProviders.Tzdb.GetSystemDefault());
 
         [Route("Query")]
         [HttpGet]
