@@ -15,6 +15,10 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignData {x:Type notes:NoteEditorViewModel}}"
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <notes:TimeDisplayConverter x:Key="TimeDisplay"
+                                    UsersClock="{DiBindings:DIBinding}"/>
+    </UserControl.Resources>
     <Grid easyGrids:GridOperations.ColsAndRows="*,*/auto,*,auto" Margin="10">
         <TextBox FontSize="18" FontWeight="Bold" Text="{Binding Note.Title, UpdateSourceTrigger=PropertyChanged}" />
         <DockPanel Grid.Row="1">
@@ -44,7 +48,7 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto" SharedSizeGroup="Button"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="{Binding TimeCreated, Converter={x:Static notes:NoteEditorViewModel.DisplayInstant}}"/>
+                                <TextBlock Text="{Binding TimeCreated, Converter={StaticResource TimeDisplay}}"/>
                                 <TextBlock  Grid.Column="1" Text="{Binding Name}" Margin="5 0"/>
                                 <Button Background="Red" Foreground="White" Click="{eventBindings:EventBinding DeleteBlob}"
                                          Grid.Column="2">X</Button>
@@ -58,7 +62,9 @@
                      pasters:TextBoxPasteEnhancement.MarkdownPaster="{DiBindings:DIBinding}"
                      pasters:TextBoxPasteEnhancement.PasterDate="{Binding Note.Date}" />
         </DockPanel>
-        <TextBlock Grid.Row="2" Text="{Binding DisplayCreationDate}"></TextBlock>
+        <TextBlock Grid.Row="2" Text="{Binding Note.TimeCreated,
+          Converter={StaticResource TimeDisplay},
+          ConverterParameter=Note Created: {0:f}}"></TextBlock>
         <wpf:ChromiumWebBrowser Address="{Binding NoteUrl, Mode=OneWay}"
                                 Grid.Column="1" Grid.RowSpan="2" IsTabStop="False">
             <wpf:ChromiumWebBrowser.RequestHandler>

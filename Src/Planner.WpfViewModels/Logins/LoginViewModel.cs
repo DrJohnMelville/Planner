@@ -37,7 +37,7 @@ namespace Planner.WpfViewModels.Logins
 
         public void FakeDb(
             [FromServices] IRegisterRepositorySource registry, 
-            [FromServices] IClock clock)
+            [FromServices] IUsersClock clock)
         {
           registry.UseLocalTestSource();
           navigator.ToDate(clock.CurrentDate());
@@ -60,7 +60,7 @@ namespace Planner.WpfViewModels.Logins
             IWaitingService wait,
             TargetSite currentSite, 
             [FromServices]IRegisterRepositorySource registry,
-            [FromServices] IClock clock)
+            [FromServices] IUsersClock clock)
         {
             using (wait.WaitBlock("Logging In"))
             {

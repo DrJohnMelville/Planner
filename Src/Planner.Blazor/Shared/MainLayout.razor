@@ -5,7 +5,7 @@
 @using Planner.Models.Time
 @inherits LayoutComponentBase
 @inject  IEventBroadcast<ClearCachesEventArgs> clearCaches;
-@inject IClock clock;
+@inject IUsersClock clock;
 @inject IAppNavigation AppNavigation
 
 <Modal/>

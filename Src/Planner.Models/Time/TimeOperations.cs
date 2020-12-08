@@ -5,11 +5,6 @@ namespace Planner.Models.Time
 {
     public static class TimeOperations
     {
-        [Obsolete("Use UserClock")]
-        public static LocalDate CurrentDate(this IClock clock) => clock.GetCurrentInstant()
-                .InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault())
-                .LocalDateTime.Date;
-
         public static bool TryParseLocalDate(string s, out LocalDate ret)
         {
             if (DateTime.TryParse(s, out var dt))

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Globalization;
+using System.Runtime.Intrinsics.Arm;
 using System.Windows;
 using System.Windows.Data;
 using Melville.INPC;
@@ -14,6 +16,7 @@ using Planner.Models.Blobs;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
+using Planner.Models.Time;
 using Planner.WpfViewModels.PlannerPages;
 
 namespace Planner.WpfViewModels.Notes
@@ -66,10 +69,6 @@ namespace Planner.WpfViewModels.Notes
             Note.Text = text;
         };
 
-        public string DisplayCreationDate => 
-            $@"Note Created: {Note.TimeCreated
-                .InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).LocalDateTime:f}";
-
         public string NoteUrl => urlGen.ShowNoteUrl(Note);
 
 
@@ -97,13 +96,24 @@ namespace Planner.WpfViewModels.Notes
 
         public Visibility BlobDisplayVisibility =>
             Blobs.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
-        public static readonly IValueConverter DisplayInstant = LambdaConverter.Create((Instant i) =>
-            i.InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).ToString("M/d/yyyy h:mm tt", null));
 
         public void DeleteBlob(Blob blob, [FromServices]IMessageBoxWrapper msgboxObject)
         {
             if (!UserConfirmsIntentToDelete(msgboxObject, blob.Name)) return;
             Blobs.Remove(blob);
         }
+    }
+
+    public class TimeDisplayConverter : IValueConverter
+    {
+        public IUsersClock? UsersClock { get; set; }
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+            value is Instant instant && UsersClock != null
+                ? string.Format(parameter as string??"{0:M/dd/yyyy h:mm tt}",
+                    instant.InZone(UsersClock.CurrentUiTimeZone()).LocalDateTime)
+                : "";
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+            "";
     }
 }

@@ -79,7 +79,7 @@ namespace Planner.WpfViewModels.PlannerPages
             signalObject.Fire(this, new ClearCachesEventArgs());
         }
 
-        public void GoToToday([FromServices] IClock clock)
+        public void GoToToday([FromServices] IUsersClock clock)
         {
             navigator.ToDate(clock.CurrentDate());
         }

@@ -43,13 +43,7 @@ namespace Planner.Wpf.Test.Notes
             sut = new NoteEditorViewModel(new NoteEditRequestEventArgs(notes, note),
                 new NoteUrlGenerator(noteServer.Object), navWin.Object, i=>null, blobs.Object);
         }
-
-        [Fact]
-        public void CreationDateDisplay()
-        {
-            Assert.Equal("Note Created: Monday, July 28, 1975 12:00 AM", sut.DisplayCreationDate);
-        }
-
+        
         [Fact]
         public void NoteUrlIsDifferentEachTimeYouCallIt()
         {

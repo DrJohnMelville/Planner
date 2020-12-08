@@ -14,6 +14,7 @@ using Planner.Models.Markdown;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
+using Planner.Models.Time;
 using Planner.Repository.Web;
 using Tewr.Blazor.FileReader;
 
@@ -62,6 +63,7 @@ namespace Planner.Blazor.CompositionRoot
         {
             services.AddSingleton<IClock>(SystemClock.Instance);
             services.AddSingleton<IWallClock, WallClock>();
+            services.AddSingleton<IUsersClock, UsersClock>();
         }
 
         private void SetupJsonSerialization()

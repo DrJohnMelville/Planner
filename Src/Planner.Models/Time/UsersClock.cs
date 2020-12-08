@@ -6,7 +6,7 @@ namespace Planner.Models.Time
     public interface IUsersClock
     {
         DateTimeZone CurrentUiTimeZone();
-        LocalDate CurentDate();
+        LocalDate CurrentDate();
     }
     public class UsersClock: IUsersClock
     {
@@ -20,7 +20,7 @@ namespace Planner.Models.Time
         public DateTimeZone CurrentUiTimeZone() =>
             DateTimeZoneProviders.Tzdb.GetSystemDefault();
 
-        public LocalDate CurentDate() => 
+        public LocalDate CurrentDate() => 
             clock.GetCurrentInstant().InZone(CurrentUiTimeZone()).Date;
     }
 }

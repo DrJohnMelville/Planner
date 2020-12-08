@@ -9,6 +9,7 @@ using Planner.Models.HtmlGeneration;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
+using Planner.Models.Time;
 using Planner.WpfViewModels.PlannerPages;
 using Planner.WpfViewModels.TaskList;
 using Xunit;
@@ -177,11 +178,9 @@ namespace Planner.Wpf.Test.PlannerPages
         [Fact]
         public void GoToTodayTest()
         {
-            var clock = new Mock<IClock>();
+            var clock = new Mock<IUsersClock>();
             var dateTimeZone = DateTimeZoneProviders.Tzdb.GetSystemDefault();
-            clock.Setup(i => i.GetCurrentInstant()).Returns(
-                new LocalDateTime(1974, 08, 18, 1, 2, 1)
-                    .InZoneLeniently(DateTimeZoneProviders.Tzdb.GetSystemDefault()).ToInstant());
+            clock.Setup(i => i.CurrentDate()).Returns(new LocalDate(1974,08,18));
             sut.GoToToday(clock.Object);
             navigation.Verify(i=>i.ToDate(new LocalDate(1974,08,18)), Times.Once);
         }
