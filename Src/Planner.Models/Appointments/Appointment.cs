@@ -17,7 +17,7 @@ namespace Planner.Models.Appointments
 
     public partial class AppointmentDetails
     {
-        [AutoNotify] private string appointmentDetailsId = "";
+        [AutoNotify] private Guid appointmentDetailsId;
         [AutoNotify] private string title = "";
         [AutoNotify] private string location = "";
         [AutoNotify] private string bodyText = "";

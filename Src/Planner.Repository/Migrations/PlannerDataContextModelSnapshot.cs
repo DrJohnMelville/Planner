@@ -14,7 +14,51 @@ namespace Planner.Repository.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.9");
+                .HasAnnotation("ProductVersion", "5.0.0");
+
+            modelBuilder.Entity("Planner.Models.Appointments.Appointment", b =>
+                {
+                    b.Property<Guid>("AppointmentDetailsId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("Start")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("End")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("AppointmentDetailsId", "Start");
+
+                    b.ToTable("Appointments");
+                });
+
+            modelBuilder.Entity("Planner.Models.Appointments.AppointmentDetails", b =>
+                {
+                    b.Property<Guid>("AppointmentDetailsId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("BodyText")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UniqueOutlookId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("AppointmentDetailsId");
+
+                    b.HasIndex("UniqueOutlookId");
+
+                    b.ToTable("AppointmentDetails");
+                });
 
             modelBuilder.Entity("Planner.Models.Blobs.Blob", b =>
                 {
@@ -98,6 +142,22 @@ namespace Planner.Repository.Migrations
                     b.HasIndex("Date");
 
                     b.ToTable("PlannerTasks");
+                });
+
+            modelBuilder.Entity("Planner.Models.Appointments.Appointment", b =>
+                {
+                    b.HasOne("Planner.Models.Appointments.AppointmentDetails", "AppointmentDetails")
+                        .WithMany("Appointments")
+                        .HasForeignKey("AppointmentDetailsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppointmentDetails");
+                });
+
+            modelBuilder.Entity("Planner.Models.Appointments.AppointmentDetails", b =>
+                {
+                    b.Navigation("Appointments");
                 });
 #pragma warning restore 612, 618
         }

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using NodaTime;
 using NodaTime.Extensions;
+using Planner.Models.Appointments;
 using Planner.Models.Notes;
 using Planner.Models.Tasks;
 
@@ -49,7 +50,23 @@ namespace Planner.Repository.SqLite
                 Title = "Some Text",
                 Text = "Try out some **markdown**."
             });
+
+            var now = SystemClock.Instance.GetCurrentInstant();
+            var appointmentKey = Guid.NewGuid();
+            context.AppointmentDetails.Add(new AppointmentDetails
+            {
+                AppointmentDetailsId = appointmentKey,
+                BodyText = "Body Text For Appointment",
+                Location = "Location for Appointment",
+                Title = "Appointment Title",
+                Appointments = new Appointment[]
+                {
+                    new() {AppointmentDetailsId = appointmentKey, Start = now, End = now.Plus(Duration.FromHours(1))}
+                }
+            });
+            
             context.SaveChanges();
+            
         }
 
         private static LocalDate Today() => SystemClock.Instance.InTzdbSystemDefaultZone().GetCurrentDate();
