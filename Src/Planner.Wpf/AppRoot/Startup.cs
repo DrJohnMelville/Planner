@@ -90,7 +90,7 @@ namespace Planner.Wpf.AppRoot
             service.Bind<ILinkRedirect>().To<EditNotification>();
             service.Bind<ILinkRedirect>().To<PlannerNavigateNotification>();
             service.Bind<ILinkRedirect>().To<OpenLocalFile>(); 
-            service.Bind<ILinkRedirect>().To<CompositeLinkRedirect>().BlockSelfInjection();
+            service.Bind<ILinkRedirect>().To<CompositeLinkRedirect>().AsScoped().BlockSelfInjection();
         }
 
         private static void RegisterReloadEvents(IBindableIocService service)

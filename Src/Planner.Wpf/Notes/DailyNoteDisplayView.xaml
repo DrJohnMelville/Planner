@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="Planner.Wpf.Notes.DailyNoteDisplayView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Planner.Wpf.Notes"
+             xmlns:easyGrids="clr-namespace:Melville.WpfControls.EasyGrids;assembly=Melville.WpfControls"
+             xmlns:plannerPages="clr-namespace:Planner.Wpf.PlannerPages"
+             xmlns:wpfHacks="clr-namespace:Melville.MVVM.Wpf.WpfHacks;assembly=Melville.MVVM.Wpf"
+             xmlns:eventBindings="clr-namespace:Melville.MVVM.Wpf.EventBindings;assembly=Melville.MVVM.Wpf"
+             xmlns:pasters="clr-namespace:Planner.WpfViewModels.Notes.Pasters;assembly=Planner.WpfViewModels"
+             xmlns:diParameterSources="clr-namespace:Melville.MVVM.Wpf.DiParameterSources;assembly=Melville.MVVM.Wpf"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+        <Grid  easyGrids:GridOperations.ColsAndRows="*/*,auto,auto">
+                <plannerPages:NoteBrowser Address="{Binding NotesUrl, Mode=OneWay}" x:Name="Browser"
+                        BoundRequestHandler="{Binding LinkRedirect, 
+                        Converter={x:Static local:WebNavigationRouter.FromLinkRedirect}}"/>
+                <Grid Grid.Row="1" easyGrids:GridOperations.ColsAndRows="*,auto/auto">
+                    <TextBox Text="{Binding NoteCreator.Title, UpdateSourceTrigger=PropertyChanged}"
+                             TextWrapping="Wrap"/>
+                    <TextBlock Foreground="DarkGray" HorizontalAlignment="Center" 
+                               IsHitTestVisible="False" 
+                               wpfHacks:VisibilityHack.CollapseUnlessWhitespace="{Binding NoteCreator.Title}">
+                        New Journal Item Title
+                    </TextBlock>
+                    <Button Grid.Column="1" 
+                            wpfHacks:VisibilityHack.CollapseUnlessWhitespace="{Binding NoteCreator.Title}"
+                            Click="{eventBindings:EventBinding SearchJournal}"
+                            Margin="5 0">Search Journal</Button>
+                </Grid>
+                <TextBox MinHeight="50" Grid.Row="2" AcceptsReturn="True"
+                         Text="{Binding NoteCreator.Text}"
+                         pasters:TextBoxPasteEnhancement.MarkdownPaster="{diParameterSources:DIBinding}"
+                         pasters:TextBoxPasteEnhancement.PasterDate="{Binding CurrentDate}"
+                         wpfHacks:VisibilityHack.CollapseIfWhitespace="{Binding NoteCreator.Title}"
+                         LostFocus="{eventBindings:EventBinding CreateNoteOnDay}"
+                         TextWrapping="Wrap"/>
+                <Grid Background="#77000000" Grid.Row="0" Grid.Column="0"
+                      Margin="30" 
+                      wpfHacks:VisibilityHack.CollapseUnless="{Binding IsNavigating, ElementName=Browser}">
+                    <TextBlock Foreground="White" FontSize="18" HorizontalAlignment="Center"
+                               VerticalAlignment="Center">Loading ...</TextBlock>
+                </Grid>
+                
+            </Grid>
+</UserControl>

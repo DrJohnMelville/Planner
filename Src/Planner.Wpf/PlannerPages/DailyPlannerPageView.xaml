@@ -42,40 +42,10 @@
                 Click="{eventBindings:EventBinding ReloadCaches}" Content="P"/>
         <Button Click="{eventBindings:EventBinding  ForwardOneDay}"
                 Style="{StaticResource BigButton}">4</Button>
+     
         <easyGrids:EasyGrid Grid.ColumnSpan="5" easyGrids:GridOperations.ColsAndRows="*,*/*,*">
             <viewFrames:ViewFrame Content="{Binding TodayTaskList}" Margin="0 0 5 5"/>
-            <Grid Grid.RowSpan="2" easyGrids:GridOperations.ColsAndRows="*/*,auto,auto">
-                <plannerPages1:NoteBrowser Address="{Binding NotesUrl, Mode=OneWay}" x:Name="Browser"
-                        BoundRequestHandler="{Binding LinkRedirect, 
-                        Converter={x:Static notes:WebNavigationRouter.FromLinkRedirect}}"/>
-                <Grid Grid.Row="1" easyGrids:GridOperations.ColsAndRows="*,auto/auto">
-                    <TextBox Text="{Binding NoteCreator.Title, UpdateSourceTrigger=PropertyChanged}"
-                             TextWrapping="Wrap"/>
-                    <TextBlock Foreground="DarkGray" HorizontalAlignment="Center" 
-                               IsHitTestVisible="False" 
-                               wpfHacks:VisibilityHack.CollapseUnlessWhitespace="{Binding NoteCreator.Title}">
-                        New Journal Item Title
-                    </TextBlock>
-                    <Button Grid.Column="1" 
-                            wpfHacks:VisibilityHack.CollapseUnlessWhitespace="{Binding NoteCreator.Title}"
-                            Click="{eventBindings:EventBinding SearchJournal}"
-                            Margin="5 0">Search Journal</Button>
-                </Grid>
-                <TextBox MinHeight="50" Grid.Row="2" AcceptsReturn="True"
-                         Text="{Binding NoteCreator.Text}"
-                         pasters:TextBoxPasteEnhancement.MarkdownPaster="{diParameterSources:DIBinding}"
-                         pasters:TextBoxPasteEnhancement.PasterDate="{Binding CurrentDate}"
-                         wpfHacks:VisibilityHack.CollapseIfWhitespace="{Binding NoteCreator.Title}"
-                         LostFocus="{eventBindings:EventBinding CreateNoteOnDay}"
-                         TextWrapping="Wrap"/>
-                <Grid Background="#77000000" Grid.Row="0" Grid.Column="0"
-                      Margin="30" 
-                      wpfHacks:VisibilityHack.CollapseUnless="{Binding IsNavigating, ElementName=Browser}">
-                    <TextBlock Foreground="White" FontSize="18" HorizontalAlignment="Center"
-                               VerticalAlignment="Center">Loading ...</TextBlock>
-                </Grid>
-                
-            </Grid>
+            <viewFrames:ViewFrame Grid.RowSpan="2" Content ="{Binding JournalPage}"></viewFrames:ViewFrame>
             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 5 0">Appointments</TextBlock>
             <GridSplitter easyGrids:EasyGrid.ForceColumn="0" easyGrids:EasyGrid.ForceRow="0" Grid.RowSpan="2" 
                           HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="5"></GridSplitter>

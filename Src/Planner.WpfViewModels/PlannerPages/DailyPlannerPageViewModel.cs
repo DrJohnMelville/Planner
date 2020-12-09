@@ -6,6 +6,7 @@ using Planner.Models.HtmlGeneration;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
 using Planner.Models.Time;
+using Planner.WpfViewModels.Notes;
 using Planner.WpfViewModels.TaskList;
 
 namespace Planner.WpfViewModels.PlannerPages
@@ -14,56 +15,37 @@ namespace Planner.WpfViewModels.PlannerPages
     {
         bool? DoRedirect(string url);
     }
-    
+
     public partial class DailyPlannerPageViewModel:PageWithEditNotifications
     {
         private readonly IPlannerNavigator navigator;
-        private readonly INoteUrlGenerator urlGen;
-        public NoteCreator NoteCreator { get; }
         public DailyTaskListViewModel TodayTaskList { get; }
+        public DailyNoteDisplayViewModel JournalPage { get; }
+        [AutoNotify] private bool popupOpen;
+        
         private readonly LocalDate currentDate;
-
-
         public LocalDate CurrentDate
         {
             get => currentDate;
             set => navigator.ToDate(value);
         }
 
-        [AutoNotify] private bool popupOpen;
-        public string NotesUrl => urlGen.DailyUrl(CurrentDate);
-
-            public DailyPlannerPageViewModel(
+        public DailyPlannerPageViewModel(
             LocalDate currentDate,
-            Func<LocalDate, DailyTaskListViewModel> taskListFactory, 
-            INotesServer noteServer, // we don't use this, we just need it to exist.  Asking for it forces it to exist.
-            NoteCreator noteCreator, 
+            Func<LocalDate, DailyTaskListViewModel> taskListFactory,
+            Func<LocalDate, DailyNoteDisplayViewModel> noteDisplayFactory,
             IPlannerNavigator navigator, 
-            INoteUrlGenerator urlGen, 
             IEventBroadcast<NoteEditRequestEventArgs> noteEditRequest, 
             ILinkRedirect redirect): base(noteEditRequest, redirect)
         {
-            
             this.navigator = navigator;
-            NoteCreator = noteCreator;
-            this.urlGen = urlGen;
             this.currentDate = currentDate; 
             TodayTaskList = taskListFactory(currentDate);
+            JournalPage = noteDisplayFactory(currentDate);
         }
 
         public void ForwardOneDay() => navigator.ToDate(CurrentDate.PlusDays(1));
         public void BackOneDay() => navigator.ToDate(CurrentDate.PlusDays(-1));
-
-        public void CreateNoteOnDay()
-        {
-            NoteCreator.Create(CurrentDate);
-            ReloadNotesDisplay();
-        }
-        //The notes url includes a nonce so we can force updates when the data changes.
-        // all we have to do is tell wpf that the url changed and it will read a new
-        // value and refresh the webbrowser.
-        private void ReloadNotesDisplay() => 
-            ((IExternalNotifyPropertyChanged) this).OnPropertyChanged(nameof(NotesUrl));
 
         protected override void DoEditNoteRequest(object? sender, NoteEditRequestEventArgs e) =>
             navigator.ToEditNote(e);
@@ -74,16 +56,10 @@ namespace Planner.WpfViewModels.PlannerPages
             navigator.NavigateToDate(segment.Match.Groups, CurrentDate);
         }
 
-        public void ReloadCaches([FromServices]IEventBroadcast<ClearCachesEventArgs> signalObject)
-        {
+        public void ReloadCaches([FromServices]IEventBroadcast<ClearCachesEventArgs> signalObject) => 
             signalObject.Fire(this, new ClearCachesEventArgs());
-        }
 
-        public void GoToToday([FromServices] IUsersClock clock)
-        {
-            navigator.ToDate(clock.CurrentDate());
-        }
-
+        public void GoToToday([FromServices] IUsersClock clock) => navigator.ToDate(clock.CurrentDate());
         public void SearchJournal() => navigator.ToNoteSearchPage();
     }
 

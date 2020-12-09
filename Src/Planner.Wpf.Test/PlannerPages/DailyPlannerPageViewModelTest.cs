@@ -10,6 +10,7 @@ using Planner.Models.Notes;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
 using Planner.Models.Time;
+using Planner.WpfViewModels.Notes;
 using Planner.WpfViewModels.PlannerPages;
 using Planner.WpfViewModels.TaskList;
 using Xunit;
@@ -18,13 +19,9 @@ namespace Planner.Wpf.Test.PlannerPages
 {
     public class DailyPlannerPageViewModelTest
     {
-        private readonly Mock<IClock> clock = new Mock<IClock>();
-        private readonly Mock<IPlannerNavigator> navigation = new Mock<IPlannerNavigator>();
-        private readonly Mock<INotesServer> notes = new Mock<INotesServer>();
-        private readonly Mock<ILocalRepository<Note>> noteRepo= new Mock<ILocalRepository<Note>>();
-        private readonly Mock<ILocalRepository<PlannerTask>> repo = new Mock<ILocalRepository<PlannerTask>>();
-        private readonly Mock<INoteUrlGenerator> urlGen = new Mock<INoteUrlGenerator>();
-        private readonly EventBroadcast<NoteEditRequestEventArgs> requestEdit = new EventBroadcast<NoteEditRequestEventArgs>();
+        private readonly Mock<IPlannerNavigator> navigation = new();
+        private readonly Mock<ILocalRepository<PlannerTask>> repo = new();
+        private readonly EventBroadcast<NoteEditRequestEventArgs> requestEdit = new();
         private readonly DailyPlannerPageViewModel sut;
         
 
@@ -35,13 +32,13 @@ namespace Planner.Wpf.Test.PlannerPages
             Func<LocalDate, DailyTaskListViewModel> taskListFactory = 
                 d => new DailyTaskListViewModel(repo.Object, i=> new PlannerTaskViewModel(i),
                     Mock.Of<IKeyboardQuery>(), d);
-            var noteCreator = new NoteCreator(noteRepo.Object, clock.Object);
+            Func<LocalDate, DailyNoteDisplayViewModel> notesCreator = d => 
+                new DailyNoteDisplayViewModel(null, d, null, null);
+            
             sut = new DailyPlannerPageViewModel(new LocalDate(1975,07,28), 
-                taskListFactory,
-                     notes.Object, 
-                         noteCreator,
+                taskListFactory, notesCreator,
                         navigation.Object, 
-                urlGen.Object, requestEdit,
+                requestEdit,
                 Mock.Of<ILinkRedirect>()
                 );
         }
@@ -74,56 +71,10 @@ namespace Planner.Wpf.Test.PlannerPages
             navigation.Verify(i=>i.ToDate(date));
         }
 
-        [Fact]
-        public void NotesUrl()
-        {
-            urlGen.Setup(i => i.DailyUrl(new LocalDate(1975, 07, 28))).Returns("Url1");
-            urlGen.Setup(i => i.DailyUrl(new LocalDate(1975, 07, 29))).Returns("Url2");
-            sut.CurrentDate = new LocalDate(1975,07,28);
-            Assert.Equal("Url1", sut.NotesUrl);
-        }
 
-        [Fact]
-        public void CreateNewNote()
-        {
-            clock.Setup(i => i.GetCurrentInstant()).Returns(Instant.MaxValue);
-            var note = new Note();
-            noteRepo.Setup(i => i.CreateItem(new LocalDate(1975,07,28),
-                It.IsAny<Action<Note>>())).Returns(
-                (LocalDate date, Action<Note> action) =>
-                {
-                    action(note);
-                    return note;
-                });
-            sut.CurrentDate = new LocalDate(1975,07,28);
-            sut.NoteCreator.Title = "Title";
-            sut.NoteCreator.Text = "Text";
 
-            sut.CreateNoteOnDay();
 
-            Assert.Equal("Title", note.Title);
-            Assert.Equal("Text", note.Text);
-            Assert.Equal(Instant.MaxValue, note.TimeCreated);
 
-            Assert.Equal("", sut.NoteCreator.Title);
-            Assert.Equal("", sut.NoteCreator.Text);
-            
-        }
-
-        [Theory]
-        [InlineData("","")]
-        [InlineData("  ","   ")]
-        [InlineData("","  ")]
-        [InlineData("  ","")]
-        [InlineData("","klhfs")]
-        [InlineData("dwf","")]
-        public void NoTextMeansNoNoteCreated(string title, string text)
-        {
-            sut.NoteCreator.Title = title;
-            sut.NoteCreator.Text = text;
-            sut.CreateNoteOnDay();
-            noteRepo.VerifyNoOtherCalls();
-        }
 
         [Theory]
         [InlineData(false, false, 0)]
