@@ -9,10 +9,10 @@ namespace Planner.Models.Repositories
 {
     public class ClearCachesEventArgs: EventArgs{}
     
-    public interface ICachedRepositorySource<T> : ILocalRepository<T> where T : PlannerItemWithDate
+    public interface ICachedRepositorySource<T> : ILocalRepository<T> where T : class
     {
     }
-
+    
     public class CachedRepository<T> : ILocalRepository<T> where T : PlannerItemWithDate
     {
         private readonly Dictionary<LocalDate, WeakReference<IListPendingCompletion<T>>> listCache =

@@ -5,11 +5,13 @@ using Melville.MVVM.Wpf.KeyboardFacade;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Moq;
 using NodaTime;
+using Planner.Models.Appointments;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
 using Planner.Models.Time;
+using Planner.WpfViewModels.Appointments;
 using Planner.WpfViewModels.Notes;
 using Planner.WpfViewModels.PlannerPages;
 using Planner.WpfViewModels.TaskList;
@@ -37,10 +39,8 @@ namespace Planner.Wpf.Test.PlannerPages
             
             sut = new DailyPlannerPageViewModel(new LocalDate(1975,07,28), 
                 taskListFactory, notesCreator,
-                        navigation.Object, 
-                requestEdit,
-                Mock.Of<ILinkRedirect>()
-                );
+                d=>new DailyAppointmentsViewModel(d, Mock.Of<ILocalRepository<Appointment>>()),
+                        navigation.Object, requestEdit, Mock.Of<ILinkRedirect>());
         }
 
         [Fact]

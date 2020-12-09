@@ -2,6 +2,7 @@
 using System.Net.Http;
 using Melville.IOC.IocContainers;
 using Melville.MVVM.FileSystem;
+using Planner.Models.Appointments;
 using Planner.Models.Blobs;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
@@ -43,6 +44,7 @@ namespace Planner.Wpf.AppRoot
             container.Bind<IDatedRemoteRepository<Blob>>().To <SqlRemoteRepositoryWithDate<Blob>>();
             container.Bind<IDatedRemoteRepository<Blob>>().To <CompopsiteBlobRemoteRepository>()
                 .BlockSelfInjection();
+            container.Bind<IDatedRemoteRepository<Appointment>>().To<AppointmentRemoteRepository>();
             container.BindGeneric(typeof(IDatedRemoteRepository<>), typeof(SqlRemoteRepositoryWithDate<>));
             container.Bind<IDirectory>().ToConstant(new MemoryDirectory("c:\\sss")).WhenConstructingType<BlobContentContentStore>();
             container.Bind<IBlobContentStore>().And<IDeletableBlobContentStore>()

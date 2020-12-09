@@ -9,7 +9,7 @@ using Planner.Models.Time;
 
 namespace Planner.Models.Repositories
 {
-    public interface ILocalRepository<T> where T: PlannerItemWithDate
+    public interface ILocalRepository<T> 
     {
          T CreateItem(LocalDate date, Action<T> initialize);
          IListPendingCompletion<T> ItemsForDate(LocalDate date);
