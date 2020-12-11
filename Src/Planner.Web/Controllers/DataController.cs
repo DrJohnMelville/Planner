@@ -8,7 +8,6 @@ using Planner.Models.Repositories;
 namespace Planner.Web.Controllers
 {
     public class DataController<TDatum> : Controller 
-        where TDatum: PlannerItemWithDate
     {
         private readonly IDatedRemoteRepository<TDatum> source;
         private readonly Func<Guid, TDatum> creator;

@@ -29,13 +29,15 @@ namespace Planner.Wpf.AppRoot
             RegisterWebRepository<PlannerTask>("/Task");
             RegisterWebRepository<Note>("/Note");
             RegisterWebRepository<Blob>("/Blob");
+            container.Bind<IDatedRemoteRepository<Appointment>>().To<AppointmentRepository>()
+                .WithParameters("/Appointment");
             container.Bind<INoteSearcher>().To<WebNoteSearcher>();
             container.Bind<IBlobContentStore>().To<WebBlobContentStore>()
                 .WithParameters(authenticatedClient)
                 .AsSingleton();
         }
 
-        private void RegisterWebRepository<T>(string urlPrefix) where T:PlannerItemWithDate => 
+        private void RegisterWebRepository<T>(string urlPrefix) where T: PlannerItemWithDate => 
             container.Bind<IDatedRemoteRepository<T>>().To<WebRepository<T>>().WithParameters(urlPrefix);
 
         public void UseLocalTestSource()

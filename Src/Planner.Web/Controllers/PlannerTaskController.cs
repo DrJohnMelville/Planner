@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using Planner.Models.Appointments;
 using Planner.Models.Blobs;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
@@ -26,6 +27,15 @@ namespace Planner.Web.Controllers
     public class BlobController : DataController<Blob>
     {
         public BlobController(IDatedRemoteRepository<Blob> source) : base(source, g=> new Blob {Key = g})
+        {
+        }
+    }
+
+    [Route("Appointment")]
+    public class AppointmentController : DataController<Appointment>
+    {
+        public AppointmentController(IDatedRemoteRepository<Appointment> source) : 
+            base(source, g=> new Appointment() {AppointmentDetails = new AppointmentDetails{AppointmentDetailsId = g}})
         {
         }
     }
