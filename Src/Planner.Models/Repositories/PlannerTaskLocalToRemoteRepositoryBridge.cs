@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Melville.MVVM.AdvancedLists;
@@ -12,7 +13,8 @@ using Planner.Models.Time;
 
 namespace Planner.Models.Repositories
 {
-    public class LocalToRemoteRepositoryBridge<T>:ICachedRepositorySource<T> where T:PlannerItemWithDate, new()
+    public  class LocalToRemoteRepositoryBridge<T>:ICachedRepositorySource<T> 
+       where T:INotifyPropertyChanged, new()
     {
         private readonly IDatedRemoteRepository<T> remote;
         private readonly IWallClock waiter;
@@ -28,11 +30,27 @@ namespace Planner.Models.Repositories
 
         public T CreateItem(LocalDate date, Action<T> initialize)
         {
-            var ret = new T(){Date = date, Key = Guid.NewGuid()};
-            initialize(ret);
+            var ret = ConstructNewItem(date, initialize);
             remote.Add(ret);
             RegisterPropertyChangeNotifications(ret);
             return ret;
+        }
+
+        private static T ConstructNewItem(LocalDate date, Action<T> initialize)
+        {
+            var ret = new T();
+            TryPopulatePlannerItemBase(date, ret);
+            initialize(ret);
+            return ret;
+        }
+
+        private static void TryPopulatePlannerItemBase(LocalDate date, T ret)
+        {
+            if (ret is PlannerItemWithDate pib)
+            {
+                pib.Date = date;
+                pib.Key = Guid.NewGuid();
+            }
         }
 
         private void RegisterPropertyChangeNotifications(T plannerTask) => 

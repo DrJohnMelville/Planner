@@ -14,6 +14,7 @@ using Melville.WpfAppFramework.StartupBases;
 using Microsoft.Extensions.Configuration;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
+using Planner.Models.Appointments;
 using Planner.Models.Blobs;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Markdown;
@@ -117,6 +118,7 @@ namespace Planner.Wpf.AppRoot
         {
             service.Bind<IRegisterRepositorySource>().To<RegisterRepositorySource>();
             service.BindGeneric(typeof(ICachedRepositorySource<>),typeof(LocalToRemoteRepositoryBridge<>));
+            service.Bind<ILocalRepository<Appointment>>().To<AppointmentCachedRepository>().AsSingleton();
             service.BindGeneric(typeof(ILocalRepository<>), typeof(CachedRepository<>), 
                 i=>i.AsSingleton());
         }

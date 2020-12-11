@@ -18,6 +18,11 @@
         <ItemsControl.ItemTemplate>
             <DataTemplate DataType="{x:Type appointments:Appointment}">
                 <Grid>
+                    <Grid.Resources>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Margin" Value="0 0 5 0"/>
+                        </Style>
+                    </Grid.Resources>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>

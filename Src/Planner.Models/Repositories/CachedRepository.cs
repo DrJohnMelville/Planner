@@ -1,28 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Melville.MVVM.Functional;
 using NodaTime;
+using Planner.Models.Appointments;
 using Planner.Models.HtmlGeneration;
 
 namespace Planner.Models.Repositories
 {
     public class ClearCachesEventArgs: EventArgs{}
     
-    public interface ICachedRepositorySource<T> : ILocalRepository<T> where T : class
+    public interface ICachedRepositorySource<T> : ILocalRepository<T> 
     {
     }
-    
-    public class CachedRepository<T> : ILocalRepository<T> where T : PlannerItemWithDate
+
+    public abstract class CachedRepositoryBase<TKey, T> : ILocalRepository<T> 
+        where T : class where TKey: notnull
     {
         private readonly Dictionary<LocalDate, WeakReference<IListPendingCompletion<T>>> listCache =
             new();
 
-        private readonly Dictionary<Guid, WeakReference<T>> itemCache = new();
+        private readonly Dictionary<TKey, WeakReference<T>> itemCache = new();
 
         private readonly ILocalRepository<T> source;
 
-        public CachedRepository(ICachedRepositorySource<T> source, 
+        protected abstract TKey KeyFromItem(T item);
+        protected abstract TKey KeyFromGuid(Guid guid);
+
+        protected abstract IListPendingCompletion<T> QuerySource(
+            ILocalRepository<T> source, IList<TKey> key);
+
+        public CachedRepositoryBase(ICachedRepositorySource<T> source, 
             IEventBroadcast<ClearCachesEventArgs> clearCacheSignal)
         {
             this.source = source;
@@ -55,7 +64,7 @@ namespace Planner.Models.Repositories
         
         public IListPendingCompletion<T> ItemsByKeys(IEnumerable<Guid> keys)
         {
-            var ret = CheckCacheForItems(keys);
+            var ret = CheckCacheForItems(keys.Select(KeyFromGuid));
             RegisterListForReconciliation(ret);
             return ret;
         }
@@ -73,7 +82,7 @@ namespace Planner.Models.Repositories
         {
             for (int i = 0; i < list.Count; i++)
             {
-                if (itemCache.TryGetValue(list[i].Key, out var weakRef))
+                if (itemCache.TryGetValue(KeyFromItem(list[i]), out var weakRef))
                 {
                     if (weakRef.TryGetTarget(out var item))
                     {
@@ -86,21 +95,21 @@ namespace Planner.Models.Repositories
                 }
                 else
                 {
-                    itemCache[list[i].Key] = new WeakReference<T>(list[i]);
+                    itemCache[KeyFromItem(list[i])] = new WeakReference<T>(list[i]);
                 }
             }
         }
 
-        private IListPendingCompletion<T> CheckCacheForItems(IEnumerable<Guid> keys)
+        private IListPendingCompletion<T> CheckCacheForItems(IEnumerable<TKey> keys)
         {
             var (remoteKeysToLoad, locallyFoundItems) = SortKeysIntoLocalAndRemote(keys);
             return AddKeysToList(remoteKeysToLoad, locallyFoundItems);
         }
 
-        private (List<Guid> remoteKeysToLoad, ItemList<T> locallyFoundItems) SortKeysIntoLocalAndRemote(
-            IEnumerable<Guid> keys)
+        private (List<TKey> remoteKeysToLoad, ItemList<T> locallyFoundItems) SortKeysIntoLocalAndRemote(
+            IEnumerable<TKey> keys)
         {
-            var remoteKeysToLoad = new List<Guid>();
+            var remoteKeysToLoad = new List<TKey>();
             var locallyFoundItems = new ItemList<T>();
             foreach (var key in keys)
             {
@@ -110,7 +119,7 @@ namespace Planner.Models.Repositories
             return (remoteKeysToLoad, locallyFoundItems);
         }
 
-        private void SortSingleKey(Guid key, ItemList<T> locallyFoundItems, List<Guid> remoteKeysToLoad)
+        private void SortSingleKey(TKey key, ItemList<T> locallyFoundItems, List<TKey> remoteKeysToLoad)
         {
             if (itemCache.TryGetValue(key, out var weakref) &&
                 weakref.TryGetTarget(out var item))
@@ -123,7 +132,7 @@ namespace Planner.Models.Repositories
             }
         }
 
-        private IListPendingCompletion<T> AddKeysToList(List<Guid> remoteKeysToLoad, ItemList<T> ret) =>
+        private IListPendingCompletion<T> AddKeysToList(List<TKey> remoteKeysToLoad, ItemList<T> ret) =>
             (remoteKeysToLoad.Count, ret.Count) switch
             {
                 (0, _) => ret,
@@ -143,11 +152,43 @@ namespace Planner.Models.Repositories
             }
         }
 
-        private IListPendingCompletion<T> SublistByKeyQuery(List<Guid> keyList)
+        private IListPendingCompletion<T> SublistByKeyQuery(List<TKey> keyList)
         {
-            var ret = source.ItemsByKeys(keyList);
+            var ret = QuerySource(source, keyList);
             RegisterListForReconciliation(ret);
             return ret;
         }
+        
+    } 
+    
+    public class CachedRepository<T> :CachedRepositoryBase<Guid, T> where T : PlannerItemWithDate
+    {
+        public CachedRepository(ICachedRepositorySource<T> source, IEventBroadcast<ClearCachesEventArgs> clearCacheSignal) : base(source, clearCacheSignal)
+        {
+        }
+
+        protected override Guid KeyFromItem(T item) => item.Key;
+
+        protected override Guid KeyFromGuid(Guid guid) => guid;
+
+        protected override IListPendingCompletion<T> QuerySource(
+            ILocalRepository<T> source, IList<Guid> key) => source.ItemsByKeys(key);
+    }
+    
+    public class AppointmentCachedRepository :CachedRepositoryBase<(Guid, Instant), Appointment>
+    {
+        public AppointmentCachedRepository(ICachedRepositorySource<Appointment> source, 
+            IEventBroadcast<ClearCachesEventArgs> clearCacheSignal) : base(source, clearCacheSignal)
+        {
+        }
+
+        protected override (Guid, Instant) KeyFromItem(Appointment item) => 
+            (item.AppointmentDetails?.AppointmentDetailsId ?? Guid.Empty, item.Start);
+
+        protected override (Guid, Instant) KeyFromGuid(Guid guid) => (guid, Instant.MinValue);
+
+        protected override IListPendingCompletion<Appointment> QuerySource(
+            ILocalRepository<Appointment> source, IList<(Guid, Instant)> key) => 
+            source.ItemsByKeys(key.Select(i=>i.Item1).Distinct());
     }
 }
