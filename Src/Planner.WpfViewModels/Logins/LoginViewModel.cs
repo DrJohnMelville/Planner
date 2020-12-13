@@ -46,7 +46,7 @@ namespace Planner.WpfViewModels.Logins
         public  Task TryAutoLogin(
             IWaitingService wait,
             [FromServices] IRegisterRepositorySource registry,
-            [FromServices] IClock clock, 
+            [FromServices] IUsersClock clock, 
             [FromServices] IKeyboardQuery keyboardQuery)
         {
 #if DEBUG
