@@ -9,57 +9,35 @@ namespace Planner.Repository.SqLite
 {
     public class AppointmentSyncEngine
     {
-        private readonly PlannerDataContext context;
+        private readonly Func<PlannerDataContext> contextFactory;
+
         public AppointmentSyncEngine(Func<PlannerDataContext> contextFactory)
         {
-            context = contextFactory();
+            this.contextFactory = contextFactory;
         }
 
         public async Task Synchronize(AppointmentSyncInfo info)
         {
-            await DeleteAppointments(
-                info.KeysToDelete.Concat(
-                    info.Items
-                        .Select(i=>i.UniqueOutlookId)
-                        .Where(i=>!string.IsNullOrWhiteSpace(i))).ToList());
-            CopyAppointments(info);
+            await using var context = contextFactory();
+            
+            await DeleteAppointments(context, info.DeletedAndModifiedItemOutlookIds());
+            CopyAppointments(context, info.Items);
 
             await context.SaveChangesAsync();
         }
 
-        private Task<int> DeleteAppointments(IList<string> infoKeysToDelete)
-        {
-            return ((IQueryable<AppointmentDetails>)context.AppointmentDetails)
-                .Where(i => infoKeysToDelete.Contains(i.UniqueOutlookId))
-                .DeleteFromQueryAsync();
-        }
+        private Task<int> DeleteAppointments(PlannerDataContext context, IList<string> infoKeysToDelete) =>
+            ((IQueryable<AppointmentDetails>)context.AppointmentDetails)
+            .Where(i => infoKeysToDelete.Contains(i.UniqueOutlookId))
+            .DeleteFromQueryAsync();
 
-        private void CopyAppointments(AppointmentSyncInfo info)
+        private void CopyAppointments(
+            PlannerDataContext context, IEnumerable<SyncAppointmentData> newAppointments)
         {
-            foreach (var appointment in info.Items)
+            foreach (var appointment in newAppointments)
             {
-                var apptInfo = CreateSingleAppointment(appointment);
-                context.AppointmentDetails.Add(apptInfo);
+                context.AppointmentDetails.Add(appointment.ToAppointmentDetails());
             }
         }
-
-        private static AppointmentDetails CreateSingleAppointment(SyncAppointmentData appointment)
-        {
-            var key = Guid.NewGuid();
-            var apptInfo = new AppointmentDetails
-            {
-                AppointmentDetailsId = key,
-                Title = appointment.Title,
-                Location = appointment.Location,
-                BodyText = appointment.BodyText,
-                UniqueOutlookId = appointment.UniqueOutlookId,
-                Appointments = appointment.Times
-                    .Select(CreateAppointmentTime).ToList()
-            };
-            return apptInfo;
-        }
-
-        private static Appointment CreateAppointmentTime(SyncAppointmentTime i) => 
-            new() {Start = i.StartTime, End = i.EndTime};
     }
 }

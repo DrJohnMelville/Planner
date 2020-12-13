@@ -34,7 +34,7 @@ namespace Planner.Repository.Test.SqLite
                         UniqueOutlookId = "OutlookId",
                         Times = new List<SyncAppointmentTime>()
                         {
-                            new() {StartTime = Instant.MinValue, EndTime = Instant.MaxValue}
+                            new() {StartTime = Instant.MinValue, EndTime = Instant.FromUnixTimeTicks(12)}
                         }
                     }
                 }
@@ -43,6 +43,8 @@ namespace Planner.Repository.Test.SqLite
             var appts = await GetAppointmentsList();
             Assert.Single(appts);
             Assert.Equal("Apt1BodyText", appts[0].AppointmentDetails.BodyText);
+            Assert.Equal(Instant.MinValue, appts[0].Start);
+            Assert.Equal(Instant.FromUnixTimeTicks(12).ToString(), appts[0].End.ToString());
             
         }
 
