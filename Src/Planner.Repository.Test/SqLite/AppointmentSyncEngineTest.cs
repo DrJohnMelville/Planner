@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Planner.Models.Appointments;
-using Planner.Models.Appointments.SuncStructure;
+using Planner.Models.Appointments.SyncStructure;
 using Planner.Repository.SqLite;
 using Xunit;
 

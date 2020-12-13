@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Extensions.ObjectPool;
 using Moq;
-using Planner.Models.Appointments.SuncStructure;
+using Planner.Models.Appointments.SyncStructure;
 using Planner.Repository.SqLite;
 using Planner.Web.Controllers;
 using Xunit;

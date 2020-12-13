@@ -1,7 +1,7 @@
 ﻿
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Planner.Models.Appointments.SuncStructure;
+using Planner.Models.Appointments.SyncStructure;
 using Planner.Repository.SqLite;
 
 namespace Planner.Web.Controllers

@@ -3,15 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Planner.Models.Appointments;
-using Planner.Models.Appointments.SuncStructure;
+using Planner.Models.Appointments.SyncStructure;
 
 namespace Planner.Repository.SqLite
 {
-    public interface IAppointmentSyncEngine
-    {
-        Task Synchronize(AppointmentSyncInfo info);
-    }
-
     public class AppointmentSyncEngine : IAppointmentSyncEngine
     {
         private readonly Func<PlannerDataContext> contextFactory;

@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
 using Planner.Models.Appointments;
+using Planner.Models.Appointments.SyncStructure;
 using Planner.Models.Blobs;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
