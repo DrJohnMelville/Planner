@@ -38,10 +38,11 @@ namespace Planner.Web.CompositionRoot
             AddCapWebAuthentication(services);
             DatabaseFactory.ConfigureDatabase(services, webHostEnvironment
             );
+            services.AddScoped<IDatedRemoteRepository<Appointment>, AppointmentRemoteRepository>();
+            services.AddTransient<IAppointmentSyncEngine, AppointmentSyncEngine>();
             services.AddScoped<IDatedRemoteRepository<PlannerTask>, SqlRemoteRepositoryWithDate<PlannerTask>>();
             services.AddScoped<IDatedRemoteRepository<Note>, SqlRemoteRepositoryWithDate<Note>>();
             services.AddScoped<IDatedRemoteRepository<Blob>, SqlRemoteRepositoryWithDate<Blob>>();
-            services.AddScoped <IDatedRemoteRepository<Appointment>, AppointmentRemoteRepository>();
             services.AddScoped<IDatedRemoteRepository<Blob>>(sp=>
                 new CompopsiteBlobRemoteRepository(sp.GetRequiredService<SqlRemoteRepositoryWithDate<Blob>>(),
                     sp.GetRequiredService<IDeletableBlobContentStore>()));

@@ -7,7 +7,12 @@ using Planner.Models.Appointments.SuncStructure;
 
 namespace Planner.Repository.SqLite
 {
-    public class AppointmentSyncEngine
+    public interface IAppointmentSyncEngine
+    {
+        Task Synchronize(AppointmentSyncInfo info);
+    }
+
+    public class AppointmentSyncEngine : IAppointmentSyncEngine
     {
         private readonly Func<PlannerDataContext> contextFactory;
 
