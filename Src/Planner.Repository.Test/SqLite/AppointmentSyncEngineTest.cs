@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using NodaTime;
 using Planner.Models.Appointments;
 using Planner.Models.Appointments.SyncStructure;
@@ -12,11 +14,13 @@ namespace Planner.Repository.Test.SqLite
     public class AppointmentSyncEngineTest
     {
         private readonly TestDatabase db = new TestDatabase();
+        private readonly Mock<IClock> clock = new();
+
         private readonly AppointmentSyncEngine sut;
 
         public AppointmentSyncEngineTest()
         {
-            sut = new AppointmentSyncEngine(db.NewContext);
+            sut = new AppointmentSyncEngine(db.NewContext, clock.Object);
         }
 
         [Fact]
@@ -108,5 +112,24 @@ namespace Planner.Repository.Test.SqLite
             var appts = await GetAppointmentsList();
             Assert.Empty(appts);            
         }
+
+        [Fact]
+        public async Task EmptyDbReturns1Jan2000()
+        {
+            var defaultTime = Instant.FromDateTimeUtc(new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+            Assert.Equal(defaultTime, await sut.LastSynchronizationTime());
+        }
+
+        [Fact]
+        public async Task SynchronizeStoresCurrentTime()
+        {
+            var time = Instant.FromUnixTimeSeconds(12345);
+            clock.Setup(i => i.GetCurrentInstant()).Returns(time);
+            await sut.Synchronize(new AppointmentSyncInfo());
+            Assert.Equal(time, await 
+                new AppointmentSyncEngine(db.NewContext, clock.Object).LastSynchronizationTime());
+        }
+
+
     }
 }

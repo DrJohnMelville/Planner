@@ -11,22 +11,25 @@ namespace Planner.Repository.SqLite
     public class AppointmentSyncEngine : IAppointmentSyncEngine
     {
         private readonly Func<PlannerDataContext> contextFactory;
+        private readonly IClock clock;
 
-        public AppointmentSyncEngine(Func<PlannerDataContext> contextFactory)
+        public AppointmentSyncEngine(Func<PlannerDataContext> contextFactory, IClock clock)
         {
             this.contextFactory = contextFactory;
+            this.clock = clock;
         }
 
         public async Task Synchronize(AppointmentSyncInfo info)
         {
             await using var context = contextFactory();
             
+            WriteLastSynchronizationTime(clock.GetCurrentInstant());
             await DeleteAppointments(context, info.DeletedAndModifiedItemOutlookIds());
             CopyAppointments(context, info.Items);
 
             await context.SaveChangesAsync();
         }
-
+        
         private Task<int> DeleteAppointments(PlannerDataContext context, IList<string> infoKeysToDelete) =>
             ((IQueryable<AppointmentDetails>)context.AppointmentDetails)
             .Where(i => infoKeysToDelete.Contains(i.UniqueOutlookId))
@@ -41,9 +44,15 @@ namespace Planner.Repository.SqLite
             }
         }
 
+        private Instant lastUpdate = 
+            Instant.FromDateTimeUtc(new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc));
         public Task<Instant> LastSynchronizationTime()
         {
-            throw new NotImplementedException();
+            return Task.FromResult(lastUpdate);
+        }
+        private void WriteLastSynchronizationTime(Instant time)
+        {
+            lastUpdate = time;
         }
     }
 }
