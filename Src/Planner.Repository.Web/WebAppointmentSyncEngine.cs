@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using NodaTime;
 using Planner.Models.Appointments.SyncStructure;
 
 namespace Planner.Repository.Web
@@ -12,9 +13,10 @@ namespace Planner.Repository.Web
             this.service = service;
         }
 
-        public Task Synchronize(AppointmentSyncInfo info)
-        {
-            return service.Put("/AppointmentSync/Outlook", info);
-        }
+        public Task Synchronize(AppointmentSyncInfo info) => 
+            service.Put("/AppointmentSync/Outlook", info);
+
+        public async Task<Instant> LastSynchronizationTime() =>
+            Instant.FromUnixTimeSeconds(await service.Get<long>("/AppointmentSync/Last"));
     }
 }

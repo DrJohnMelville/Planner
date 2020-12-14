@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Extensions.ObjectPool;
 using Moq;
+using NodaTime;
 using Planner.Models.Appointments.SyncStructure;
 using Planner.Repository.SqLite;
 using Planner.Web.Controllers;
@@ -26,6 +27,15 @@ namespace Planner.Web.Test.Controllers
             engine.Verify(i=>i.Synchronize(dat), Times.Once);
             engine.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task GetLastTime()
+        {
+            engine.Setup(i => i.LastSynchronizationTime()).ReturnsAsync(Instant.FromUnixTimeSeconds(12345));
+            Assert.Equal(12345, await sut.GetLastUpdateTime());
+            
+        }
+
 
     }
 }
