@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Planner.Models.Appointments;
 using Planner.Models.Appointments.SyncStructure;
@@ -11,19 +12,17 @@ namespace Planner.Repository.SqLite
     public class AppointmentSyncEngine : IAppointmentSyncEngine
     {
         private readonly Func<PlannerDataContext> contextFactory;
-        private readonly IClock clock;
 
-        public AppointmentSyncEngine(Func<PlannerDataContext> contextFactory, IClock clock)
+        public AppointmentSyncEngine(Func<PlannerDataContext> contextFactory)
         {
             this.contextFactory = contextFactory;
-            this.clock = clock;
         }
 
         public async Task Synchronize(AppointmentSyncInfo info)
         {
             await using var context = contextFactory();
             
-            WriteLastSynchronizationTime(clock.GetCurrentInstant());
+            await WriteLastSynchronizationTime(context, info.QueryTime);
             await DeleteAppointments(context, info.DeletedAndModifiedItemOutlookIds());
             CopyAppointments(context, info.Items);
 
@@ -44,15 +43,19 @@ namespace Planner.Repository.SqLite
             }
         }
 
-        private Instant lastUpdate = 
-            Instant.FromDateTimeUtc(new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc));
-        public Task<Instant> LastSynchronizationTime()
+        private static readonly Guid lastUpdateTimeKey = new Guid("015A2146-2949-40F6-8117-B8BCBAC9C21D");
+        public async Task<Instant> LastSynchronizationTime()
         {
-            return Task.FromResult(lastUpdate);
+            await using var context = contextFactory();
+            var lastSyncRecord = await context.SyncTimes.AsNoTracking()
+                .FirstOrDefaultAsync(i => i.SyncTimeId == lastUpdateTimeKey);
+            return lastSyncRecord?.Time ?? 
+                   Instant.FromDateTimeUtc(new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc));
         }
-        private void WriteLastSynchronizationTime(Instant time)
-        {
-            lastUpdate = time;
-        }
+        private Task WriteLastSynchronizationTime(PlannerDataContext context, Instant time) => 
+            context.Upsert(CreateSyncRecord(time)).RunAsync();
+
+        private static SyncTime CreateSyncRecord(Instant time) => 
+            new() {SyncTimeId = lastUpdateTimeKey, Time = time};
     }
 }

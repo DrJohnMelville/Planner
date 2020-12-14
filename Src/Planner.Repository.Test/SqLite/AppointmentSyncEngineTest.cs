@@ -14,13 +14,12 @@ namespace Planner.Repository.Test.SqLite
     public class AppointmentSyncEngineTest
     {
         private readonly TestDatabase db = new TestDatabase();
-        private readonly Mock<IClock> clock = new();
 
         private readonly AppointmentSyncEngine sut;
 
         public AppointmentSyncEngineTest()
         {
-            sut = new AppointmentSyncEngine(db.NewContext, clock.Object);
+            sut = new AppointmentSyncEngine(db.NewContext);
         }
 
         [Fact]
@@ -121,13 +120,12 @@ namespace Planner.Repository.Test.SqLite
         }
 
         [Fact]
-        public async Task SynchronizeStoresCurrentTime()
+        public async Task SynchronizeStoresQueryTimeInDatabase()
         {
             var time = Instant.FromUnixTimeSeconds(12345);
-            clock.Setup(i => i.GetCurrentInstant()).Returns(time);
-            await sut.Synchronize(new AppointmentSyncInfo());
+            await sut.Synchronize(new AppointmentSyncInfo() {QueryTime = time});
             Assert.Equal(time, await 
-                new AppointmentSyncEngine(db.NewContext, clock.Object).LastSynchronizationTime());
+                new AppointmentSyncEngine(db.NewContext).LastSynchronizationTime());
         }
 
 

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Planner.Models.Appointments;
+using Planner.Models.Appointments.SyncStructure;
 using Planner.Models.Blobs;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
@@ -11,11 +12,12 @@ namespace Planner.Repository.SqLite
 {
     public class PlannerDataContext:DbContext
     {
-        public DbSet<PlannerTask> PlannerTasks { get; set; } = null!;
-        public DbSet<Note> Notes { get; set; } = null!;
-        public DbSet<Blob> Blobs { get; set; } = null!;
-        public DbSet<Appointment> Appointments { get; set; } = null!;
-        public DbSet<AppointmentDetails> AppointmentDetails { get; set; } = null!;
+        public DbSet<PlannerTask> PlannerTasks => Set<PlannerTask>();
+        public DbSet<Note> Notes => Set<Note>();
+        public DbSet<Blob> Blobs => Set<Blob>();
+        public DbSet<Appointment> Appointments => Set<Appointment>();
+        public DbSet<AppointmentDetails> AppointmentDetails => Set<AppointmentDetails>();
+        public DbSet<SyncTime> SyncTimes => Set<SyncTime>();
 
         public PlannerDataContext(DbContextOptions options) : base(options)
         {
@@ -42,6 +44,10 @@ namespace Planner.Repository.SqLite
             modelBuilder.Entity<Appointment>().Property(i => i.Start).ValueGeneratedNever();
             modelBuilder.Entity<AppointmentDetails>().HasMany(i => i.Appointments).WithOne(i => i.AppointmentDetails!)
                 .IsRequired().OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<SyncTime>().HasKey(i => i.SyncTimeId);
+            modelBuilder.Entity<SyncTime>().Property(i => i.SyncTimeId).ValueGeneratedNever();
+
         }
 
         private static void DeclareTable<T>(EntityTypeBuilder<T> entity) where T:PlannerItemWithDate

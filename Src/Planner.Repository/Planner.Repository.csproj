@@ -9,6 +9,7 @@
         <ProjectReference Include="..\Planner.Models\Planner.Models.csproj" />
     </ItemGroup>
     <ItemGroup>
+      <PackageReference Include="FlexLabs.EntityFrameworkCore.Upsert" Version="3.1.0" />
       <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="5.0.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.0">
         <PrivateAssets>all</PrivateAssets>

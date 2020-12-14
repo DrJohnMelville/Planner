@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Planner.Repository.SqLite;
 
 namespace Planner.Repository.Migrations
 {
     [DbContext(typeof(PlannerDataContext))]
-    partial class PlannerDataContextModelSnapshot : ModelSnapshot
+    [Migration("20201214060810_SyncTimeTable")]
+    partial class SyncTimeTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
