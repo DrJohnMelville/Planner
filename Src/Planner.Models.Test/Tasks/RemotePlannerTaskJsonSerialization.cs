@@ -10,7 +10,7 @@ namespace Planner.Models.Test.Tasks
 {
     public class PlannerTaskJsonSerialization
     {
-        private const string JsonTextForObject = "{\"Name\":\"Foo\",\"Priority\":\"A\",\"Order\":2,\"Status\":0,\"StatusDetail\":\"\",\"Date\":\"0001-01-01\",\"Key\":\"f3d68e2f-10ec-4a7c-9de7-bdb26906718b\"}";
+        private const string JsonTextForObject = "{\"$id\":\"1\",\"Name\":\"Foo\",\"Priority\":\"A\",\"Order\":2,\"Status\":0,\"StatusDetail\":\"\",\"Date\":\"0001-01-01\",\"Key\":\"f3d68e2f-10ec-4a7c-9de7-bdb26906718b\"}";
 
         [Fact]
         public void Serialize()

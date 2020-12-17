@@ -243,26 +243,7 @@ namespace Planner.Wpf.Test.TaskList
             VerifyTaskDeferredToDate(localDate, item.PlannerTask, PlannerTaskStatus.Deferred);
             Assert.False(item.PopupOpen);
         }
-
-        [Fact]
-        public void OpenWebLink()
-        {
-            var command = new Mock<IRunShellCommand>();
-            sut.WebLinkLinkClicked(new Segment<TaskTextType>("www.google.com", TaskTextType.WebLink, 0),
-                command.Object);
-            command.Verify(i=>i.ShellExecute("www.google.com", Array.Empty<string>()));
-            command.VerifyNoOtherCalls();
-        }
-        [Fact]
-        public void OpenFileLink()
-        {
-            var command = new Mock<IRunShellCommand>();
-            sut.FileLinkLinkClicked(new Segment<TaskTextType>("c:\\blah.txt", TaskTextType.FileLink, 0),
-                command.Object);
-            command.Verify(i=>i.ShellExecute("c:\\blah.txt", Array.Empty<string>()));
-            command.VerifyNoOtherCalls();
-        }
-
+        
         [Fact]
         public void DeleteTask()
         {
