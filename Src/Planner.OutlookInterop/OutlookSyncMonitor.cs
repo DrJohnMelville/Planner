@@ -67,8 +67,9 @@ namespace Planner.OutlookInterop
         private AppointmentSyncInfo CreateSyncObject(LocalDate endDate, Instant lastSynchronizationTime) =>
             new()
             {
+                QueryTime = clock.GetCurrentInstant(),
                 Items = NewOrChangedItemsQuery(endDate, lastSynchronizationTime),
-                KeysToDelete = DeletedItemsQuery(endDate, lastSynchronizationTime)
+                KeysToDelete = DeletedItemsQuery(endDate, lastSynchronizationTime),
             };
 
         private List<SyncAppointmentData> NewOrChangedItemsQuery(LocalDate endDate, Instant lastSynchronizationTime) =>
