@@ -14,6 +14,7 @@ namespace Planner.WpfViewModels.Appointments
         private LocalDate date;
         private IPlannerNavigator navigator;
         public IList<Appointment> Appointments { get; }
+        
 
         public DailyAppointmentsViewModel(LocalDate date,
             ILocalRepository<Appointment> appointmentFactory, IPlannerNavigator navigator)

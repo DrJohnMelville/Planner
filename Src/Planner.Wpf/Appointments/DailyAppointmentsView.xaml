@@ -9,39 +9,54 @@
              xmlns:appointments="clr-namespace:Planner.Models.Appointments;assembly=Planner.Models"
              xmlns:wpfHacks="clr-namespace:Melville.MVVM.Wpf.WpfHacks;assembly=Melville.MVVM.Wpf"
              xmlns:taskList="clr-namespace:Planner.Wpf.TaskList"
+             xmlns:eventBindings="clr-namespace:Melville.MVVM.Wpf.EventBindings;assembly=Melville.MVVM.Wpf"
+             xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <notes:TimeDisplayConverter x:Key="TimeDisplay"
                                     UsersClock="{diParameterSources:DIBinding}"/>
+        <CollectionViewSource x:Key="SortedList"
+                              Source="{Binding Appointments}" IsLiveSortingRequested="True">
+            <CollectionViewSource.SortDescriptions>
+                <componentModel:SortDescription PropertyName="Start"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
     </UserControl.Resources>
-    <ItemsControl ItemsSource="{Binding Appointments}" Grid.IsSharedSizeScope="True">
-        <ItemsControl.ItemTemplate>
-            <DataTemplate DataType="{x:Type appointments:Appointment}">
-                <Grid>
-                    <Grid.Resources>
-                        <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Margin" Value="0 0 5 0"/>
-                        </Style>
-                    </Grid.Resources>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition SharedSizeGroup="Start"/>
-                        <ColumnDefinition SharedSizeGroup="End"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="{Binding Start, Converter={StaticResource TimeDisplay}, ConverterParameter={}{0:h:mm tt}}"/>
-                    <TextBlock Text="{Binding End, Converter={StaticResource TimeDisplay}, ConverterParameter= {}{0:h:mm tt}}"
-                               Grid.Column="1"/>
-                    <taskList:RichTextDisplay Grid.Column="2" Text="{Binding AppointmentDetails.Title}"/>
-                    <taskList:RichTextDisplay Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" 
-                                              Text="{Binding AppointmentDetails.Location}"
-                                              wpfHacks:VisibilityHack.CollapseIfWhitespace="{Binding AppointmentDetails.Location}"/>
-                </Grid>
-            </DataTemplate>
-        </ItemsControl.ItemTemplate>
-    </ItemsControl>
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto">
+        <ItemsControl ItemsSource="{Binding Source={StaticResource SortedList}}" Grid.IsSharedSizeScope="True">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type appointments:Appointment}">
+                    <Grid>
+                        <Grid.Resources>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Margin" Value="0 0 5 0"/>
+                            </Style>
+                        </Grid.Resources>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition SharedSizeGroup="Start"/>
+                            <ColumnDefinition SharedSizeGroup="End"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition SharedSizeGroup="Icon"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Start, Converter={StaticResource TimeDisplay}, ConverterParameter={}{0:h:mm tt}}"/>
+                        <TextBlock Text="{Binding End, Converter={StaticResource TimeDisplay}, ConverterParameter= {}{0:h:mm tt}}"
+                                   Grid.Column="1"/>
+                        <taskList:RichTextDisplay Grid.Column="2" Text="{Binding AppointmentDetails.Title}"/>
+                        <TextBlock Grid.Column="3" Background="Transparent" FontFamily="WebDings" Text="L"
+                                   MouseLeftButtonDown="{eventBindings:EventBinding AppointmentLinkClicked}"
+                                   Grid.RowSpan="2" FontSize="18"/>
+                        <taskList:RichTextDisplay Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" 
+                                                  Text="{Binding AppointmentDetails.Location}"
+                                                  wpfHacks:VisibilityHack.CollapseIfWhitespace="{Binding AppointmentDetails.Location}"/>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </ScrollViewer>
 </UserControl>
