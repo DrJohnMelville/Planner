@@ -1,4 +1,5 @@
-﻿using Melville.MVVM.Wpf.RootWindows;
+﻿using Melville.MVVM.Wpf.DiParameterSources;
+using Melville.MVVM.Wpf.RootWindows;
 using Planner.Models.HtmlGeneration;
 
 namespace Planner.WpfViewModels.PlannerPages
@@ -21,6 +22,5 @@ namespace Planner.WpfViewModels.PlannerPages
         public void NavigatedAwayFrom() => noteEditRequest.Fired -= DoEditNoteRequest;
 
         protected abstract void DoEditNoteRequest(object? sender, NoteEditRequestEventArgs e);
-
     }
 }

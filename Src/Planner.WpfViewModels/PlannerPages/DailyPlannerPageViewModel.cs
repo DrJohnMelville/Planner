@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using Melville.INPC;
 using Melville.MVVM.RunShellCommands;
 using Melville.MVVM.Wpf.DiParameterSources;
+using Melville.MVVM.Wpf.EventBindings;
 using NodaTime;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Repositories;
@@ -18,9 +20,10 @@ namespace Planner.WpfViewModels.PlannerPages
         bool? DoRedirect(string url);
     }
 
-    public partial class DailyPlannerPageViewModel:PageWithEditNotifications
+    public partial class DailyPlannerPageViewModel:PageWithEditNotifications, IAdditionlTargets
     {
         private readonly IPlannerNavigator navigator;
+        private readonly Func<LocalDate, RichTextCommandTarget> richCommandFactory;
         public DailyTaskListViewModel TodayTaskList { get; }
         public DailyNoteDisplayViewModel JournalPage { get; }
         public DailyAppointmentsViewModel Appointments { get; }
@@ -40,9 +43,11 @@ namespace Planner.WpfViewModels.PlannerPages
             Func<LocalDate, DailyAppointmentsViewModel> appointmentFactory,
             IPlannerNavigator navigator, 
             IEventBroadcast<NoteEditRequestEventArgs> noteEditRequest, 
-            ILinkRedirect redirect): base(noteEditRequest, redirect)
+            ILinkRedirect redirect,
+            Func<LocalDate,RichTextCommandTarget> richCommandFactory): base(noteEditRequest, redirect)
         {
             this.navigator = navigator;
+            this.richCommandFactory = richCommandFactory;
             this.currentDate = currentDate; 
             TodayTaskList = taskListFactory(currentDate);
             JournalPage = noteDisplayFactory(currentDate);
@@ -55,11 +60,6 @@ namespace Planner.WpfViewModels.PlannerPages
         protected override void DoEditNoteRequest(object? sender, NoteEditRequestEventArgs e) =>
             navigator.ToEditNote(e);
 
-        public void PlannerPageLinkClicked(Segment<TaskTextType> segment)
-        {
-            if (segment.Match == null) return;
-            navigator.NavigateToDate(segment.Match.Groups, CurrentDate);
-        }
 
         public void ReloadCaches([FromServices]IEventBroadcast<ClearCachesEventArgs> signalObject) => 
             signalObject.Fire(this, new ClearCachesEventArgs());
@@ -67,17 +67,7 @@ namespace Planner.WpfViewModels.PlannerPages
         public void GoToToday([FromServices] IUsersClock clock) => navigator.ToDate(clock.CurrentDate());
         public void SearchJournal() => navigator.ToNoteSearchPage();
         
-        
-        public void WebLinkLinkClicked(
-            Segment<TaskTextType> segment, 
-            [FromServices] IRunShellCommand commandObject) =>
-            commandObject.ShellExecute(segment.Text, Array.Empty<string>());
-        public void FileLinkLinkClicked(
-            Segment<TaskTextType> segment, 
-            [FromServices] IRunShellCommand commandObject) =>
-            commandObject.ShellExecute(segment.Text, Array.Empty<string>());
-
-
+        IEnumerable<object> IAdditionlTargets.Targets() => new []{richCommandFactory(currentDate)};
     }
 
 }
