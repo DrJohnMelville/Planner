@@ -40,9 +40,9 @@
                 <td>
                     <span class="@ClassFromStatus(task.Status)" aria-hidden="true"></span>
                 </td>
-                <td>@task.PriorityDisplay</td>
+                <td><a href="/TaskDetail/@RelativeDateString(0)/@task.Key">@MakeVisible(task.PriorityDisplay)</a></td>
                 <td>
-                    <a href="/TaskDetail/@RelativeDateString(0)/@task.Key">@task.Name</a>
+                    @((MarkupString) MarkdownTranslator.RenderLine(date, task.Name))
                 </td>
             </tr>
         }
@@ -68,8 +68,16 @@
         <tr>
             <td>@Clock.InstantInZone(appt.Start).ToString("h:mm tt", null)</td>
             <td>@Clock.InstantInZone(appt.End).ToString("h:mm tt", null)</td>
-            <td>@appt.AppointmentDetails?.Title</td>
+            <td>@((MarkupString) MarkdownTranslator.RenderLine(date, appt.AppointmentDetails?.Title??""))
+            </td>
         </tr>
+        @if (!string.IsNullOrWhiteSpace(appt.AppointmentDetails.Location))
+        {
+            <tr>
+                <td></td>
+                <td colspan="2">@((MarkupString) MarkdownTranslator.RenderLine(date, appt.AppointmentDetails?.Location??""))</td>
+            </tr>
+        }
     }
     </table>
 }
@@ -154,4 +162,5 @@
         newTaskName = "";
     }
 
+    private string MakeVisible(string s) => string.IsNullOrWhiteSpace(s) ? "__" : s;
 }
