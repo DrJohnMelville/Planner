@@ -3,6 +3,7 @@ using System.Net.Http;
 using Melville.IOC.IocContainers;
 using Melville.MVVM.FileSystem;
 using Planner.Models.Appointments;
+using Planner.Models.Appointments.SyncStructure;
 using Planner.Models.Blobs;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
@@ -35,6 +36,7 @@ namespace Planner.Wpf.AppRoot
             container.Bind<IBlobContentStore>().To<WebBlobContentStore>()
                 .WithParameters(authenticatedClient)
                 .AsSingleton();
+            container.Bind<IAppointmentSyncEngine>().To<WebAppointmentSyncEngine>();
         }
 
         private void RegisterWebRepository<T>(string urlPrefix) where T: PlannerItemWithDate => 
@@ -52,6 +54,7 @@ namespace Planner.Wpf.AppRoot
             container.Bind<IBlobContentStore>().And<IDeletableBlobContentStore>()
                 .To<BlobContentContentStore>().AsSingleton();
             container.Bind<INoteSearcher>().To<SqlNoteSearcher>();
+            container.Bind<IAppointmentSyncEngine>().To<AppointmentSyncEngine>();
         }
     }
 }

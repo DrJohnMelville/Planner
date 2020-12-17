@@ -26,6 +26,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Planner.Models\Planner.Models.csproj" />
+      <ProjectReference Include="..\Planner.OutlookInterop\Planner.OutlookInterop.csproj" />
       <ProjectReference Include="..\Planner.Repository.Web\Planner.Repository.Web.csproj" />
       <ProjectReference Include="..\Planner.Repository\Planner.Repository.csproj" />
       <ProjectReference Include="..\Planner.WpfViewModels\Planner.WpfViewModels.csproj" />

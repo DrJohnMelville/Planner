@@ -10,6 +10,7 @@ using Melville.MVVM.Wpf.KeyboardFacade;
 using Melville.MVVM.Wpf.RootWindows;
 using Melville.MVVM.Wpf.ViewFrames;
 using NodaTime;
+using Planner.Models.Appointments.SyncStructure;
 using Planner.Models.Time;
 using Planner.WpfViewModels.PlannerPages;
 using Serilog;
@@ -28,11 +29,13 @@ namespace Planner.WpfViewModels.Logins
     {
         public IList<TargetSite> Sites { get; }
         private readonly IPlannerNavigator navigator;
+        private readonly IAppointmentSyncMonitor syncMOnitor;
 
-        public LoginViewModel(IList<TargetSite> sites, IPlannerNavigator navigator)
+        public LoginViewModel(IList<TargetSite> sites, IPlannerNavigator navigator, IAppointmentSyncMonitor syncMOnitor)
         {
             Sites = sites;
             this.navigator = navigator;
+            this.syncMOnitor = syncMOnitor;
         }
 
         public void FakeDb(
@@ -40,7 +43,7 @@ namespace Planner.WpfViewModels.Logins
             [FromServices] IUsersClock clock)
         {
           registry.UseLocalTestSource();
-          navigator.ToDate(clock.CurrentDate());
+          AfterLoginStartup(clock);
         }
 
         public  Task TryAutoLogin(
@@ -71,7 +74,8 @@ namespace Planner.WpfViewModels.Logins
                         wait.ErrorMessage = "Login failed";
                         return;
                     }
-                    navigator.ToDate(clock.CurrentDate());
+
+                    AfterLoginStartup(clock);
                 }
                 catch (Exception e)
                 {
@@ -79,7 +83,7 @@ namespace Planner.WpfViewModels.Logins
                 }
             }
         }
-        
+
         public async Task<bool> ConnectToWebRepository(TargetSite site, IRegisterRepositorySource register)
         {
             var loginAttempt = CapWebTokenFactory.CreateCapWebClient(site.Name, site.Secret);
@@ -93,6 +97,12 @@ namespace Planner.WpfViewModels.Logins
             var client = loginAttempt.AuthenticatedClient();
             client.BaseAddress = new Uri(targetUrl);
             return client;
+        }
+
+        private void AfterLoginStartup(IUsersClock clock)
+        {
+            syncMOnitor.Start();
+            navigator.ToDate(clock.CurrentDate());
         }
     }
 }

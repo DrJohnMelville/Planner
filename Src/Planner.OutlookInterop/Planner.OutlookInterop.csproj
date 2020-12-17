@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <Nullable>Enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Reference Include="Microsoft.Office.Interop.Outlook, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
+            <HintPath>c:\Program Files (x86)\Microsoft Visual Studio\Shared\Visual Studio Tools for Office\PIA\Office15\Microsoft.Office.Interop.Outlook.dll</HintPath>
+        </Reference>
+      <ProjectReference Include="..\Planner.Models\Planner.Models.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -17,10 +17,10 @@ namespace Planner.Models.Appointments.SyncStructure
             new()
             {
                 AppointmentDetailsId = Guid.NewGuid(),
-                Title = Title,
-                Location = Location,
-                BodyText = BodyText,
-                UniqueOutlookId = UniqueOutlookId,
+                Title = Title ?? "",
+                Location = Location ??"",
+                BodyText = BodyText ?? "",
+                UniqueOutlookId = UniqueOutlookId ?? "",
                 Appointments = Times
                     .Select(i=>i.ToAppointment()).ToList()
             };
