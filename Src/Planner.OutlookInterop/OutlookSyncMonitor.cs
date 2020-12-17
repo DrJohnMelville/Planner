@@ -8,6 +8,8 @@ using Microsoft.Office.Interop.Outlook;
 using NodaTime;
 using NodaTime.Extensions;
 using Planner.Models.Appointments.SyncStructure;
+using Planner.Models.HtmlGeneration;
+using Planner.Models.Repositories;
 
 namespace Planner.OutlookInterop
 {
@@ -18,11 +20,17 @@ namespace Planner.OutlookInterop
         private readonly Folder deletedItems;
         private readonly IAppointmentSyncEngine engine;
         private readonly IClock clock;
+        private readonly IEventBroadcast<ClearCachesEventArgs> clearCaches;
 
-        public OutlookSyncMonitor(IAppointmentSyncEngine engine, IClock clock, string account)
+        public OutlookSyncMonitor(
+            IAppointmentSyncEngine engine, 
+            IClock clock, 
+            string account, 
+            IEventBroadcast<ClearCachesEventArgs> clearCaches)
         {
             this.engine = engine;
             this.clock = clock;
+            this.clearCaches = clearCaches;
             (appointments, deletedItems) = ConnectToOutlook(account);
             appointmentItemsKeepAlive = MonitorSourceForChanges();
         }
@@ -53,6 +61,7 @@ namespace Planner.OutlookInterop
             await engine.Synchronize(
                 CreateSyncObject(DateOneYearFromNow(), await engine.LastSynchronizationTime())
             );
+            clearCaches.Fire(this, new ClearCachesEventArgs());
         }
 
         private AppointmentSyncInfo CreateSyncObject(LocalDate endDate, Instant lastSynchronizationTime) =>
