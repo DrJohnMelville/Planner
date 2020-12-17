@@ -68,7 +68,12 @@
         <tr>
             <td>@Clock.InstantInZone(appt.Start).ToString("h:mm tt", null)</td>
             <td>@Clock.InstantInZone(appt.End).ToString("h:mm tt", null)</td>
-            <td>@((MarkupString) MarkdownTranslator.RenderLine(date, appt.AppointmentDetails?.Title??""))
+            <td>@((MarkupString) MarkdownTranslator.RenderLine(date, appt.AppointmentDetails?.Title??""))</td>
+            <td>
+                @if (!string.IsNullOrWhiteSpace(appt.AppointmentDetails?.BodyText))
+                {
+                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
+                }
             </td>
         </tr>
         @if (!string.IsNullOrWhiteSpace(appt.AppointmentDetails.Location))
