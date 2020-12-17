@@ -153,6 +153,7 @@ namespace Planner.Wpf.AppRoot
                 .To<RootNavigationWindow>()
                 .FixResult(i=>((RootNavigationWindow)i).Title = "John Melville's Planner")
                 .AsScoped();
+            service.Bind<NoteCreator>().ToSelf().AsScoped();
             service.Bind<Func<(IRootNavigationWindow, IPlannerNavigator)>>().ToMethod(ioc => () =>
             {
                 var scope  = GetRootService(ioc).CreateScope();

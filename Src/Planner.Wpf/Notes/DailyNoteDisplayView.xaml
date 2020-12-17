@@ -30,7 +30,7 @@
                             Margin="5 0">Search Journal</Button>
                 </Grid>
                 <TextBox MinHeight="50" Grid.Row="2" AcceptsReturn="True"
-                         Text="{Binding NoteCreator.Text}"
+                         Text="{Binding NoteCreator.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          pasters:TextBoxPasteEnhancement.MarkdownPaster="{diParameterSources:DIBinding}"
                          pasters:TextBoxPasteEnhancement.PasterDate="{Binding CurrentDate}"
                          wpfHacks:VisibilityHack.CollapseIfWhitespace="{Binding NoteCreator.Title}"
