@@ -4,9 +4,34 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Planner.Wpf.Appointments"
+             xmlns:easyGrids="clr-namespace:Melville.WpfControls.EasyGrids;assembly=Melville.WpfControls"
+             xmlns:taskList="clr-namespace:Planner.Wpf.TaskList"
+             xmlns:notes="clr-namespace:Planner.WpfViewModels.Notes;assembly=Planner.WpfViewModels"
+             xmlns:diParameterSources="clr-namespace:Melville.MVVM.Wpf.DiParameterSources;assembly=Melville.MVVM.Wpf"
+             xmlns:eventBindings="clr-namespace:Melville.MVVM.Wpf.EventBindings;assembly=Melville.MVVM.Wpf"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        <TextBlock>Appointment Detail</TextBlock>
-    </Grid>
+    <UserControl.Resources>
+        <notes:TimeDisplayConverter x:Key="TimeDisplay"
+                                    UsersClock="{diParameterSources:DIBinding}"/>
+
+    </UserControl.Resources>
+    <easyGrids:EasyGrid easyGrids:GridOperations.ColsAndRows="auto,*/auto, auto, auto, auto,*"
+                        DataContext="{Binding Appointment}" Margin="20">
+        <TextBlock>Title</TextBlock>
+        <DockPanel LastChildFill="True">
+            <Button DockPanel.Dock="Right" Click="{eventBindings:EventBinding NavigateToPriorPage}">Back</Button>
+            <taskList:RichTextDisplay Text="{Binding AppointmentDetails.Title, PresentationTraceSources.TraceLevel=High}"/>
+        </DockPanel>
+        <TextBlock>Start</TextBlock>
+        <TextBlock Text="{Binding Start, Converter={StaticResource TimeDisplay}, ConverterParameter={}{0:dddd MMM dd, yyyy h:mm tt}}"/>
+        <TextBlock>End</TextBlock>
+        <TextBlock Text="{Binding End, Converter={StaticResource TimeDisplay}, ConverterParameter={}{0:dddd MMM dd, yyyy h:mm tt}}"/>
+        <TextBlock>Location:</TextBlock>
+        <taskList:RichTextDisplay Text="{Binding AppointmentDetails.Location}"/>
+        <TextBlock></TextBlock>
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <taskList:RichTextDisplay Text="{Binding AppointmentDetails.BodyText}"/>
+        </ScrollViewer>
+    </easyGrids:EasyGrid>
 </UserControl>
