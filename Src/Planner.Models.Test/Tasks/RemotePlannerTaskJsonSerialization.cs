@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
 using Planner.Models.Tasks;
@@ -43,6 +44,8 @@ namespace Planner.Models.Test.Tasks
             var sett = new JsonSerializerOptions();
             sett.IgnoreReadOnlyProperties = true;
             sett.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+            sett.ReferenceHandler = ReferenceHandler.Preserve;
+            ;
             return sett;
         }
     }

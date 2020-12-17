@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Windows;
 using CefSharp;
 using Melville.IOC.IocContainers;
@@ -119,6 +120,7 @@ namespace Planner.Wpf.AppRoot
             options.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
             options.IgnoreReadOnlyProperties = true;
             options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            options.ReferenceHandler = ReferenceHandler.Preserve;
             service.Bind<JsonSerializerOptions>().ToConstant(options);
         }
 

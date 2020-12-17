@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text.Json.Serialization;
 using Melville.MVVM.FileSystem;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
@@ -69,6 +70,7 @@ namespace Planner.Web.CompositionRoot
         private void ConfigureJsonSerialization(JsonOptions o)
         {
             o.JsonSerializerOptions.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+            o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
             o.JsonSerializerOptions.IgnoreReadOnlyProperties = true;
         }
 

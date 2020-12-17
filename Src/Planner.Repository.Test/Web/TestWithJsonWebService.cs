@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Melville.TestHelpers.Http;
 using Moq;
 using NodaTime;
@@ -18,6 +19,7 @@ namespace Planner.Repository.Test.Web
         {
             var seropt = new JsonSerializerOptions();
             seropt.IgnoreReadOnlyProperties = true;
+            seropt.ReferenceHandler = ReferenceHandler.Preserve;
             seropt.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
             var httpClient = httpSource.ToHttpClient();
             httpClient.BaseAddress = new Uri("https://Planner.DRJohnMelville.com");

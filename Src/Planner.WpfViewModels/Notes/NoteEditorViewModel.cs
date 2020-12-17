@@ -109,7 +109,7 @@ namespace Planner.WpfViewModels.Notes
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
             value is Instant instant && UsersClock != null
                 ? string.Format(parameter as string??"{0:M/dd/yyyy h:mm tt}",
-                    instant.InZone(UsersClock.CurrentUiTimeZone()).LocalDateTime)
+                   UsersClock.InstantToLocalDateTime(instant))
                 : "";
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>

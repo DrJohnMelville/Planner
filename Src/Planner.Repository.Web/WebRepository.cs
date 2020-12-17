@@ -24,7 +24,8 @@ namespace Planner.Repository.Web
         {
         }
 
-        protected override string KeyString(Appointment item) => item.AppointmentDetailsId.ToString();
+        protected override string KeyString(Appointment item) => 
+            item.AppointmentDetailsId.ToString();
     }
     public abstract class WebRepositoryBase<T>:IDatedRemoteRepository<T> 
     {
@@ -51,7 +52,7 @@ namespace Planner.Repository.Web
 
         public async IAsyncEnumerable<T> TasksForDate(LocalDate date, DateTimeZone zone)
         {
-            foreach (var task in await webService.Get<T[]>($"{prefix}/{date:yyyy-MM-dd}/{HttpUtility.UrlEncode(zone.Id)}"))
+            foreach (var task in await webService.Get<List<T>>($"{prefix}/{date:yyyy-MM-dd}/{HttpUtility.UrlEncode(zone.Id)}"))
             {
                 yield return task;
             }

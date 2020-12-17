@@ -23,4 +23,12 @@ namespace Planner.Models.Time
         public LocalDate CurrentDate() => 
             clock.GetCurrentInstant().InZone(CurrentUiTimeZone()).Date;
     }
+
+    public static class UserClockOperations
+    {
+        public static LocalDateTime InstantToLocalDateTime(this IUsersClock clock, Instant instant) =>
+            clock.InstantInZone(instant).LocalDateTime;
+        public static ZonedDateTime InstantInZone(this IUsersClock clock, Instant instant) =>
+            instant.InZone(clock.CurrentUiTimeZone());
+    }
 }

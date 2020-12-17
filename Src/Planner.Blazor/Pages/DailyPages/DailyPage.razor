@@ -8,9 +8,12 @@
 @using Planner.Models.Notes
 @using Planner.Models.Time
 @using Markdig.Renderers.Html
+@using Planner.Models.Appointments
 @using Tewr.Blazor.FileReader
+@using Markdig.Extensions.Tables
 @inject ILocalRepository<PlannerTask> taskStore
 @inject ILocalRepository<Note> noteStore
+@inject ILocalRepository<Appointment> appointmentStore
 @inject ModalService ModalService
 @inject IAppNavigation AppNavigation
 @inject IUsersClock Clock
@@ -56,6 +59,20 @@
     }
 </table>
 
+<h4>Appointments</h4>
+@if (appointments != null)
+{
+    <table>
+        @foreach(var appt in appointments.OrderBy(i=>i.Start))
+    {
+        <tr>
+            <td>@Clock.InstantInZone(appt.Start).ToString("h:mm tt", null)</td>
+            <td>@Clock.InstantInZone(appt.End).ToString("h:mm tt", null)</td>
+            <td>@appt.AppointmentDetails?.Title</td>
+        </tr>
+    }
+    </table>
+}
 <h4>Notes</h4>
 @if (notes != null)
 {
@@ -81,6 +98,7 @@
 
     private IListPendingCompletion<PlannerTask>? tasks;
     private IListPendingCompletion<Note>? notes;
+    private IListPendingCompletion<Appointment>? appointments;
 
     protected override Task OnParametersSetAsync() => OnInitializedAsync();
 
@@ -89,6 +107,7 @@
         SetDate();
         tasks = taskStore.ItemsForDate(date);
         notes = noteStore.ItemsForDate(date);
+        appointments = appointmentStore.ItemsForDate(date);
         return Task.WhenAll(tasks.CompleteList(), notes.CompleteList());
     }
 
