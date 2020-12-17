@@ -8,6 +8,7 @@
              xmlns:diParameterSources="clr-namespace:Melville.MVVM.Wpf.DiParameterSources;assembly=Melville.MVVM.Wpf"
              xmlns:appointments="clr-namespace:Planner.Models.Appointments;assembly=Planner.Models"
              xmlns:wpfHacks="clr-namespace:Melville.MVVM.Wpf.WpfHacks;assembly=Melville.MVVM.Wpf"
+             xmlns:taskList="clr-namespace:Planner.Wpf.TaskList"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -35,10 +36,10 @@
                     <TextBlock Text="{Binding Start, Converter={StaticResource TimeDisplay}, ConverterParameter={}{0:h:mm tt}}"/>
                     <TextBlock Text="{Binding End, Converter={StaticResource TimeDisplay}, ConverterParameter= {}{0:h:mm tt}}"
                                Grid.Column="1"/>
-                    <TextBlock Grid.Column="2" Text="{Binding AppointmentDetails.Title}"/>
-                    <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" 
-                               Text="{Binding AppointmentDetails.Location}"
-                               wpfHacks:VisibilityHack.CollapseIfWhitespace="{Binding AppointmentDetails.Location}"/>
+                    <taskList:RichTextDisplay Grid.Column="2" Text="{Binding AppointmentDetails.Title}"/>
+                    <taskList:RichTextDisplay Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" 
+                                              Text="{Binding AppointmentDetails.Location}"
+                                              wpfHacks:VisibilityHack.CollapseIfWhitespace="{Binding AppointmentDetails.Location}"/>
                 </Grid>
             </DataTemplate>
         </ItemsControl.ItemTemplate>

@@ -16,10 +16,11 @@ namespace Planner.Wpf.TaskList
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RichTextBlock),
                 new FrameworkPropertyMetadata(typeof(RichTextBlock)));
         }
-        
+
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
             "Text", typeof(string), typeof(RichTextBlock),
             new FrameworkPropertyMetadata(null));
+
         public string Text
         {
             get => (string) GetValue(TextProperty);

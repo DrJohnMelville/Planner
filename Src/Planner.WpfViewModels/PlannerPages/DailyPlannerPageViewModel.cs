@@ -1,5 +1,6 @@
 ﻿using System;
 using Melville.INPC;
+using Melville.MVVM.RunShellCommands;
 using Melville.MVVM.Wpf.DiParameterSources;
 using NodaTime;
 using Planner.Models.HtmlGeneration;
@@ -65,6 +66,18 @@ namespace Planner.WpfViewModels.PlannerPages
 
         public void GoToToday([FromServices] IUsersClock clock) => navigator.ToDate(clock.CurrentDate());
         public void SearchJournal() => navigator.ToNoteSearchPage();
+        
+        
+        public void WebLinkLinkClicked(
+            Segment<TaskTextType> segment, 
+            [FromServices] IRunShellCommand commandObject) =>
+            commandObject.ShellExecute(segment.Text, Array.Empty<string>());
+        public void FileLinkLinkClicked(
+            Segment<TaskTextType> segment, 
+            [FromServices] IRunShellCommand commandObject) =>
+            commandObject.ShellExecute(segment.Text, Array.Empty<string>());
+
+
     }
 
 }

@@ -128,15 +128,6 @@ namespace Planner.WpfViewModels.TaskList
             }
         }
 
-        public void WebLinkLinkClicked(
-            Segment<TaskTextType> segment, 
-            [FromServices] IRunShellCommand commandObject) =>
-            commandObject.ShellExecute(segment.Text, Array.Empty<string>());
-        public void FileLinkLinkClicked(
-            Segment<TaskTextType> segment, 
-            [FromServices] IRunShellCommand commandObject) =>
-            commandObject.ShellExecute(segment.Text, Array.Empty<string>());
-
         public void DeleteTask(PlannerTaskViewModel task)
         {
             SourceList.Remove(task.PlannerTask);
