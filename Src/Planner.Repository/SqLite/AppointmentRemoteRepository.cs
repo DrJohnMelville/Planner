@@ -43,8 +43,8 @@ namespace Planner.Repository.SqLite
         public IAsyncEnumerable<Appointment> TasksForDate(LocalDate date, DateTimeZone timeZone)
         {
             var start = date.AtStartOfDayInZone(timeZone).ToInstant();
-            var end = date.PlusDays(1).AtStartOfDayInZone(timeZone).ToInstant();
-            return SimpleQuery(i => i.Start < end && i.End >= start);
+            var end = date.PlusDays(1).AtStartOfDayInZone(timeZone).PlusSeconds(-1).ToInstant();
+            return SimpleQuery(i => i.Start < end && i.End > start);
         }
 
         private IAsyncEnumerable<Appointment> SimpleQuery(Expression<Func<Appointment, bool>> predicate)

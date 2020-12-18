@@ -1,0 +1,48 @@
+﻿@page "/AppointmentDetail/{DateString}/{KeyString}"
+@using Planner.Models.Appointments
+@using Planner.Models.Markdown
+@using Planner.Models.Repositories
+@using Planner.Models.Time
+@using NodaTime
+@inject ILocalRepository<Appointment> appointmentStore
+@inject IMarkdownTranslator MarkdownTranslator
+@inject IUsersClock Clock
+
+@if (appointment != null)
+{
+    <table>
+        <tr><td>Title</td>
+            <td>@RenderLine(appointment.AppointmentDetails?.Title)</td></tr>
+        <tr><td>Start</td><td>@DisplayInstant(appointment.Start)</td></tr>
+        <tr><td>End</td><td>@DisplayInstant(appointment.End)</td></tr>
+        <tr><td>Location</td>
+            <td>@RenderLine(appointment.AppointmentDetails?.Location)</td></tr>
+        <tr><td colspan="2">@Render(appointment.AppointmentDetails?.BodyText)</td> </tr>
+    </table>
+}
+
+@code {
+    [Parameter] public string DateString { get; set; }
+    [Parameter] public string KeyString { get; set; }
+    private LocalDate date;
+    private Appointment? appointment;
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (!(TimeOperations.TryParseLocalDate(DateString, out date) &&
+              Guid.TryParse(KeyString, out var key))) return;
+        var dayList = await appointmentStore.ItemsForDate(date).CompleteList();
+        appointment = dayList.FirstOrDefault(i => i.AppointmentDetailsId == key);
+    }
+
+    private string DisplayInstant(Instant appointmentStart)
+    {
+        return Clock.InstantToLocalDateTime(appointmentStart).ToString("dddd MMM dd, yyyy h:mm tt", null);
+    }
+
+    private MarkupString RenderLine(string? text) => 
+        (MarkupString) MarkdownTranslator.RenderLine(date, text??"");
+    private MarkupString Render(string? text) => 
+        (MarkupString) MarkdownTranslator.Render(date, text??"");
+
+}

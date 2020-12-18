@@ -72,7 +72,8 @@
             <td>
                 @if (!string.IsNullOrWhiteSpace(appt.AppointmentDetails?.BodyText))
                 {
-                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
+                    <a href="/AppointmentDetail/@RelativeDateString(0)/@appt.AppointmentDetails.AppointmentDetailsId">
+                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span></a>
                 }
             </td>
         </tr>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.AspNetCore.Mvc;
 using NodaTime;
 using Planner.Models.Repositories;
@@ -21,9 +22,16 @@ namespace Planner.Web.Controllers
         [Route("{date}/{timeZone}")]
         [HttpGet]
         public IAsyncEnumerable<TDatum> TasksForDate(LocalDate date, string timeZone) =>
-            source.TasksForDate(date,
-                DateTimeZoneProviders.Tzdb.GetZoneOrNull(timeZone)??
-                DateTimeZoneProviders.Tzdb.GetSystemDefault());
+            source.TasksForDate(date, ZoneFromString(timeZone));
+        
+        private DateTimeZone ZoneFromString (string zoneName) => 
+            DateTimeZoneProviders.Tzdb.GetZoneOrNull(HttpUtility.UrlDecode(zoneName)) ??
+#if DEBUG
+                throw new InvalidOperationException("Cannot find time zone.");
+#else
+            DateTimeZoneProviders.Tzdb.GetZoneOrNull("America/New_York")??
+            DateTimeZone.Utc;
+#endif
 
         [Route("Query")]
         [HttpGet]
