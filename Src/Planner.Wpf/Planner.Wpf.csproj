@@ -8,6 +8,7 @@
         <UseWPF>true</UseWPF>
         <Nullable>enable</Nullable>
       <UserSecretsId>61c8620a-93d0-499d-83e0-45328ebae465</UserSecretsId>
+      <ApplicationIcon>AppRoot/App.ico</ApplicationIcon>
   </PropertyGroup>
 
     <ItemGroup>
@@ -25,6 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Resource Include="AppRoot/App.ico"/>
       <ProjectReference Include="..\Planner.Models\Planner.Models.csproj" />
       <ProjectReference Include="..\Planner.OutlookInterop\Planner.OutlookInterop.csproj" />
       <ProjectReference Include="..\Planner.Repository.Web\Planner.Repository.Web.csproj" />
