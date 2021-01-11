@@ -135,7 +135,6 @@ namespace Planner.WpfViewModels.TaskList
 
         private void InitializePriorityMenu()
         {
-            Console.WriteLine("InitializePriorityMenu");
             var menu = SourceList.CreatePriorityMenu().ToList();
             foreach (var taskViewModel in TaskViewModels)
             {

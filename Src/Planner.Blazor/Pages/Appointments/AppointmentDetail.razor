@@ -22,8 +22,8 @@
 }
 
 @code {
-    [Parameter] public string DateString { get; set; }
-    [Parameter] public string KeyString { get; set; }
+    [Parameter] public string DateString { get; set; } = "";
+    [Parameter] public string KeyString { get; set; } = "";
     private LocalDate date;
     private Appointment? appointment;
     protected override async Task OnInitializedAsync()

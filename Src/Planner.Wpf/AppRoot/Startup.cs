@@ -153,7 +153,7 @@ namespace Planner.Wpf.AppRoot
             service.Bind<IRootNavigationWindow>()
                 .And<Window>()
                 .To<RootNavigationWindow>()
-                .FixResult(i=>((RootNavigationWindow)i).Title = "John Melville's Planner")
+                .FixResult(ConfigRootWindow)
                 .AsScoped();
             service.Bind<NoteCreator>().ToSelf().AsScoped();
             service.Bind<Func<(IRootNavigationWindow, IPlannerNavigator)>>().ToMethod(ioc => () =>
@@ -162,6 +162,12 @@ namespace Planner.Wpf.AppRoot
                 return (scope.Get<IRootNavigationWindow>(), scope.Get<IPlannerNavigator>());
             });
             service.Bind<IStaWorker>().To<DispatcherStaWorker>();
+        }
+
+        private static void ConfigRootWindow(IRootNavigationWindow window)
+        {
+            window.SetWindowIconFromResource("Planner.WPF", "AppRoot/App.ico");
+            if (window is RootNavigationWindow rnw) rnw.Title = "John Melville's Planner";
         }
 
         private static IIocService GetRootService(IIocService ioc)
