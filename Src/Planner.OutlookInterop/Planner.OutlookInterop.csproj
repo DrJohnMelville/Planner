@@ -10,9 +10,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.Office.Interop.Outlook" Version="15.0.4797.1003">
-          <NoWarn>NU1701</NoWarn>
-      </PackageReference>
+        <Reference Include="Microsoft.Office.Interop.Outlook, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
+            <HintPath>c:\Program Files (x86)\Microsoft Visual Studio\Shared\Visual Studio Tools for Office\PIA\Office15\Microsoft.Office.Interop.Outlook.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
 </Project>
