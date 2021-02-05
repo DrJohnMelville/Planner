@@ -26,7 +26,8 @@ namespace Planner.Wpf.AppRoot
         public void UseWebSource(HttpClient authenticatedClient)
         {
             container.Bind<IJsonWebService>().To<JsonWebService>()
-                .WithParameters(authenticatedClient);
+                .WithParameters(authenticatedClient)
+                .WrapWith<RepeatingJsonWebService>();
             RegisterWebRepository<PlannerTask>("/Task");
             RegisterWebRepository<Note>("/Note");
             RegisterWebRepository<Blob>("/Blob");

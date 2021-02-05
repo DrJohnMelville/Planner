@@ -13,6 +13,7 @@ namespace Planner.Repository.Web
         public Task Put<T>(string url, T body);
         public Task Post<T>(string url, T body);
     }
+
     public class JsonWebService: IJsonWebService
     {
         private HttpClient client;
@@ -23,7 +24,8 @@ namespace Planner.Repository.Web
             this.client = client;
             this.serializerOptions = serializerOptions;
         }
-
+        
+    
         public async Task<T> Get<T>( string url) => 
             await ParseGetResponse<T>(await client.GetAsync(url));
         public async Task<T> Get<TBody, T>( string url, TBody body) => 
@@ -37,9 +39,12 @@ namespace Planner.Repository.Web
         }
 
 
-        public Task Delete(string url) => client.DeleteAsync(url);
-        public Task Put<T>(string url, T body) => client.PutAsync(url, ObjectAsJsonByteArray(body));
-        public Task Post<T>(string url, T body) => client.PostAsync(url, ObjectAsJsonByteArray(body));
+        public Task Delete(string url) => EnsureTaskAsync(client.DeleteAsync(url));
+        public Task Put<T>(string url, T body) => EnsureTaskAsync(client.PutAsync(url, ObjectAsJsonByteArray(body)));
+        public Task Post<T>(string url, T body) => EnsureTaskAsync(client.PostAsync(url, ObjectAsJsonByteArray(body)));
+
+        private Task EnsureTaskAsync(Task<HttpResponseMessage> input) =>
+            input.ContinueWith(i => i.Result.EnsureSuccessStatusCode());
         
         private T ObjectFromJsonByteArray<T>(byte[] text) => 
             JsonSerializer.Deserialize<T>(text, serializerOptions) ??
