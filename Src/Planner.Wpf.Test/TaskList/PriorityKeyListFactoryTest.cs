@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Planner.Models.Tasks;
-using Planner.Wpf.TaskList;
 using Xunit;
 
 namespace Planner.Wpf.Test.TaskList

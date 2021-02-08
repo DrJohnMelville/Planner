@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using Moq;
-using NodaTime;
+﻿using Moq;
 using Planner.Models.HtmlGeneration;
-using Planner.Models.Notes;
 using Planner.Wpf.Notes;
 using Xunit;
 

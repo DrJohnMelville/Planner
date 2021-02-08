@@ -5,7 +5,6 @@ using Moq;
 using NodaTime;
 using Planner.Models.Tasks;
 using Planner.Wpf.PlannerPages;
-using Planner.Wpf.PlannerPages;
 using Xunit;
 
 namespace Planner.Wpf.Test.PlannerPages

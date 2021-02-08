@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Input;
-using Melville.MVVM.RunShellCommands;
 using Melville.MVVM.Wpf.KeyboardFacade;
 using Melville.TestHelpers.InpcTesting;
 using Melville.TestHelpers.MockConstruction;
@@ -9,7 +8,6 @@ using Moq;
 using NodaTime;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
-using Planner.Wpf.TaskList;
 using Planner.Wpf.TaskList;
 using Xunit;
 using DailyTaskListViewModel = Planner.Wpf.TaskList.DailyTaskListViewModel;

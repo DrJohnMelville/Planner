@@ -4,8 +4,6 @@ using NodaTime;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
-using Planner.Models.Tasks;
-using Planner.Wpf.PlannerPages;
 using Planner.Wpf.PlannerPages;
 using Xunit;
 using DailyNoteDisplayViewModel = Planner.Wpf.Notes.DailyNoteDisplayViewModel;

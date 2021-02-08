@@ -3,7 +3,6 @@ using NodaTime;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Repositories;
 using Planner.Wpf.PlannerPages;
-using Planner.Wpf.PlannerPages;
 using Xunit;
 
 namespace Planner.Wpf.Test.PlannerPages

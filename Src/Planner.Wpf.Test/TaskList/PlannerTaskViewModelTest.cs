@@ -1,6 +1,5 @@
 ﻿using Planner.Models.Tasks;
 using Planner.Wpf.TaskList;
-using Planner.Wpf.TaskList;
 using Xunit;
 using PlannerTaskViewModel = Planner.Wpf.TaskList.PlannerTaskViewModel;
 

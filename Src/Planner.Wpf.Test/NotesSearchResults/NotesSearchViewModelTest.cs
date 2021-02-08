@@ -8,8 +8,6 @@ using NodaTime;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Notes;
 using Planner.Wpf.PlannerPages;
-using Planner.Wpf.NotesSearchResults;
-using Planner.Wpf.PlannerPages;
 using Xunit;
 using NotesSearchViewModel = Planner.Wpf.NotesSearchResults.NotesSearchViewModel;
 

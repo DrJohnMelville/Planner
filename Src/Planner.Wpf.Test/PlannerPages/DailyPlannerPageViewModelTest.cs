@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Melville.MVVM.Wpf.KeyboardFacade;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Moq;
 using NodaTime;
 using Planner.Models.Appointments;
@@ -12,8 +11,6 @@ using Planner.Models.Tasks;
 using Planner.Models.Time;
 using Planner.Wpf.Appointments;
 using Planner.Wpf.PlannerPages;
-using Planner.Wpf.PlannerPages;
-using Planner.Wpf.TaskList;
 using Xunit;
 using DailyNoteDisplayViewModel = Planner.Wpf.Notes.DailyNoteDisplayViewModel;
 using DailyPlannerPageViewModel = Planner.Wpf.PlannerPages.DailyPlannerPageViewModel;
