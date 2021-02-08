@@ -3,25 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:plannerPages="clr-namespace:Planner.WpfViewModels.PlannerPages;assembly=Planner.WpfViewModels"
              xmlns:easyGrids="clr-namespace:Melville.WpfControls.EasyGrids;assembly=Melville.WpfControls"
              xmlns:viewFrames="clr-namespace:Melville.MVVM.Wpf.ViewFrames;assembly=Melville.MVVM.Wpf"
              xmlns:eventBindings="clr-namespace:Melville.MVVM.Wpf.EventBindings;assembly=Melville.MVVM.Wpf"
              xmlns:taskList="clr-namespace:Planner.Wpf.TaskList"
-             xmlns:taskList1="clr-namespace:Planner.WpfViewModels.TaskList;assembly=Planner.WpfViewModels"
-             xmlns:wpfHacks="clr-namespace:Melville.MVVM.Wpf.WpfHacks;assembly=Melville.MVVM.Wpf"
-             xmlns:diParameterSources="clr-namespace:Melville.MVVM.Wpf.DiParameterSources;assembly=Melville.MVVM.Wpf"
-             xmlns:pasters="clr-namespace:Planner.WpfViewModels.Notes.Pasters;assembly=Planner.WpfViewModels"
              xmlns:plannerPages1="clr-namespace:Planner.Wpf.PlannerPages"
-             xmlns:notes="clr-namespace:Planner.Wpf.Notes"
-             d:DataContext="{d:DesignData {x:Type plannerPages:DailyPlannerPageViewModel}}"
+             d:DataContext="{d:DesignData {x:Type plannerPages1:DailyPlannerPageViewModel}}"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <easyGrids:EasyGrid easyGrids:GridOperations.ColsAndRows="auto,*,auto,auto,auto/auto,*">
         <easyGrids:EasyGrid.Resources>
             <Style x:Key="BigButton">
                 <Setter Property="TextBlock.FontFamily" Value="Marlett"/>
-                <Setter Property="TextBlock.FontSize" Value="20"></Setter>
+                <Setter Property="TextBlock.FontSize" Value="20" />
             </Style>
         </easyGrids:EasyGrid.Resources>
         <Button Click="{eventBindings:EventBinding BackOneDay}"
@@ -48,17 +42,17 @@
             <viewFrames:ViewFrame Grid.RowSpan="2" Content ="{Binding JournalPage}"/>
             <viewFrames:ViewFrame Margin="0 0 5 0" Content="{Binding Appointments}"/>
             <GridSplitter easyGrids:EasyGrid.ForceColumn="0" easyGrids:EasyGrid.ForceRow="0" Grid.RowSpan="2" 
-                          HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="5"></GridSplitter>
+                          HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="5" />
             <GridSplitter easyGrids:EasyGrid.ForceColumn="0" easyGrids:EasyGrid.ForceRow="0"
-                          HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="5"></GridSplitter>
+                          HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="5" />
         </easyGrids:EasyGrid>
        
         <Popup IsOpen="{Binding PopupOpen}" StaysOpen="False" Placement="Bottom"
                PlacementTarget="{Binding ElementName=BigDate}">
             <Border BorderThickness="1" BorderBrush="Black" Background="Silver">
-                <Calendar DisplayDateStart="{Binding BeginDay, Mode=OneWay, Converter={x:Static taskList1:DateConverter.Instance}}"
+                <Calendar DisplayDateStart="{Binding BeginDay, Mode=OneWay, Converter={x:Static taskList:DateConverter.Instance}}"
                           SelectedDate="{Binding CurrentDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,
-                      Converter={x:Static taskList1:DateConverter.Instance}}"
+                      Converter={x:Static taskList:DateConverter.Instance}}"
                           taskList:CalendarHelper.SingleClickDefocus="true" />
             </Border>
         </Popup>

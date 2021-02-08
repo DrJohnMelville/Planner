@@ -6,13 +6,13 @@
              xmlns:local="clr-namespace:Planner.Wpf.Appointments"
              xmlns:easyGrids="clr-namespace:Melville.WpfControls.EasyGrids;assembly=Melville.WpfControls"
              xmlns:taskList="clr-namespace:Planner.Wpf.TaskList"
-             xmlns:notes="clr-namespace:Planner.WpfViewModels.Notes;assembly=Planner.WpfViewModels"
              xmlns:diParameterSources="clr-namespace:Melville.MVVM.Wpf.DiParameterSources;assembly=Melville.MVVM.Wpf"
              xmlns:eventBindings="clr-namespace:Melville.MVVM.Wpf.EventBindings;assembly=Melville.MVVM.Wpf"
+             xmlns:notes1="clr-namespace:Planner.Wpf.Notes"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <notes:TimeDisplayConverter x:Key="TimeDisplay"
+        <notes1:TimeDisplayConverter x:Key="TimeDisplay"
                                     UsersClock="{diParameterSources:DIBinding}"/>
 
     </UserControl.Resources>

@@ -1,13 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Data;
-using System.Windows.Forms;
+﻿using System.Windows.Data;
 using CefSharp;
 using CefSharp.Handler;
-using Melville.MVVM.RunShellCommands;
 using Melville.MVVM.Wpf.Bindings;
-using Planner.WpfViewModels.PlannerPages;
+using Planner.Wpf.PlannerPages;
 
 namespace Planner.Wpf.Notes
 {

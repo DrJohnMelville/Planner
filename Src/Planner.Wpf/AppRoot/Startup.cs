@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Windows;
-using CefSharp;
 using Melville.IOC.IocContainers;
 using Melville.IOC.IocContainers.ActivationStrategies.TypeActivation;
-using Melville.MVVM.AdvancedLists;
 using Melville.MVVM.Asyncs;
 using Melville.MVVM.Wpf.Clipboards;
 using Melville.MVVM.Wpf.RootWindows;
-using Melville.MVVM.Wpf.ViewFrames;
 using Melville.WpfAppFramework.StartupBases;
 using Microsoft.Extensions.Configuration;
 using NodaTime;
@@ -22,12 +19,11 @@ using Planner.Models.HtmlGeneration;
 using Planner.Models.Markdown;
 using Planner.Models.Repositories;
 using Planner.OutlookInterop;
+using Planner.Wpf.Logins;
 using Planner.Wpf.Notes;
+using Planner.Wpf.Notes.Pasters;
 using Planner.Wpf.PlannerPages;
-using Planner.WpfViewModels.Logins;
-using Planner.WpfViewModels.Notes;
-using Planner.WpfViewModels.Notes.Pasters;
-using Planner.WpfViewModels.PlannerPages;
+using NoteCreator = Planner.Wpf.PlannerPages.NoteCreator;
 
 namespace Planner.Wpf.AppRoot
 {
@@ -141,7 +137,6 @@ namespace Planner.Wpf.AppRoot
         private static void RegisterMainWindowWithView(IBindableIocService service)
         {
             service.Bind<INavigationHistory>().To<PlannerPageNavigationHistory>().AsScoped();
-            service.Bind<IViewMappingConvention>().To<MapViewsToOwnAssembly>().AsSingleton();
             service.RegisterHomeViewModel<LoginViewModel>();
             service.Bind<INavigationWindow>().To<NavigationWindow>().AsScoped();
             service.Bind<IPlannerNavigator>().To<NewWindowPlannerNavigator>()

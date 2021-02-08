@@ -10,11 +10,15 @@ using Planner.Models.Notes;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
 using Planner.Models.Time;
-using Planner.WpfViewModels.Appointments;
-using Planner.WpfViewModels.Notes;
-using Planner.WpfViewModels.PlannerPages;
-using Planner.WpfViewModels.TaskList;
+using Planner.Wpf.Appointments;
+using Planner.Wpf.PlannerPages;
+using Planner.Wpf.PlannerPages;
+using Planner.Wpf.TaskList;
 using Xunit;
+using DailyNoteDisplayViewModel = Planner.Wpf.Notes.DailyNoteDisplayViewModel;
+using DailyPlannerPageViewModel = Planner.Wpf.PlannerPages.DailyPlannerPageViewModel;
+using DailyTaskListViewModel = Planner.Wpf.TaskList.DailyTaskListViewModel;
+using PlannerTaskViewModel = Planner.Wpf.TaskList.PlannerTaskViewModel;
 
 namespace Planner.Wpf.Test.PlannerPages
 {

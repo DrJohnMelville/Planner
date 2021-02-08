@@ -9,8 +9,8 @@ using Planner.Models.Blobs;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
-using Planner.WpfViewModels.Notes;
 using Xunit;
+using NoteEditorViewModel = Planner.Wpf.Notes.NoteEditorViewModel;
 
 namespace Planner.Wpf.Test.Notes
 {

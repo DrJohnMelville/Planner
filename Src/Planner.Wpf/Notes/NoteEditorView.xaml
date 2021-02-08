@@ -5,18 +5,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Planner.Wpf.Notes"
              xmlns:easyGrids="clr-namespace:Melville.WpfControls.EasyGrids;assembly=Melville.WpfControls"
-             xmlns:notes="clr-namespace:Planner.WpfViewModels.Notes;assembly=Planner.WpfViewModels"
              xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
              xmlns:eventBindings="clr-namespace:Melville.MVVM.Wpf.EventBindings;assembly=Melville.MVVM.Wpf"
              xmlns:DiBindings="clr-namespace:Melville.MVVM.Wpf.DiParameterSources;assembly=Melville.MVVM.Wpf"
-             xmlns:pasters="clr-namespace:Planner.WpfViewModels.Notes.Pasters;assembly=Planner.WpfViewModels"
              xmlns:blobs="clr-namespace:Planner.Models.Blobs;assembly=Planner.Models"
              xmlns:wpf1="clr-namespace:Planner.Wpf"
+             xmlns:pasters="clr-namespace:Planner.Wpf.Notes.Pasters"
              mc:Ignorable="d"
-             d:DataContext="{d:DesignData {x:Type notes:NoteEditorViewModel}}"
+             d:DataContext="{d:DesignData {x:Type local:NoteEditorViewModel}}"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <notes:TimeDisplayConverter x:Key="TimeDisplay"
+        <local:TimeDisplayConverter x:Key="TimeDisplay"
                                     UsersClock="{DiBindings:DIBinding}"/>
     </UserControl.Resources>
     <Grid easyGrids:GridOperations.ColsAndRows="*,*/auto,*,auto" Margin="10">

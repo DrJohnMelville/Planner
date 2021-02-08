@@ -7,9 +7,11 @@ using Moq;
 using NodaTime;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Notes;
-using Planner.WpfViewModels.NotesSearchResults;
-using Planner.WpfViewModels.PlannerPages;
+using Planner.Wpf.PlannerPages;
+using Planner.Wpf.NotesSearchResults;
+using Planner.Wpf.PlannerPages;
 using Xunit;
+using NotesSearchViewModel = Planner.Wpf.NotesSearchResults.NotesSearchViewModel;
 
 namespace Planner.Wpf.Test.NotesSearchResults
 {

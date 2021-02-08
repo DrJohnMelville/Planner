@@ -9,11 +9,19 @@
     <ItemGroup>
         <PackageReference Include="CefSharp.Common" Version="85.3.130" />
         <PackageReference Include="CsvHelper" Version="16.0.0" />
-        <PackageReference Include="Melville.Generators.INPC" Version="0.1.6" />
-        <PackageReference Include="Melville.MVVM.Wpf" Version="0.3.10" />
+        <PackageReference Include="Melville.Generators.INPC" Version="0.1.8" />
+        <PackageReference Include="Melville.MVVM.Wpf" Version="0.3.11" />
         <PackageReference Include="TokenServiceClient.Native" Version="0.2.5" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Planner.Models\Planner.Models.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Appointments" />
+      <Folder Include="Logins" />
+      <Folder Include="NotesSearchResults" />
+      <Folder Include="Notes\Pasters" />
+      <Folder Include="PlannerPages" />
+      <Folder Include="TaskList" />
     </ItemGroup>
 </Project>

@@ -10,7 +10,7 @@ using Planner.Models.Repositories;
 using Planner.Models.Tasks;
 using Planner.Repository.SqLite;
 using Planner.Repository.Web;
-using Planner.WpfViewModels.Logins;
+using Planner.Wpf.Logins;
 
 namespace Planner.Wpf.AppRoot
 {

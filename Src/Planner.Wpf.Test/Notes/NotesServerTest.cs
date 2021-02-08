@@ -4,7 +4,7 @@ using Moq;
 using NodaTime;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Notes;
-using Planner.WpfViewModels.Notes;
+using Planner.Wpf.Notes;
 using Xunit;
 
 namespace Planner.Wpf.Test.Notes

@@ -3,14 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:Planner.Wpf.NotesSearchResults"
              xmlns:easyGrids="clr-namespace:Melville.WpfControls.EasyGrids;assembly=Melville.WpfControls"
-             xmlns:taskList="clr-namespace:Planner.WpfViewModels.TaskList;assembly=Planner.WpfViewModels"
              xmlns:eventBindings="clr-namespace:Melville.MVVM.Wpf.EventBindings;assembly=Melville.MVVM.Wpf"
-             xmlns:notes="clr-namespace:Planner.Models.Notes;assembly=Planner.Models"
              xmlns:filteredDataGrids="clr-namespace:Melville.WpfControls.FilteredDataGrids;assembly=Melville.WpfControls"
              xmlns:plannerPages="clr-namespace:Planner.Wpf.PlannerPages"
              xmlns:notes1="clr-namespace:Planner.Wpf.Notes"
+             xmlns:taskList1="clr-namespace:Planner.Wpf.TaskList"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid easyGrids:GridOperations.ColsAndRows="*,*/*">
@@ -25,10 +23,10 @@
             <Button Grid.ColumnSpan="2" HorizontalAlignment="Right" Margin="10 0 0 0" IsDefault="True"
                     Click="{eventBindings:EventBinding DoSearch}">Search</Button>
             <TextBlock>Start Date: </TextBlock>
-            <DatePicker SelectedDate="{Binding BeginDate, Converter={x:Static taskList:DateConverter.Instance}}"
+            <DatePicker SelectedDate="{Binding BeginDate, Converter={x:Static taskList1:DateConverter.Instance}}"
                         Grid.ColumnSpan="2"/>
             <TextBlock>End Date: </TextBlock>
-            <DatePicker SelectedDate="{Binding EndDate, Converter={x:Static taskList:DateConverter.Instance}}" 
+            <DatePicker SelectedDate="{Binding EndDate, Converter={x:Static taskList1:DateConverter.Instance}}" 
                         Grid.ColumnSpan="2"/>
             <DataGrid ItemsSource="{Binding Results}" AutoGenerateColumns="False" HorizontalScrollBarVisibility="Disabled"
                       IsReadOnly="True" Grid.ColumnSpan="3" filteredDataGrids:FilteredDataGrid.UseFilter="True"

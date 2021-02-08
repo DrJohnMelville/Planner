@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Web;
 using Melville.MVVM.RunShellCommands;
-using NodaTime;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
 using Planner.Models.Time;
-using Planner.WpfViewModels.PlannerPages;
+using Planner.Wpf.PlannerPages;
 
 namespace Planner.Wpf.Notes
 {

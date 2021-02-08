@@ -2,7 +2,6 @@
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Windows;
 using CefSharp;
 using CefSharp.Wpf;
 
