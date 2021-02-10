@@ -28,4 +28,8 @@
       <ProjectReference Include="..\Planner.Repository\Planner.Repository.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\JmLink\Index.cshtml" />
+    </ItemGroup>
+
 </Project>
