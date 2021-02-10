@@ -2,7 +2,7 @@
 using Moq;
 using NodaTime;
 using Planner.Models.Time;
-using Planner.WpfViewModels.Notes;
+using Planner.Wpf.Notes;
 using Xunit;
 
 namespace Planner.Wpf.Test.Notes

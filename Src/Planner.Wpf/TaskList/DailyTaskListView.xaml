@@ -6,39 +6,37 @@
              xmlns:local="clr-namespace:Planner.Wpf.TaskList"
              xmlns:wpfHacks="clr-namespace:Melville.MVVM.Wpf.WpfHacks;assembly=Melville.MVVM.Wpf"
              xmlns:eventBindings="clr-namespace:Melville.MVVM.Wpf.EventBindings;assembly=Melville.MVVM.Wpf"
-             xmlns:bindings="clr-namespace:Melville.MVVM.Wpf.Bindings;assembly=Melville.MVVM.Wpf"
-             xmlns:taskList="clr-namespace:Planner.WpfViewModels.TaskList;assembly=Planner.WpfViewModels"
              xmlns:mouseClicks="clr-namespace:Melville.MVVM.Wpf.MouseClicks;assembly=Melville.MVVM.Wpf"
              xmlns:hacks="clr-namespace:Melville.WpfControls.Hacks;assembly=Melville.WpfControls"
              xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:tasks="clr-namespace:Planner.Models.Tasks;assembly=Planner.Models"
-             d:DataContext="{d:DesignData {x:Type taskList:DailyTaskListViewModel}}"
+             d:DataContext="{d:DesignData {x:Type local:DailyTaskListViewModel}}"
              mc:Ignorable="d" Grid.IsSharedSizeScope="True" x:Name="TopControl">
     <UserControl.Resources>
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="Margin" Value="4 2" />
         </Style>
-        <DataTemplate DataType="{x:Type taskList:DelegatedContext}">
+        <DataTemplate DataType="{x:Type local:DelegatedContext}">
             <StackPanel Margin="10">
                 <TextBlock Margin="0 0 0 10" Text="{Binding Prompt}"/>
                 <TextBox Text="{Binding EditText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="200"
                          hacks:SetSelection.Immediate="true"/>
             </StackPanel>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type taskList:PickDeferDate}">
+        <DataTemplate DataType="{x:Type local:PickDeferDate}">
             <StackPanel>
-                <Calendar DisplayDateStart="{Binding BeginDay, Mode=OneWay, Converter={x:Static taskList:DateConverter.Instance}}"
+                <Calendar DisplayDateStart="{Binding BeginDay, Mode=OneWay, Converter={x:Static local:DateConverter.Instance}}"
                           SelectedDate="{Binding SelectedDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,
-                      Converter={x:Static taskList:DateConverter.Instance}}"
+                      Converter={x:Static local:DateConverter.Instance}}"
                           local:CalendarHelper.SingleClickDefocus="true" 
                           MouseDoubleClick="{eventBindings:EventBinding DoDeferral}"/>
                 <Button Click="{eventBindings:EventBinding DoDeferral}">Defer Task</Button>
             </StackPanel>
         </DataTemplate>
-        <DataTemplate x:Key="TaskLineTemplate" DataType="{x:Type taskList:PlannerTaskViewModel}">
+        <DataTemplate x:Key="TaskLineTemplate" DataType="{x:Type local:PlannerTaskViewModel}">
             <Grid Background="Transparent" 
                   ToolTip="{Binding PlannerTask.StatusDetail, 
-                  Converter={x:Static taskList:PlannerTaskViewModel.ToolTipOnlyWithText}}"
+                  Converter={x:Static local:PlannerTaskViewModel.ToolTipOnlyWithText}}"
                   Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type local:DailyTaskListView}}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="CheckMark" />
@@ -75,27 +73,27 @@
                         </MenuItem>
                         <MenuItem Header="Incomplete" Click="{eventBindings:EventBinding MarkIncomplete}">
                             <MenuItem.Icon>
-                                <TextBlock Text="" FontFamily="Wingdings"></TextBlock>
+                                <TextBlock Text="" FontFamily="Wingdings" />
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Header="Done" Click="{eventBindings:EventBinding MarkDone}">
                             <MenuItem.Icon>
-                                <TextBlock Text="a" FontFamily="Marlett"></TextBlock>
+                                <TextBlock Text="a" FontFamily="Marlett" />
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Header="Canceled" Click="{eventBindings:EventBinding MarkCanceled}">
                             <MenuItem.Icon>
-                                <TextBlock Text="r" FontFamily="Marlett"></TextBlock>
+                                <TextBlock Text="r" FontFamily="Marlett" />
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Header="Pending" Click="{eventBindings:EventBinding MarkPending}">
                             <MenuItem.Icon>
-                                <TextBlock Text="n" FontFamily="Marlett"></TextBlock>
+                                <TextBlock Text="n" FontFamily="Marlett" />
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Header="Delegated" Click="{eventBindings:EventBinding MarkDelegated}">
                             <MenuItem.Icon>
-                                <TextBlock Text="¡" FontFamily="Wingdings"></TextBlock>
+                                <TextBlock Text="¡" FontFamily="Wingdings" />
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Header="Delete Task" Click="{eventBindings:EventBinding DeleteTask}"/>
@@ -130,8 +128,7 @@
                     </Border>
                 </Popup>
                 <TextBlock Grid.Column="0" Text="{Binding StatusDisplayText}" FontFamily="{Binding StatusDisplayFont}"
-                           Margin="4 2" mouseClicks:Click.LeftClick="PlannerTask.ToggleStatus" FontSize="18">
-                </TextBlock>
+                           Margin="4 2" mouseClicks:Click.LeftClick="PlannerTask.ToggleStatus" FontSize="18" />
                 <TextBlock Grid.Column="1" Text="{Binding PlannerTask.PriorityDisplay}" Margin="4 2" />
                 <Rectangle Grid.ColumnSpan="3" Height="0.5" VerticalAlignment="Top" HorizontalAlignment="Stretch"
                            Fill="LightGray" />
@@ -145,7 +142,7 @@
                               ItemsSource="{Binding DigitMenu}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="{x:Type tasks:PriorityKey}">
-                           <Button Background="{Binding Priority, Converter={x:Static taskList:PlannerTaskViewModel.PriortyBackground}}"
+                           <Button Background="{Binding Priority, Converter={x:Static local:PlannerTaskViewModel.PriortyBackground}}"
                                    Margin="2 0" Click="{eventBindings:EventBinding SetItemPriority}"
                                    Content="{Binding Order}"/> 
                         </DataTemplate>

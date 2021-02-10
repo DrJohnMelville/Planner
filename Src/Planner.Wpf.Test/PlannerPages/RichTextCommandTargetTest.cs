@@ -4,7 +4,7 @@ using Melville.MVVM.RunShellCommands;
 using Moq;
 using NodaTime;
 using Planner.Models.Tasks;
-using Planner.WpfViewModels.PlannerPages;
+using Planner.Wpf.PlannerPages;
 using Xunit;
 
 namespace Planner.Wpf.Test.PlannerPages

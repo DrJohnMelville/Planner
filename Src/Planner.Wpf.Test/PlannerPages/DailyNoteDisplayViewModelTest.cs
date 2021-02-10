@@ -4,10 +4,10 @@ using NodaTime;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
-using Planner.Models.Tasks;
-using Planner.WpfViewModels.Notes;
-using Planner.WpfViewModels.PlannerPages;
+using Planner.Wpf.PlannerPages;
 using Xunit;
+using DailyNoteDisplayViewModel = Planner.Wpf.Notes.DailyNoteDisplayViewModel;
+using NoteCreator = Planner.Wpf.PlannerPages.NoteCreator;
 
 namespace Planner.Wpf.Test.PlannerPages
 {

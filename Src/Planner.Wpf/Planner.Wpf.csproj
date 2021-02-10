@@ -9,12 +9,15 @@
         <Nullable>enable</Nullable>
       <UserSecretsId>61c8620a-93d0-499d-83e0-45328ebae465</UserSecretsId>
       <ApplicationIcon>AppRoot/App.ico</ApplicationIcon>
+      <IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
   </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="CefSharp.Wpf" Version="86.0.241" />
-      <PackageReference Include="Melville.WpfAppFramework" Version="0.1.12" />
-      <PackageReference Include="Melville.WpfControls" Version="0.2.8" />
+      <PackageReference Include="Melville.MVVM" Version="0.3.9" />
+      <PackageReference Include="Melville.MVVM.Wpf" Version="0.3.13" />
+      <PackageReference Include="Melville.WpfAppFramework" Version="0.1.15" />
+      <PackageReference Include="Melville.WpfControls" Version="0.2.9" />
       <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
       <PackageReference Include="NodaTime.Serialization.SystemTextJson" Version="1.0.0" />
     </ItemGroup>
@@ -26,12 +29,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Resource Include="AppRoot/App.ico"/>
+      <Resource Include="AppRoot/App.ico" />
       <ProjectReference Include="..\Planner.Models\Planner.Models.csproj" />
       <ProjectReference Include="..\Planner.OutlookInterop\Planner.OutlookInterop.csproj" />
       <ProjectReference Include="..\Planner.Repository.Web\Planner.Repository.Web.csproj" />
       <ProjectReference Include="..\Planner.Repository\Planner.Repository.csproj" />
-      <ProjectReference Include="..\Planner.WpfViewModels\Planner.WpfViewModels.csproj" />
+      <PackageReference Include="TokenServiceClient.Native" Version="0.2.5" />
+      <PackageReference Include="CsvHelper" Version="16.0.0" />
     </ItemGroup>
 
 </Project>

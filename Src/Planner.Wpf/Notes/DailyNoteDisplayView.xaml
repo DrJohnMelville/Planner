@@ -8,8 +8,8 @@
              xmlns:plannerPages="clr-namespace:Planner.Wpf.PlannerPages"
              xmlns:wpfHacks="clr-namespace:Melville.MVVM.Wpf.WpfHacks;assembly=Melville.MVVM.Wpf"
              xmlns:eventBindings="clr-namespace:Melville.MVVM.Wpf.EventBindings;assembly=Melville.MVVM.Wpf"
-             xmlns:pasters="clr-namespace:Planner.WpfViewModels.Notes.Pasters;assembly=Planner.WpfViewModels"
              xmlns:diParameterSources="clr-namespace:Melville.MVVM.Wpf.DiParameterSources;assembly=Melville.MVVM.Wpf"
+             xmlns:pasters="clr-namespace:Planner.Wpf.Notes.Pasters"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
         <Grid  easyGrids:GridOperations.ColsAndRows="*/*,auto,auto">

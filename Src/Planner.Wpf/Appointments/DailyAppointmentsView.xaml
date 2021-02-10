@@ -4,17 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Planner.Wpf.Appointments"
-             xmlns:notes="clr-namespace:Planner.WpfViewModels.Notes;assembly=Planner.WpfViewModels"
              xmlns:diParameterSources="clr-namespace:Melville.MVVM.Wpf.DiParameterSources;assembly=Melville.MVVM.Wpf"
              xmlns:appointments="clr-namespace:Planner.Models.Appointments;assembly=Planner.Models"
              xmlns:wpfHacks="clr-namespace:Melville.MVVM.Wpf.WpfHacks;assembly=Melville.MVVM.Wpf"
              xmlns:taskList="clr-namespace:Planner.Wpf.TaskList"
              xmlns:eventBindings="clr-namespace:Melville.MVVM.Wpf.EventBindings;assembly=Melville.MVVM.Wpf"
              xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:notes1="clr-namespace:Planner.Wpf.Notes"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <notes:TimeDisplayConverter x:Key="TimeDisplay"
+        <notes1:TimeDisplayConverter x:Key="TimeDisplay"
                                     UsersClock="{diParameterSources:DIBinding}"/>
         <CollectionViewSource x:Key="SortedList"
                               Source="{Binding Appointments}" IsLiveSortingRequested="True">

@@ -4,7 +4,7 @@ using System.Windows;
 using Moq;
 using NodaTime;
 using Planner.Models.Blobs;
-using Planner.WpfViewModels.Notes.Pasters;
+using Planner.Wpf.Notes.Pasters;
 using Xunit;
 
 namespace Planner.Wpf.Test.Notes.Pasters

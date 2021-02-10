@@ -5,10 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Planner.Wpf.Logins"
              xmlns:eventBindings="clr-namespace:Melville.MVVM.Wpf.EventBindings;assembly=Melville.MVVM.Wpf"
-             xmlns:logins="clr-namespace:Planner.WpfViewModels.Logins;assembly=Planner.WpfViewModels"
              xmlns:taskList="clr-namespace:Planner.Wpf.TaskList"
              mc:Ignorable="d"
-             d:DataContext="{d:DesignData Type={x:Type logins:LoginViewModel}}"
+             d:DataContext="{d:DesignData Type={x:Type local:LoginViewModel}}"
              d:DesignHeight="300" d:DesignWidth="300">
     <StackPanel>
         <TextBlock HorizontalAlignment="Center" FontSize="20" Margin="30">
@@ -20,7 +19,7 @@
                 <Button Margin="20" FontSize="50" Click="{eventBindings:EventBinding FakeDb}" Content="Local Fake"/>
                 <ItemsControl ItemsSource="{Binding Sites}">
                     <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="{x:Type logins:TargetSite}">
+                        <DataTemplate DataType="{x:Type local:TargetSite}">
                             <Button Margin="20" FontSize="50" Click="{eventBindings:EventBinding LogIn}" Content="{Binding Name}"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
