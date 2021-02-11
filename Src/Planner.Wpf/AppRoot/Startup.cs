@@ -33,7 +33,6 @@ namespace Planner.Wpf.AppRoot
         [STAThread]
         public static int Main(string[] commandLineArgs)
         {
-            CefSharpRegistration.Initialize();
             ApplicationRootImplementation.Run(new Startup());
             return 0;
         }

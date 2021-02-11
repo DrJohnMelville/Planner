@@ -7,7 +7,6 @@
              xmlns:eventBindings="clr-namespace:Melville.MVVM.Wpf.EventBindings;assembly=Melville.MVVM.Wpf"
              xmlns:filteredDataGrids="clr-namespace:Melville.WpfControls.FilteredDataGrids;assembly=Melville.WpfControls"
              xmlns:plannerPages="clr-namespace:Planner.Wpf.PlannerPages"
-             xmlns:notes1="clr-namespace:Planner.Wpf.Notes"
              xmlns:taskList1="clr-namespace:Planner.Wpf.TaskList"
              xmlns:wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
              mc:Ignorable="d"
