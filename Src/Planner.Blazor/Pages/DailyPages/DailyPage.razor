@@ -122,7 +122,7 @@
         tasks = taskStore.ItemsForDate(date);
         notes = noteStore.ItemsForDate(date);
         appointments = appointmentStore.ItemsForDate(date);
-        return Task.WhenAll(tasks.CompleteList(), notes.CompleteList());
+        return Task.WhenAll(tasks.CompleteList(), notes.CompleteList(), appointments.CompleteList());
     }
 
     private void SetDate()

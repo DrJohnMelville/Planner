@@ -1,6 +1,7 @@
 ﻿using Melville.INPC;
 using Melville.MVVM.Wpf.DiParameterSources;
 using Melville.MVVM.Wpf.ViewFrames;
+using Microsoft.Web.WebView2.Core;
 using NodaTime;
 using Planner.Models.HtmlGeneration;
 using Planner.Wpf.PlannerPages;
@@ -45,7 +46,20 @@ namespace Planner.Wpf.Notes
         // value and refresh the webbrowser.
         private void ReloadNotesDisplay() => 
             ((IExternalNotifyPropertyChanged) this).OnPropertyChanged(nameof(NotesUrl));
-        
+/*
+        [AutoNotify] private bool isNavigating;
 
+        public void OnNavigationStarting(CoreWebView2NavigationStartingEventArgs e)
+        {
+            if ((LinkRedirect.DoRedirect(e.Uri) ?? false))
+            {
+                e.Cancel = true;
+                return;
+            }
+
+            IsNavigating = true;
+        }
+
+        public void OnNavigationCompleted() => IsNavigating = false;*/
     }
 }

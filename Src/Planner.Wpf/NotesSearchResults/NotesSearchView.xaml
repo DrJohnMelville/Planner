@@ -9,6 +9,7 @@
              xmlns:plannerPages="clr-namespace:Planner.Wpf.PlannerPages"
              xmlns:notes1="clr-namespace:Planner.Wpf.Notes"
              xmlns:taskList1="clr-namespace:Planner.Wpf.TaskList"
+             xmlns:wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid easyGrids:GridOperations.ColsAndRows="*,*/*">
@@ -38,8 +39,8 @@
                 </DataGrid.Columns>
             </DataGrid>
         </easyGrids:EasyGrid>
-        <plannerPages:NoteBrowser Address="{Binding DisplayUrl, Mode=OneWay}" Grid.Column="1"
-                                   BoundRequestHandler="{Binding LinkRedirect,
-                                   Converter={x:Static notes1:WebNavigationRouter.FromLinkRedirect}}"/>
+        <wpf:WebView2 plannerPages:WebView2Adapter.BoundSource="{Binding DisplayUrl}"
+                      Grid.Column="1"
+                      plannerPages:WebView2Adapter.LinkRedirect="{Binding LinkRedirect}"/>
     </Grid>
 </UserControl>

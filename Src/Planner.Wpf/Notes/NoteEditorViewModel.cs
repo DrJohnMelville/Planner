@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Data;
 using Melville.INPC;
 using Melville.MVVM.Wpf;
 using Melville.MVVM.Wpf.DiParameterSources;
 using Melville.MVVM.Wpf.RootWindows;
+using Microsoft.Web.WebView2.Core;
 using NodaTime;
 using Planner.Models.Blobs;
 using Planner.Models.HtmlGeneration;
@@ -98,6 +100,10 @@ namespace Planner.Wpf.Notes
             if (!UserConfirmsIntentToDelete(msgboxObject, blob.Name)) return;
             Blobs.Remove(blob);
         }
+
+        public void OnNavigationStarting(CoreWebView2NavigationStartingEventArgs e) => 
+            e.Cancel = !Regex.IsMatch(e.Uri,@"/\d+/\d{4}-\d{1,2}-\d{1,2}/show/");
+        
     }
 
     public class TimeDisplayConverter : IValueConverter
