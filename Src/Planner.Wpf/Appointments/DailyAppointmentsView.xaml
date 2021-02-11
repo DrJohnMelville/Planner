@@ -23,41 +23,50 @@
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
     </UserControl.Resources>
-    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
-                  VerticalScrollBarVisibility="Auto">
-        <ItemsControl ItemsSource="{Binding Source={StaticResource SortedList}}" Grid.IsSharedSizeScope="True">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type appointments:Appointment}">
-                    <Grid>
-                        <Grid.Resources>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="Margin" Value="0 0 5 0"/>
-                            </Style>
-                        </Grid.Resources>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition SharedSizeGroup="Start"/>
-                            <ColumnDefinition SharedSizeGroup="End"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition SharedSizeGroup="Icon"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding Start, Converter={StaticResource TimeDisplay}, ConverterParameter={}{0:h:mm tt}}"/>
-                        <TextBlock Text="{Binding End, Converter={StaticResource TimeDisplay}, ConverterParameter= {}{0:h:mm tt}}"
-                                   Grid.Column="1"/>
-                        <taskList:RichTextDisplay Grid.Column="2" Text="{Binding AppointmentDetails.Title}"/>
-                        <TextBlock Grid.Column="3" Background="Transparent" FontFamily="WebDings" Text="L"
-                                   MouseLeftButtonDown="{eventBindings:EventBinding AppointmentLinkClicked}"
-                                   Grid.RowSpan="2" FontSize="18"
-                                   wpfHacks:VisibilityHack.CollapseIfWhitespace="{Binding AppointmentDetails.BodyText}"/>
-                        <taskList:RichTextDisplay Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" 
-                                                  Text="{Binding AppointmentDetails.Location}"
-                                                  wpfHacks:VisibilityHack.CollapseIfWhitespace="{Binding AppointmentDetails.Location}"/>
-                    </Grid>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </ScrollViewer>
+    <Grid>
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Source={StaticResource SortedList}}" Grid.IsSharedSizeScope="True">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type appointments:Appointment}">
+                        <Grid>
+                            <Grid.Resources>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Margin" Value="0 0 5 0"/>
+                                </Style>
+                            </Grid.Resources>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition SharedSizeGroup="Start"/>
+                                <ColumnDefinition SharedSizeGroup="End"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition SharedSizeGroup="Icon"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding Start, Converter={StaticResource TimeDisplay}, ConverterParameter={}{0:h:mm tt}}"/>
+                            <TextBlock Text="{Binding End, Converter={StaticResource TimeDisplay}, ConverterParameter= {}{0:h:mm tt}}"
+                                       Grid.Column="1"/>
+                            <taskList:RichTextDisplay Grid.Column="2" Text="{Binding AppointmentDetails.Title}"/>
+                            <TextBlock Grid.Column="3" Background="Transparent" FontFamily="WebDings" Text="L"
+                                       MouseLeftButtonDown="{eventBindings:EventBinding AppointmentLinkClicked}"
+                                       Grid.RowSpan="2" FontSize="18"
+                                       wpfHacks:VisibilityHack.CollapseIfWhitespace="{Binding AppointmentDetails.BodyText}"/>
+                            <taskList:RichTextDisplay Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" 
+                                                      Text="{Binding AppointmentDetails.Location}"
+                                                      wpfHacks:VisibilityHack.CollapseIfWhitespace="{Binding AppointmentDetails.Location}"/>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <Grid Background="#77000000" Grid.Row="0" Grid.Column="0"
+              Margin="30" 
+              wpfHacks:VisibilityHack.CollapseIf="{Binding Appointments.FinishedLoading}">
+            <TextBlock Foreground="White" FontSize="18" HorizontalAlignment="Center"
+                       VerticalAlignment="Center">Loading ...</TextBlock>
+        </Grid>
+
+    </Grid>
 </UserControl>
