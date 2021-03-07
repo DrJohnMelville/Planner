@@ -25,5 +25,9 @@ namespace Planner.Web.Controllers
         [HttpGet]
         [Route("Last")]
         public async Task<long> GetLastUpdateTime() => (await engine.LastSynchronizationTime()).ToUnixTimeSeconds();
+
+        [HttpPut]
+        [Route("Clear")]
+        public Task Clear() => engine.ClearAppointments();
     }
 }

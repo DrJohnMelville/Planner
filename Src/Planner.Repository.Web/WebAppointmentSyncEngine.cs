@@ -18,5 +18,8 @@ namespace Planner.Repository.Web
 
         public async Task<Instant> LastSynchronizationTime() =>
             Instant.FromUnixTimeSeconds(await service.Get<long>("/AppointmentSync/Last"));
+
+        public Task ClearAppointments() => 
+            service.Put("/AppointmentSync/Clear");
     }
 }

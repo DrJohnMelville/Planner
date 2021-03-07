@@ -50,6 +50,7 @@ namespace Planner.Repository.Web
         public Task Delete(string url) => Try10Times(() => inner.Delete(url));
 
         public Task Put<T>(string url, T body) => Try10Times(() => inner.Put(url, body));
+        public Task Put(string url) => Try10Times(() => inner.Put(url));
 
         public Task Post<T>(string url, T body) => Try10Times(() => inner.Post(url, body));
     }

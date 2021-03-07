@@ -128,6 +128,13 @@ namespace Planner.Repository.Test.SqLite
                 new AppointmentSyncEngine(db.NewContext).LastSynchronizationTime());
         }
 
-
+        [Fact]
+        public async Task ClearRemovesAllAppointmentData()
+        {
+            await AddMultiAppointment();
+            await sut.ClearAppointments();
+            await EmptyDbReturns1Jan2000();
+            Assert.Empty(await GetAppointmentsList());
+        }
     }
 }

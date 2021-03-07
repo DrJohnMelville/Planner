@@ -11,6 +11,7 @@ namespace Planner.Repository.Web
         public Task<T> Get<TBody, T>(string url, TBody body );
         public Task Delete(string url);
         public Task Put<T>(string url, T body);
+        public Task Put(string url);
         public Task Post<T>(string url, T body);
     }
 
@@ -41,6 +42,7 @@ namespace Planner.Repository.Web
 
         public Task Delete(string url) => EnsureTaskAsync(client.DeleteAsync(url));
         public Task Put<T>(string url, T body) => EnsureTaskAsync(client.PutAsync(url, ObjectAsJsonByteArray(body)));
+        public Task Put(string url) => EnsureTaskAsync(client.PutAsync(url, new ByteArrayContent(Array.Empty<byte>())));
         public Task Post<T>(string url, T body) => EnsureTaskAsync(client.PostAsync(url, ObjectAsJsonByteArray(body)));
 
         private Task EnsureTaskAsync(Task<HttpResponseMessage> input) =>

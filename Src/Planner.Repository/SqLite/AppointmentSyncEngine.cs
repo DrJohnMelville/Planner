@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using NodaTime;
 using Planner.Models.Appointments;
 using Planner.Models.Appointments.SyncStructure;
@@ -57,5 +58,12 @@ namespace Planner.Repository.SqLite
 
         private static SyncTime CreateSyncRecord(Instant time) => 
             new() {SyncTimeId = lastUpdateTimeKey, Time = time};
+
+        public async Task ClearAppointments()
+        {
+            await using var context = contextFactory();
+            await context.Database.ExecuteSqlRawAsync("DELETE FROM SyncTimes");
+            await context.Database.ExecuteSqlRawAsync("DELETE FROM Appointments");
+        }
     }
 }

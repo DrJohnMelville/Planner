@@ -23,7 +23,13 @@
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
     </UserControl.Resources>
-    <Grid>
+    <Grid Background="Transparent">
+        <Grid.ContextMenu>
+            <ContextMenu>
+                <MenuItem Header="Clear All Appointments" 
+                          Click="{eventBindings:EventBinding ClearAllAppointments}"/>
+            </ContextMenu>
+        </Grid.ContextMenu>
         <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                       VerticalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding Source={StaticResource SortedList}}" Grid.IsSharedSizeScope="True">

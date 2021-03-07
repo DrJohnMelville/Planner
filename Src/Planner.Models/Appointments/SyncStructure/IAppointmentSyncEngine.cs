@@ -7,5 +7,6 @@ namespace Planner.Models.Appointments.SyncStructure
     {
         Task Synchronize(AppointmentSyncInfo info);
         Task<Instant> LastSynchronizationTime();
+        Task ClearAppointments();
     }
 }

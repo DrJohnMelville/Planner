@@ -29,6 +29,14 @@ namespace Planner.Web.Test.Controllers
         }
 
         [Fact]
+        public async Task ClearTest()
+        {
+            await sut.Clear();
+            engine.Verify(i=>i.ClearAppointments());
+            engine.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async Task GetLastTime()
         {
             engine.Setup(i => i.LastSynchronizationTime()).ReturnsAsync(Instant.FromUnixTimeSeconds(12345));
