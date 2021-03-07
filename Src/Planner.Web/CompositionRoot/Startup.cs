@@ -40,6 +40,7 @@ namespace Planner.Web.CompositionRoot
             AddCapWebAuthentication(services);
             DatabaseFactory.ConfigureDatabase(services, webHostEnvironment
             );
+            services.AddSingleton<IClock>(SystemClock.Instance);
             services.AddScoped<IDatedRemoteRepository<Appointment>, AppointmentRemoteRepository>();
             services.AddTransient<IAppointmentSyncEngine, AppointmentSyncEngine>();
             services.AddScoped<IDatedRemoteRepository<PlannerTask>, SqlRemoteRepositoryWithDate<PlannerTask>>();

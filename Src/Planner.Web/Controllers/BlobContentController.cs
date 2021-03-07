@@ -14,7 +14,7 @@ namespace Planner.Web.Controllers
     {
         [HttpGet]
         [Route("{key}")]
-        public async Task<IActionResult> Get([FromRoute]Guid key, [FromServices]BlobStreamExtractor extractor)
+        public async Task<IActionResult> Get(Guid key, [FromServices]BlobStreamExtractor extractor)
         {
             var pair = await extractor.FromGuid(key);
             return FormatOutput(pair);
