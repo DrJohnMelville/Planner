@@ -44,7 +44,7 @@ namespace Planner.Repository.Web
         protected abstract string KeyString(T item);
         public async IAsyncEnumerable<T> ItemsFromKeys(IEnumerable<Guid> keys)
         {
-            foreach (var task in await webService.Get<Guid[],T[]>($"{prefix}/Query", keys.ToArray()))
+            foreach (var task in await webService.Get<Guid[],IList<T>>($"{prefix}/Query", keys.ToArray()))
             {
                 yield return task;
             }

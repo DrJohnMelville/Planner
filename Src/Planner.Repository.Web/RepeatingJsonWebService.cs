@@ -34,6 +34,7 @@ namespace Planner.Repository.Web
                 try
                 {
                     await method();
+                    return;
                 }
                 catch (Exception)
                 {

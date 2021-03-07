@@ -32,7 +32,7 @@ namespace Planner.Repository.SqLite
                 .Where(i=>i.Date >= minDate && i.Date <= maxDate)
                 .OrderByDescending(i => i.Date).ThenBy(i => i.TimeCreated)
                 .Take(300)
-                .Select(i => new NoteTitle(i.Title, i.Key, i.Date))
+                .Select(i => new NoteTitle{Title = i.Title, Key = i.Key, Date = i.Date})
                 .AsAsyncEnumerable();
     }
 }

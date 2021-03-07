@@ -59,8 +59,8 @@ namespace Planner.Wpf.Test.NotesSearchResults
         {
             return new NoteTitle[]
             {
-                new("Title1", Guid.Empty, date),
-                new("Title2", Guid.Empty, date.PlusDays(2)),
+                new() {Title = "Title1", Key = Guid.Empty, Date = date},
+                    new() {Title = "Title2", Key = Guid.Empty, Date = date.PlusDays(2)}
             };
         }
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using NodaTime;
@@ -23,8 +24,8 @@ namespace Planner.Repository.Web
             }
         }
 
-        private Task<NoteTitle[]> QueryFromWeb(string query, LocalDate minDate, LocalDate maxDate) => 
-            service.Get<NoteTitle[]>(
+        private Task<IList<NoteTitle>> QueryFromWeb(string query, LocalDate minDate, LocalDate maxDate) => 
+            service.Get<IList<NoteTitle>>(
                 $"/SearchNotes/{HttpUtility.UrlEncode(query)}/{minDate:yyyy-MM-dd}/{maxDate:yyyy-MM-dd}");
     }
 }

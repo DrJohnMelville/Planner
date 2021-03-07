@@ -20,7 +20,7 @@ namespace Planner.Web.Test.Controllers
         {
             source.Setup(i => i.SearchFor("foo", date, date)).Returns(new[]
             {
-                new NoteTitle("Title", Guid.Empty, date)
+                new NoteTitle{Title ="Title", Key =Guid.Empty, Date = date}
             }.ToAsyncEnumerable);
 
             Assert.Equal("Title", (await sut.Search("foo", date, date, source.Object).FirstAsync()).Title);

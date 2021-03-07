@@ -4,9 +4,11 @@ using NodaTime;
 
 namespace Planner.Models.Notes
 {
-    public record NoteTitle(string Title, Guid Key, LocalDate Date)
+    public class NoteTitle
     {
-        
+        public string Title { get; set; } = "";
+        public Guid Key { get; set; }
+        public LocalDate Date { get; set; }
     }
 
     public interface INoteSearcher
