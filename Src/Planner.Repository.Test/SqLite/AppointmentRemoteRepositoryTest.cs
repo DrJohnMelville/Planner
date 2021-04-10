@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
 using NodaTime;
 using Planner.Models.Appointments;
 using Planner.Repository.SqLite;

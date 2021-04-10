@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Http;
+using Melville.FileSystem;
 using Melville.IOC.IocContainers;
-using Melville.MVVM.FileSystem;
 using Planner.Models.Appointments;
 using Planner.Models.Appointments.SyncStructure;
 using Planner.Models.Blobs;

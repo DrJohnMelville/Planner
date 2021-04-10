@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows;
-using Melville.DependencyPropertyGeneration;
+using Melville.INPC;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
 

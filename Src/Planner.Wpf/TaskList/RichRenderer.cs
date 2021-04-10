@@ -35,8 +35,8 @@ namespace Planner.Wpf.TaskList
             ret.ToolTip = segment.Text;
             ret.Focusable = false;
             ret.IsEnabled = true;
-            ret.Click += (s, e) => RunOnVisualTreeSearch.Run((DependencyObject)s, 
-                segment.Label+"LinkClicked", new object[] {e, segment}, out var _);
+            ret.Click += (s, e) =>new VisualTreeRunner((DependencyObject)s)
+                .RunTreeSearch(segment.Label+"LinkClicked", new object[] {e, segment}, out var _);
             return ret;
         }
         

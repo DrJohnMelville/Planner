@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Input;
-using Melville.MVVM.Asyncs;
+using Melville.Hacks;
 using Melville.MVVM.Wpf.KeyboardFacade;
 using Melville.MVVM.Wpf.RootWindows;
 using NodaTime;

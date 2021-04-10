@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using NodaTime;
-using NodaTime.TimeZones;
 
 namespace Planner.Models.Repositories
 {

@@ -1,5 +1,5 @@
 ﻿using System;
-using Melville.MVVM.Time;
+using Melville.SystemInterface.Time;
 
 namespace Planner.Models.HtmlGeneration
 {

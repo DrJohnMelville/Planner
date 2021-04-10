@@ -1,7 +1,6 @@
 ﻿using Melville.INPC;
 using Melville.MVVM.Wpf.DiParameterSources;
 using Melville.MVVM.Wpf.ViewFrames;
-using Microsoft.Web.WebView2.Core;
 using NodaTime;
 using Planner.Models.HtmlGeneration;
 using Planner.Wpf.PlannerPages;

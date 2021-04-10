@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Melville.MVVM.CSharpHacks;
+using Melville.Hacks;
 using Planner.Models.Appointments.SyncStructure;
 
 namespace Planner.OutlookInterop

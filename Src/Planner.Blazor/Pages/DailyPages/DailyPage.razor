@@ -3,14 +3,10 @@
 @using Planner.Models.Repositories
 @using Planner.Models.Tasks
 @using NodaTime
-@using Planner.Blazor.ModalComponent
 @using Planner.Models.Markdown
 @using Planner.Models.Notes
 @using Planner.Models.Time
-@using Markdig.Renderers.Html
 @using Planner.Models.Appointments
-@using Tewr.Blazor.FileReader
-@using Markdig.Extensions.Tables
 @inject ILocalRepository<PlannerTask> taskStore
 @inject ILocalRepository<Note> noteStore
 @inject ILocalRepository<Appointment> appointmentStore

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Melville.MVVM.Time;
+using Melville.SystemInterface.Time;
 using Moq;
 using NodaTime;
 using Planner.Models.Repositories;
@@ -17,8 +17,8 @@ namespace Planner.Models.Test.Repositories
             new Mock<IDatedRemoteRepository<PlannerTask>>();
 
         private readonly Mock<IUsersClock> usersClock = new();
-        private readonly Mock<IWallClock> clock = new Mock<IWallClock>();
-        private readonly LocalDate date = new LocalDate(1975,07,28);
+        private readonly Mock<IWallClock> clock = new();
+        private readonly LocalDate date = new(1975,07,28);
 
         public LocalToRemoteRepositoryBridge<PlannerTask> sut;
 

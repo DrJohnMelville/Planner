@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mime;
 using System.Threading.Tasks;
-using Melville.MVVM.CSharpHacks;
+using Melville.Hacks;
 using Microsoft.Office.Interop.Outlook;
 using NodaTime;
 using NodaTime.Extensions;

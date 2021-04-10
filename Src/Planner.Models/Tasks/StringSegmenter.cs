@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Melville.MVVM.Functional;
+using Melville.Linq;
 
 namespace Planner.Models.Tasks
 {

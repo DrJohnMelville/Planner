@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Melville.INPC;
-using Melville.MVVM.Time;
+using Melville.SystemInterface.Time;
 using NodaTime;
 
 namespace Planner.Models.Repositories

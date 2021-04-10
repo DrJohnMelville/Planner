@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Melville.MVVM.Functional;
+using Melville.Hacks;
 using NodaTime;
 using Planner.Models.Appointments;
 using Planner.Models.HtmlGeneration;

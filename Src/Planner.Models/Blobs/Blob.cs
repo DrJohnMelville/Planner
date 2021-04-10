@@ -1,7 +1,5 @@
-﻿using System;
-using Melville.INPC;
+﻿using Melville.INPC;
 using NodaTime;
-using Planner.Models.Notes;
 using Planner.Models.Repositories;
 
 namespace Planner.Models.Blobs

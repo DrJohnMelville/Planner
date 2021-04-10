@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Melville.MVVM.AdvancedLists;
+using Melville.Lists;
 
 namespace Planner.Models.Repositories
 {

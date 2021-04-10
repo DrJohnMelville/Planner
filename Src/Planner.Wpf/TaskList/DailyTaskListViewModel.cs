@@ -4,7 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Windows.Input;
 using Melville.INPC;
-using Melville.MVVM.AdvancedLists.PersistentLinq;
+using Melville.Lists.PersistentLinq;
 using Melville.MVVM.Wpf.KeyboardFacade;
 using NodaTime;
 using Planner.Models.Repositories;

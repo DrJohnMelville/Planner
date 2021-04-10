@@ -1,11 +1,7 @@
 ﻿using System;
-using Melville.MVVM.FileSystem;
+using Melville.FileSystem;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using NodaTime;
-using NodaTime.Extensions;
-using Planner.Models.Notes;
-using Planner.Models.Tasks;
 
 namespace Planner.Repository.SqLite
 {

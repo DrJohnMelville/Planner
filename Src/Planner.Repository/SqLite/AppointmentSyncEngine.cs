@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using NodaTime;
 using Planner.Models.Appointments;
 using Planner.Models.Appointments.SyncStructure;

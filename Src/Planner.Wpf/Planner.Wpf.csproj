@@ -13,10 +13,10 @@
   </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Melville.MVVM" Version="0.3.9" />
-      <PackageReference Include="Melville.MVVM.Wpf" Version="0.3.13" />
-      <PackageReference Include="Melville.WpfAppFramework" Version="0.1.15" />
-      <PackageReference Include="Melville.WpfControls" Version="0.2.9" />
+      <PackageReference Include="Melville.MVVM" Version="0.5.1" />
+      <PackageReference Include="Melville.MVVM.Wpf" Version="0.5.1" />
+      <PackageReference Include="Melville.WpfAppFramework" Version="0.5.1" />
+      <PackageReference Include="Melville.WpfControls" Version="0.5.0" />
       <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
       <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.774.44" />
       <PackageReference Include="NodaTime.Serialization.SystemTextJson" Version="1.0.0" />

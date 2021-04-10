@@ -1,9 +1,6 @@
-﻿
-using System.Runtime.Versioning;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Planner.Models.Appointments.SyncStructure;
-using Planner.Repository.SqLite;
 
 namespace Planner.Web.Controllers
 {

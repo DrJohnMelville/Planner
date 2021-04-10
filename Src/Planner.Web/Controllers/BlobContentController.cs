@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NodaTime;
 using Planner.Models.Blobs;
-using Planner.Models.Repositories;
 
 namespace Planner.Web.Controllers
 {

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Melville.TestHelpers.Http;
 using Moq;
 using NodaTime;
-using Planner.Models.Notes;
 using Planner.Models.Tasks;
 using Planner.Repository.Test.SqLite;
 using Planner.Repository.Web;

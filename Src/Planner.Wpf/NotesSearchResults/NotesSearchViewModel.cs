@@ -3,7 +3,7 @@ using System.Collections;
 using System.Linq;
 using System.Threading.Tasks;
 using Melville.INPC;
-using Melville.MVVM.AdvancedLists;
+using Melville.Lists;
 using Melville.MVVM.WaitingServices;
 using Melville.MVVM.Wpf.DiParameterSources;
 using NodaTime;

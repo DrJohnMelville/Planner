@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Moq;
 using NodaTime;
 using Planner.Models.Appointments;
 using Planner.Models.Appointments.SyncStructure;

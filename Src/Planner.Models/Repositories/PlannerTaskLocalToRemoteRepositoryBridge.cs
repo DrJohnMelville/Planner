@@ -4,11 +4,10 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Melville.MVVM.AdvancedLists;
-using Melville.MVVM.CSharpHacks;
-using Melville.MVVM.Time;
+using Melville.Hacks;
+using Melville.Lists;
+using Melville.SystemInterface.Time;
 using NodaTime;
-using Planner.Models.Tasks;
 using Planner.Models.Time;
 
 namespace Planner.Models.Repositories

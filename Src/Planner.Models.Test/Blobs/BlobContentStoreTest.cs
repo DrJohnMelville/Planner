@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Text.Unicode;
 using System.Threading.Tasks;
 using Melville.Mvvm.TestHelpers.MockFiles;
 using Planner.Models.Blobs;

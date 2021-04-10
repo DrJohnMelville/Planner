@@ -1,4 +1,4 @@
-﻿using Melville.MVVM.AdvancedLists;
+﻿using Melville.Lists;
 using Planner.Models.Tasks;
 using Xunit;
 
