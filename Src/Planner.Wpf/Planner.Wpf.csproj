@@ -18,7 +18,7 @@
       <PackageReference Include="Melville.WpfAppFramework" Version="0.1.15" />
       <PackageReference Include="Melville.WpfControls" Version="0.2.9" />
       <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
-      <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.705.50" />
+      <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.774.44" />
       <PackageReference Include="NodaTime.Serialization.SystemTextJson" Version="1.0.0" />
     </ItemGroup>
 
@@ -35,7 +35,7 @@
       <ProjectReference Include="..\Planner.Repository.Web\Planner.Repository.Web.csproj" />
       <ProjectReference Include="..\Planner.Repository\Planner.Repository.csproj" />
       <PackageReference Include="TokenServiceClient.Native" Version="0.2.5" />
-      <PackageReference Include="CsvHelper" Version="16.0.0" />
+      <PackageReference Include="CsvHelper" Version="26.1.0" />
     </ItemGroup>
 
 </Project>

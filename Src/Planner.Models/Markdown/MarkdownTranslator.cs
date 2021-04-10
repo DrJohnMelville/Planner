@@ -70,8 +70,7 @@ namespace Planner.Models.Markdown
         private MarkdownParserContext ParserContext(LocalDate baseDate)
         {
             var context = new MarkdownParserContext();
-            context.Properties.Add(PlannerLinkParser.NoteDateKey, baseDate);
-            context.Properties.Add(PlannerLinkParser.DailyPageRootKey, dailyPageRoot);
+            context.SetupCustomParserContext(baseDate, dailyPageRoot);
             return context;
         }
     }
