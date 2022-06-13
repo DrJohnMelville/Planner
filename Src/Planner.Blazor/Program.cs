@@ -7,7 +7,6 @@ using Planner.Blazor.CompositionRoot;
 
 namespace Planner.Blazor
 {
-    #warning try publishing an untrimmed app once the production framework is out/
     public class Program
     {
         public static async Task Main(string[] args)

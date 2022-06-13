@@ -3,7 +3,7 @@
     <PropertyGroup>
       <CefSharpAnyCpuSupport>true</CefSharpAnyCpuSupport>
       <OutputType>WinExe</OutputType>
-        <TargetFramework>net5.0-windows</TargetFramework>
+        <TargetFramework>net6.0-windows</TargetFramework>
         <LangVersion>9</LangVersion>
         <UseWPF>true</UseWPF>
         <Nullable>enable</Nullable>
