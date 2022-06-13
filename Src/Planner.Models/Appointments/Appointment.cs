@@ -5,6 +5,7 @@ using NodaTime;
 
 namespace Planner.Models.Appointments
 {
+    [Obsolete]
     public partial class Appointment
     {
         [AutoNotify] private Instant start;
@@ -14,6 +15,7 @@ namespace Planner.Models.Appointments
         [AutoNotify] private AppointmentDetails? appointmentDetails;
     }
 
+    [Obsolete]
     public partial class AppointmentDetails
     {
         [AutoNotify] private Guid appointmentDetailsId;
