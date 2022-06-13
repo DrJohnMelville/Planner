@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using Melville.MVVM.Wpf.KeyboardFacade;
 using Moq;
 using NodaTime;
-using Planner.Models.Appointments;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
 using Planner.Models.Time;
-using Planner.Wpf.Appointments;
 using Planner.Wpf.PlannerPages;
 using Xunit;
 using DailyNoteDisplayViewModel = Planner.Wpf.Notes.DailyNoteDisplayViewModel;
@@ -39,8 +37,6 @@ namespace Planner.Wpf.Test.PlannerPages
             
             sut = new DailyPlannerPageViewModel(new LocalDate(1975,07,28), 
                 taskListFactory, notesCreator,
-                d=>new DailyAppointmentsViewModel(d, 
-                    Mock.Of<ILocalRepository<Appointment>>(), Mock.Of<IPlannerNavigator>()),
                         navigation.Object, requestEdit, Mock.Of<ILinkRedirect>(),
                    i=>new RichTextCommandTarget(null,null,LocalDate.MaxIsoValue));
         }

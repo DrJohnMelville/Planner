@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Windows.Input;
+using Melville.INPC;
 using Melville.MVVM.WaitingServices;
 using Melville.MVVM.Wpf.DiParameterSources;
 using Melville.MVVM.Wpf.KeyboardFacade;
 using Melville.MVVM.Wpf.ViewFrames;
-using Planner.Models.Appointments.SyncStructure;
 using Planner.Models.Time;
 using Planner.Wpf.PlannerPages;
 using TokenServiceClient.Native;
@@ -23,17 +22,9 @@ namespace Planner.Wpf.Logins
     [OnDisplayed(nameof(TryAutoLogin))]
     public partial class LoginViewModel
     {
-        public IList<TargetSite> Sites { get; }
-        private readonly IPlannerNavigator navigator;
-        private readonly IAppointmentSyncMonitor syncMOnitor;
-
-        public LoginViewModel(IList<TargetSite> sites, IPlannerNavigator navigator, IAppointmentSyncMonitor syncMOnitor)
-        {
-            Sites = sites;
-            this.navigator = navigator;
-            this.syncMOnitor = syncMOnitor;
-        }
-
+        [FromConstructor]public IList<TargetSite> Sites { get; }
+        [FromConstructor] private readonly IPlannerNavigator navigator;
+        
         public void FakeDb(
             [FromServices] IRegisterRepositorySource registry, 
             [FromServices] IUsersClock clock)
@@ -97,7 +88,6 @@ namespace Planner.Wpf.Logins
 
         private void AfterLoginStartup(IUsersClock clock)
         {
-            syncMOnitor.Start();
             navigator.ToDate(clock.CurrentDate());
         }
     }

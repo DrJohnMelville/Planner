@@ -7,7 +7,6 @@ using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
 using Planner.Blazor.ModalComponent;
 using Planner.Blazor.Pages;
-using Planner.Models.Appointments;
 using Planner.Models.Blobs;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Markdown;
@@ -85,9 +84,6 @@ namespace Planner.Blazor.CompositionRoot
             RegisterWebRepository<PlannerTask>("/Task");
             RegisterWebRepository<Note>("/Note");
             RegisterWebRepository<Blob>("/Blob");
-            services.AddSingleton<ILocalRepository<Appointment>, AppointmentCachedRepository>();
-            services.AddSingleton<IDatedRemoteRepository<Appointment>>(i =>
-                new AppointmentRepository(i.GetRequiredService<IJsonWebService>(), "Appointment"));
             services.AddSingleton(typeof(ICachedRepositorySource<>), typeof(LocalToRemoteRepositoryBridge<>));
             services.AddSingleton(typeof(ILocalRepository<>), typeof(CachedRepository<>));
         }

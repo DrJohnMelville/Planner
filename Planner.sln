@@ -22,8 +22,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Blazor", "Src\Plann
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Blazor.Test", "Src\Planner.Blazor.Test\Planner.Blazor.Test.csproj", "{B09F721C-2F53-4374-AC0B-AA5F183E7E3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.OutlookInterop", "Src\Planner.OutlookInterop\Planner.OutlookInterop.csproj", "{473D3F8B-5374-436F-A77C-14B89CE380FC}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,9 +72,5 @@ Global
 		{B09F721C-2F53-4374-AC0B-AA5F183E7E3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B09F721C-2F53-4374-AC0B-AA5F183E7E3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B09F721C-2F53-4374-AC0B-AA5F183E7E3E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{473D3F8B-5374-436F-A77C-14B89CE380FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{473D3F8B-5374-436F-A77C-14B89CE380FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{473D3F8B-5374-436F-A77C-14B89CE380FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{473D3F8B-5374-436F-A77C-14B89CE380FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
