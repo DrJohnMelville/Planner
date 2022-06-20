@@ -40,7 +40,6 @@
         <easyGrids:EasyGrid Grid.ColumnSpan="5" easyGrids:GridOperations.ColsAndRows="*,*/*,*">
             <viewFrames:ViewFrame Content="{Binding TodayTaskList}" Margin="0 0 5 5"/>
             <viewFrames:ViewFrame Grid.RowSpan="2" Content ="{Binding JournalPage}"/>
-            <viewFrames:ViewFrame Margin="0 0 5 0" Content="{Binding Appointments}"/>
             <GridSplitter easyGrids:EasyGrid.ForceColumn="0" easyGrids:EasyGrid.ForceRow="0" Grid.RowSpan="2" 
                           HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="5" />
             <GridSplitter easyGrids:EasyGrid.ForceColumn="0" easyGrids:EasyGrid.ForceRow="0"

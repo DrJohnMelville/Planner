@@ -16,7 +16,6 @@ using Planner.Models.Blobs;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Markdown;
 using Planner.Models.Repositories;
-using Planner.OutlookInterop;
 using Planner.Wpf.Logins;
 using Planner.Wpf.Notes;
 using Planner.Wpf.Notes.Pasters;
@@ -166,10 +165,6 @@ namespace Planner.Wpf.AppRoot
         private static void SetupConfiguration(IBindableIocService service)
         {
             service.AddConfigurationSources(i => i.AddUserSecrets<Startup>());
-            service.Bind<IList<OutlookConnectionConfig>>()
-                .To<List<OutlookConnectionConfig>>(ConstructorSelectors.DefaultConstructor)
-                .InitializeFromConfiguration("Outlook")
-                .AsSingleton();
             service.Bind<IList<TargetSite>>().To<List<TargetSite>>(ConstructorSelectors.DefaultConstructor)
                 .InitializeFromConfiguration("Sites")
                 .AsSingleton();

@@ -31,7 +31,6 @@
     <ItemGroup>
       <Resource Include="AppRoot/App.ico" />
       <ProjectReference Include="..\Planner.Models\Planner.Models.csproj" />
-      <ProjectReference Include="..\Planner.OutlookInterop\Planner.OutlookInterop.csproj" />
       <ProjectReference Include="..\Planner.Repository.Web\Planner.Repository.Web.csproj" />
       <ProjectReference Include="..\Planner.Repository\Planner.Repository.csproj" />
       <PackageReference Include="TokenServiceClient.Native" Version="0.2.5" />
