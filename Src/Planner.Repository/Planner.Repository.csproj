@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <LangVersion>preview</LangVersion>
         <Nullable>enable</Nullable>
     </PropertyGroup>
@@ -9,14 +9,14 @@
         <ProjectReference Include="..\Planner.Models\Planner.Models.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="FlexLabs.EntityFrameworkCore.Upsert" Version="6.0.1" />
-      <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="6.0.5" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.5">
+      <PackageReference Include="FlexLabs.EntityFrameworkCore.Upsert" Version="7.0.0" />
+      <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="7.0.2" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.2">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.5" />
-      <PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="6.14.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.2" />
+      <PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="7.18.3" />
     </ItemGroup>
 
 </Project>
