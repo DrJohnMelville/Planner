@@ -7,7 +7,6 @@ using NodaTime;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Repositories;
 using Planner.Models.Time;
-using Planner.Wpf.Appointments;
 using Planner.Wpf.Notes;
 using DailyTaskListViewModel = Planner.Wpf.TaskList.DailyTaskListViewModel;
 
@@ -24,7 +23,6 @@ namespace Planner.Wpf.PlannerPages
         private readonly Func<LocalDate, RichTextCommandTarget> richCommandFactory;
         public DailyTaskListViewModel TodayTaskList { get; }
         public DailyNoteDisplayViewModel JournalPage { get; }
-        public DailyAppointmentsViewModel Appointments { get; }
         [AutoNotify] private bool popupOpen;
         
         private readonly LocalDate currentDate;
@@ -38,7 +36,6 @@ namespace Planner.Wpf.PlannerPages
             LocalDate currentDate,
             Func<LocalDate, DailyTaskListViewModel> taskListFactory,
             Func<LocalDate, DailyNoteDisplayViewModel> noteDisplayFactory,
-            Func<LocalDate, DailyAppointmentsViewModel> appointmentFactory,
             IPlannerNavigator navigator, 
             IEventBroadcast<NoteEditRequestEventArgs> noteEditRequest, 
             ILinkRedirect redirect,
@@ -49,7 +46,6 @@ namespace Planner.Wpf.PlannerPages
             this.currentDate = currentDate; 
             TodayTaskList = taskListFactory(currentDate);
             JournalPage = noteDisplayFactory(currentDate);
-            Appointments = appointmentFactory(currentDate);
         }
 
         public void ForwardOneDay() => navigator.ToDate(CurrentDate.PlusDays(1));

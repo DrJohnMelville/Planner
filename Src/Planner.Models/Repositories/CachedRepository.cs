@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Melville.Hacks;
 using NodaTime;
-using Planner.Models.Appointments;
 using Planner.Models.HtmlGeneration;
 
 namespace Planner.Models.Repositories
@@ -173,22 +172,5 @@ namespace Planner.Models.Repositories
 
         protected override IListPendingCompletion<T> QuerySource(
             ILocalRepository<T> source, IList<Guid> key) => source.ItemsByKeys(key);
-    }
-    
-    public class AppointmentCachedRepository :CachedRepositoryBase<(Guid, Instant), Appointment>
-    {
-        public AppointmentCachedRepository(ICachedRepositorySource<Appointment> source, 
-            IEventBroadcast<ClearCachesEventArgs> clearCacheSignal) : base(source, clearCacheSignal)
-        {
-        }
-
-        protected override (Guid, Instant) KeyFromItem(Appointment item) => 
-            (item.AppointmentDetails?.AppointmentDetailsId ?? Guid.Empty, item.Start);
-
-        protected override (Guid, Instant) KeyFromGuid(Guid guid) => (guid, Instant.MinValue);
-
-        protected override IListPendingCompletion<Appointment> QuerySource(
-            ILocalRepository<Appointment> source, IList<(Guid, Instant)> key) => 
-            source.ItemsByKeys(key.Select(i=>i.Item1).Distinct());
     }
 }

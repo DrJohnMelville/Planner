@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <LangVersion>preview</LangVersion>
         <Nullable>enable</Nullable>
     </PropertyGroup>
@@ -9,7 +9,7 @@
         <ProjectReference Include="..\Planner.Models\Planner.Models.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="System.Linq.Async" Version="5.0.0" />
+      <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     </ItemGroup>
 
 </Project>

@@ -10,8 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
-using Planner.Models.Appointments;
-using Planner.Models.Appointments.SyncStructure;
 using Planner.Models.Blobs;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
@@ -40,8 +38,6 @@ namespace Planner.Web.CompositionRoot
             DatabaseFactory.ConfigureDatabase(services, webHostEnvironment
             );
             services.AddSingleton<IClock>(SystemClock.Instance);
-            services.AddScoped<IDatedRemoteRepository<Appointment>, AppointmentRemoteRepository>();
-            services.AddTransient<IAppointmentSyncEngine, AppointmentSyncEngine>();
             services.AddScoped<IDatedRemoteRepository<PlannerTask>, SqlRemoteRepositoryWithDate<PlannerTask>>();
             services.AddScoped<IDatedRemoteRepository<Note>, SqlRemoteRepositoryWithDate<Note>>();
             services.AddScoped<IDatedRemoteRepository<Blob>, SqlRemoteRepositoryWithDate<Blob>>();

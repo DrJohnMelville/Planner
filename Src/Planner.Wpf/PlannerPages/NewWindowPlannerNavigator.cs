@@ -4,7 +4,6 @@ using Melville.Hacks;
 using Melville.MVVM.Wpf.KeyboardFacade;
 using Melville.MVVM.Wpf.RootWindows;
 using NodaTime;
-using Planner.Models.Appointments;
 using Planner.Models.HtmlGeneration;
 
 namespace Planner.Wpf.PlannerPages
@@ -48,7 +47,5 @@ namespace Planner.Wpf.PlannerPages
             staWorker.Run(()=>Target().ToEditNote(args));
 
         public void ToNoteSearchPage() => staWorker.Run(() => Target().ToNoteSearchPage());
-        public void ToAppointmentPage(Appointment appointment) => 
-           staWorker.Run(()=>Target().ToAppointmentPage(appointment));
     }
 }

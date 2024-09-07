@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using NodaTime;
-using Planner.Models.Appointments;
 using Planner.Models.Repositories;
 
 namespace Planner.Repository.Web
@@ -18,15 +17,6 @@ namespace Planner.Repository.Web
         protected override string KeyString(T item) => item.Key.ToString();
     }
 
-    public class AppointmentRepository : WebRepositoryBase<Appointment>
-    {
-        public AppointmentRepository(IJsonWebService webService, string prefix) : base(webService, prefix)
-        {
-        }
-
-        protected override string KeyString(Appointment item) => 
-            item.AppointmentDetailsId.ToString();
-    }
     public abstract class WebRepositoryBase<T>:IDatedRemoteRepository<T> 
     {
         private readonly IJsonWebService webService;

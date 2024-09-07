@@ -6,10 +6,8 @@
 @using Planner.Models.Markdown
 @using Planner.Models.Notes
 @using Planner.Models.Time
-@using Planner.Models.Appointments
 @inject ILocalRepository<PlannerTask> taskStore
 @inject ILocalRepository<Note> noteStore
-@inject ILocalRepository<Appointment> appointmentStore
 @inject ModalService ModalService
 @inject IAppNavigation AppNavigation
 @inject IUsersClock Clock
@@ -56,33 +54,7 @@
 </table>
 
 <h4>Appointments</h4>
-@if (appointments != null)
-{
-    <table>
-        @foreach(var appt in appointments.OrderBy(i=>i.Start))
-    {
-        <tr>
-            <td>@Clock.InstantInZone(appt.Start).ToString("h:mm tt", null)</td>
-            <td>@Clock.InstantInZone(appt.End).ToString("h:mm tt", null)</td>
-            <td>@((MarkupString) MarkdownTranslator.RenderLine(date, appt.AppointmentDetails?.Title??""))</td>
-            <td>
-                @if (!string.IsNullOrWhiteSpace(appt.AppointmentDetails?.BodyText))
-                {
-                    <a href="/AppointmentDetail/@RelativeDateString(0)/@appt.AppointmentDetails.AppointmentDetailsId">
-                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span></a>
-                }
-            </td>
-        </tr>
-        @if (!string.IsNullOrWhiteSpace(appt.AppointmentDetails?.Location))
-        {
-            <tr>
-                <td></td>
-                <td colspan="2">@((MarkupString) MarkdownTranslator.RenderLine(date, appt.AppointmentDetails?.Location??""))</td>
-            </tr>
-        }
-    }
-    </table>
-}
+
 <h4>Notes</h4>
 @if (notes != null)
 {
@@ -108,7 +80,6 @@
 
     private IListPendingCompletion<PlannerTask>? tasks;
     private IListPendingCompletion<Note>? notes;
-    private IListPendingCompletion<Appointment>? appointments;
 
     protected override Task OnParametersSetAsync() => OnInitializedAsync();
 
@@ -117,8 +88,7 @@
         SetDate();
         tasks = taskStore.ItemsForDate(date);
         notes = noteStore.ItemsForDate(date);
-        appointments = appointmentStore.ItemsForDate(date);
-        return Task.WhenAll(tasks.CompleteList(), notes.CompleteList(), appointments.CompleteList());
+        return Task.WhenAll(tasks.CompleteList(), notes.CompleteList());
     }
 
     private void SetDate()

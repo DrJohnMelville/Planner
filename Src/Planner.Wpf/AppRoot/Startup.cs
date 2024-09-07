@@ -12,13 +12,10 @@ using Melville.WpfAppFramework.StartupBases;
 using Microsoft.Extensions.Configuration;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
-using Planner.Models.Appointments;
-using Planner.Models.Appointments.SyncStructure;
 using Planner.Models.Blobs;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Markdown;
 using Planner.Models.Repositories;
-using Planner.OutlookInterop;
 using Planner.Wpf.Logins;
 using Planner.Wpf.Notes;
 using Planner.Wpf.Notes.Pasters;
@@ -50,13 +47,8 @@ namespace Planner.Wpf.AppRoot
             RegisterRepositories(service);
             RegisterNoteServer(service);
             RegisterMarkdownPasters(service);
-            RegisterOutlookSync(service);
         }
 
-        private void RegisterOutlookSync(IBindableIocService service)
-        {
-            service.Bind<IAppointmentSyncMonitor>().To<AppointmentSyncMonitor>().AsSingleton();
-        }
 
         private void RegisterMarkdownPasters(IBindableIocService service)
         {
@@ -123,7 +115,6 @@ namespace Planner.Wpf.AppRoot
         {
             service.Bind<IRegisterRepositorySource>().To<RegisterRepositorySource>();
             service.BindGeneric(typeof(ICachedRepositorySource<>),typeof(LocalToRemoteRepositoryBridge<>));
-            service.Bind<ILocalRepository<Appointment>>().To<AppointmentCachedRepository>().AsSingleton();
             service.BindGeneric(typeof(ILocalRepository<>), typeof(CachedRepository<>), 
                 i=>i.AsSingleton());
         }
@@ -174,10 +165,6 @@ namespace Planner.Wpf.AppRoot
         private static void SetupConfiguration(IBindableIocService service)
         {
             service.AddConfigurationSources(i => i.AddUserSecrets<Startup>());
-            service.Bind<IList<OutlookConnectionConfig>>()
-                .To<List<OutlookConnectionConfig>>(ConstructorSelectors.DefaultConstructor)
-                .InitializeFromConfiguration("Outlook")
-                .AsSingleton();
             service.Bind<IList<TargetSite>>().To<List<TargetSite>>(ConstructorSelectors.DefaultConstructor)
                 .InitializeFromConfiguration("Sites")
                 .AsSingleton();
