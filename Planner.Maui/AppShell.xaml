@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="Planner.Maui.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Planner.Maui"
+    xmlns:daily="clr-namespace:Planner.Maui.Pages.Daily"
+    xmlns:searchNotes="clr-namespace:Planner.Maui.Pages.SearchNotes"
+    Shell.FlyoutBehavior="Disabled"
+    Title="Planner.Maui">
+
+    <TabBar>
+        <Tab Title="Today" Icon="task.svg">
+            <ShellContent Route="Today" ContentTemplate="{DataTemplate daily:DayPage}"/>
+        </Tab>
+        <Tab Title="Search" Icon="notes.svg">
+            <ShellContent Route="Search" 
+                          ContentTemplate="{DataTemplate searchNotes:SearchPage}"/>
+        </Tab>
+    </TabBar>
+</Shell>

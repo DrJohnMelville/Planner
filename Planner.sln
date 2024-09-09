@@ -1,26 +1,31 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Wpf", "Src\Planner.Wpf\Planner.Wpf.csproj", "{68964DF7-5B60-4B24-93BD-E66A2BD485DA}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35111.106
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Planner.Wpf", "Src\Planner.Wpf\Planner.Wpf.csproj", "{68964DF7-5B60-4B24-93BD-E66A2BD485DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Wpf.Test", "Src\Planner.Wpf.Test\Planner.Wpf.Test.csproj", "{F0CBA9E9-8FF4-4CDD-B91F-4BB39A7F54BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Planner.Wpf.Test", "Src\Planner.Wpf.Test\Planner.Wpf.Test.csproj", "{F0CBA9E9-8FF4-4CDD-B91F-4BB39A7F54BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Models", "Src\Planner.Models\Planner.Models.csproj", "{1B0E7202-99E0-4412-9442-05EA6128C5CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Planner.Models", "Src\Planner.Models\Planner.Models.csproj", "{1B0E7202-99E0-4412-9442-05EA6128C5CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Models.Test", "Src\Planner.Models.Test\Planner.Models.Test.csproj", "{AD718B3A-F579-4A60-B542-B1E16DBB450D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Planner.Models.Test", "Src\Planner.Models.Test\Planner.Models.Test.csproj", "{AD718B3A-F579-4A60-B542-B1E16DBB450D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Repository", "Src\Planner.Repository\Planner.Repository.csproj", "{4A4E7E97-356D-4032-8D97-A1340993432F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Planner.Repository", "Src\Planner.Repository\Planner.Repository.csproj", "{4A4E7E97-356D-4032-8D97-A1340993432F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Repository.Test", "Src\Planner.Repository.Test\Planner.Repository.Test.csproj", "{BC426516-D69C-4895-8704-D056F7C2E9DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Planner.Repository.Test", "Src\Planner.Repository.Test\Planner.Repository.Test.csproj", "{BC426516-D69C-4895-8704-D056F7C2E9DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Web", "Src\Planner.Web\Planner.Web.csproj", "{BB6A1770-FB3E-4EB5-9A22-BCABD81CFB31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Planner.Web", "Src\Planner.Web\Planner.Web.csproj", "{BB6A1770-FB3E-4EB5-9A22-BCABD81CFB31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Web.Test", "Src\Planner.Web.Test\Planner.Web.Test.csproj", "{055C80E5-0F5B-4442-AA0F-CE7EB4B694F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Planner.Web.Test", "Src\Planner.Web.Test\Planner.Web.Test.csproj", "{055C80E5-0F5B-4442-AA0F-CE7EB4B694F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Repository.Web", "Src\Planner.Repository.Web\Planner.Repository.Web.csproj", "{B37BDBE7-C81B-448B-9EBC-207B88D8BC41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Planner.Repository.Web", "Src\Planner.Repository.Web\Planner.Repository.Web.csproj", "{B37BDBE7-C81B-448B-9EBC-207B88D8BC41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Blazor", "Src\Planner.Blazor\Planner.Blazor.csproj", "{701576D8-599C-4C01-B0D0-58E32F63CC4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Planner.Blazor", "Src\Planner.Blazor\Planner.Blazor.csproj", "{701576D8-599C-4C01-B0D0-58E32F63CC4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Blazor.Test", "Src\Planner.Blazor.Test\Planner.Blazor.Test.csproj", "{B09F721C-2F53-4374-AC0B-AA5F183E7E3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Planner.Blazor.Test", "Src\Planner.Blazor.Test\Planner.Blazor.Test.csproj", "{B09F721C-2F53-4374-AC0B-AA5F183E7E3E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Maui", "Planner.Maui\Planner.Maui.csproj", "{FC4AEEAE-2A81-4E71-A2D6-B805FBB833D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,10 +61,10 @@ Global
 		{BB6A1770-FB3E-4EB5-9A22-BCABD81CFB31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB6A1770-FB3E-4EB5-9A22-BCABD81CFB31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB6A1770-FB3E-4EB5-9A22-BCABD81CFB31}.Release|Any CPU.Build.0 = Release|Any CPU
-		{055C80E5-0F5B-4442-AA0F-CE7EB4B694F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{055C80E5-0F5B-4442-AA0F-CE7EB4B694F5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{055C80E5-0F5B-4442-AA0F-CE7EB4B694F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{055C80E5-0F5B-4442-AA0F-CE7EB4B694F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{055C80E5-0F5B-4442-AA0F-CE7EB4B694F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{055C80E5-0F5B-4442-AA0F-CE7EB4B694F5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B37BDBE7-C81B-448B-9EBC-207B88D8BC41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B37BDBE7-C81B-448B-9EBC-207B88D8BC41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B37BDBE7-C81B-448B-9EBC-207B88D8BC41}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -72,5 +77,14 @@ Global
 		{B09F721C-2F53-4374-AC0B-AA5F183E7E3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B09F721C-2F53-4374-AC0B-AA5F183E7E3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B09F721C-2F53-4374-AC0B-AA5F183E7E3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC4AEEAE-2A81-4E71-A2D6-B805FBB833D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC4AEEAE-2A81-4E71-A2D6-B805FBB833D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC4AEEAE-2A81-4E71-A2D6-B805FBB833D6}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{FC4AEEAE-2A81-4E71-A2D6-B805FBB833D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC4AEEAE-2A81-4E71-A2D6-B805FBB833D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC4AEEAE-2A81-4E71-A2D6-B805FBB833D6}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
