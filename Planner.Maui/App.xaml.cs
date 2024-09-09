@@ -1,11 +1,18 @@
-﻿namespace Planner.Maui;
+﻿using Planner.Maui.Pages.Login;
 
-public partial class App : Application
+namespace Planner.Maui;
+
+public partial class App : Application, IAfterLoginOperation
 {
     public App()
     {
         InitializeComponent();
 
+        MainPage = new LoginPage(new LoginPageViewModel(this));
+    }
+
+    public void Do()
+    {
         MainPage = new AppShell();
     }
 }

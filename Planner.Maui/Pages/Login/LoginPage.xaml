@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:login="clr-namespace:Planner.Maui.Pages.Login"
+             x:Class="Planner.Maui.Pages.Login.LoginPage"
+             Title="LoginPage"
+             x:DataType="{x:Type login:LoginPageViewModel}">
+    <VerticalStackLayout>
+        <ActivityIndicator IsRunning="True"></ActivityIndicator>
+    </VerticalStackLayout>
+</ContentPage>
