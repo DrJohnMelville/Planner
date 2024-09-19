@@ -10,6 +10,6 @@ public readonly struct IocConfiguration(
     public void Register()
     {
         service.Bind<IList<TargetSite>>().ToConstant(
-            config.Bind<List<TargetSite>>());
+            config.GetSection("Sites").Bind<List<TargetSite>>());
     }
 }

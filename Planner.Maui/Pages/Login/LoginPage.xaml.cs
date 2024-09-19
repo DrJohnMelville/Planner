@@ -29,5 +29,6 @@ public partial class LoginPageViewModel(IList<TargetSite> sites)
 
     public void TryAutoLogin()
     {
+        ;
     } 
 }
