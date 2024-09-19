@@ -5,7 +5,5 @@
              x:Class="Planner.Maui.Pages.Login.LoginPage"
              Title="LoginPage"
              x:DataType="{x:Type login:LoginPageViewModel}">
-    <VerticalStackLayout>
-        <ActivityIndicator IsRunning="True"></ActivityIndicator>
-    </VerticalStackLayout>
+    
 </ContentPage>

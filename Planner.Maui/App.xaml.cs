@@ -1,18 +1,14 @@
-﻿using Planner.Maui.Pages.Login;
+﻿using Melville.INPC;
+using Planner.Maui.Pages.Login;
 
 namespace Planner.Maui;
 
-public partial class App : Application, IAfterLoginOperation
+public partial class App : Application
 {
-    public App()
-    {
+    public App(Func<AppShell> shell)
+    { 
         InitializeComponent();
-
-        MainPage = new LoginPage(new LoginPageViewModel(this));
+        MainPage = shell();
     }
 
-    public void Do()
-    {
-        MainPage = new AppShell();
-    }
 }

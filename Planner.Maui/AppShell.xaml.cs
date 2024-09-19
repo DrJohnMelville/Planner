@@ -1,11 +1,13 @@
 ﻿using Planner.Maui.Pages.Daily;
+using Planner.Maui.Pages.Login;
 
 namespace Planner.Maui;
 
-public partial class AppShell : Shell
+public partial class AppShell
 {
-    public AppShell()
+    public AppShell(LoginPage page)
     {
         InitializeComponent();
+        Navigation.PushModalAsync(page);
     }
 }

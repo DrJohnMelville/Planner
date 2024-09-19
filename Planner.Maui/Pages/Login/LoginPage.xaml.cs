@@ -1,4 +1,6 @@
 using System.Windows.Input;
+using Melville.INPC;
+using Planner.Models.Login;
 
 namespace Planner.Maui.Pages.Login;
 
@@ -8,19 +10,24 @@ public partial class LoginPage : ContentPage
     {
         BindingContext = vm;
         InitializeComponent();
+        vm.SetNavigation(Navigation);
     }
-}
 
-public interface IAfterLoginOperation
-{
-    void Do();
-}
-
-public class LoginPageViewModel
-{
-    public ICommand DoneLoginCommand { get; }
-    public LoginPageViewModel(IAfterLoginOperation after)
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
     {
-        DoneLoginCommand = new Command(after.Do);
+        base.OnNavigatedTo(args);
+        ((LoginPageViewModel)BindingContext).TryAutoLogin();
     }
+}
+
+public partial class LoginPageViewModel(IList<TargetSite> sites)
+{
+    public IList<TargetSite> Sites { get; } = sites;
+    private INavigation navigation;
+    public void SetNavigation(INavigation navigation) => this.navigation = navigation;
+
+
+    public void TryAutoLogin()
+    {
+    } 
 }
