@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:login="clr-namespace:Planner.Maui.Pages.Login"
+             xmlns:login1="clr-namespace:Planner.Models.Login;assembly=Planner.Models"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="Planner.Maui.Pages.Login.LoginPage"
+             Title="LoginPage" 
+             x:DataType="{x:Type login:LoginPageViewModel}" x:Name="Outer">
+    <login:FillItemsLayout BindableLayout.ItemsSource="{Binding Sites}"
+                                MaxColumns="1" Background="Blue">
+        <BindableLayout.ItemTemplate>
+            <DataTemplate x:DataType="{x:Type login1:TargetSite}">
+                <Button Text="{Binding Name}" Margin="10"
+                        Command="{Binding BindingContext.LoginCommand, 
+                    Source={x:Reference Outer}}"
+                        CommandParameter="{Binding}"/>
+            </DataTemplate>
+        </BindableLayout.ItemTemplate>
+    </login:FillItemsLayout>
+</ContentPage>

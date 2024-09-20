@@ -1,6 +1,5 @@
 using System.Windows.Input;
-using Melville.INPC;
-using Planner.Models.Login;
+using Microsoft.Maui.Layouts;
 
 namespace Planner.Maui.Pages.Login;
 
@@ -20,15 +19,3 @@ public partial class LoginPage : ContentPage
     }
 }
 
-public partial class LoginPageViewModel(IList<TargetSite> sites)
-{
-    public IList<TargetSite> Sites { get; } = sites;
-    private INavigation navigation;
-    public void SetNavigation(INavigation navigation) => this.navigation = navigation;
-
-
-    public void TryAutoLogin()
-    {
-        ;
-    } 
-}

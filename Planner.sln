@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Planner.Blazor", "Src\Plann
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Planner.Blazor.Test", "Src\Planner.Blazor.Test\Planner.Blazor.Test.csproj", "{B09F721C-2F53-4374-AC0B-AA5F183E7E3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Maui", "Planner.Maui\Planner.Maui.csproj", "{FC4AEEAE-2A81-4E71-A2D6-B805FBB833D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Planner.Maui", "Src\Planner.Maui\Planner.Maui.csproj", "{BC521167-B029-4FAA-A708-82D20821DFBC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,14 +77,17 @@ Global
 		{B09F721C-2F53-4374-AC0B-AA5F183E7E3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B09F721C-2F53-4374-AC0B-AA5F183E7E3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B09F721C-2F53-4374-AC0B-AA5F183E7E3E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FC4AEEAE-2A81-4E71-A2D6-B805FBB833D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FC4AEEAE-2A81-4E71-A2D6-B805FBB833D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FC4AEEAE-2A81-4E71-A2D6-B805FBB833D6}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{FC4AEEAE-2A81-4E71-A2D6-B805FBB833D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FC4AEEAE-2A81-4E71-A2D6-B805FBB833D6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FC4AEEAE-2A81-4E71-A2D6-B805FBB833D6}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{BC521167-B029-4FAA-A708-82D20821DFBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC521167-B029-4FAA-A708-82D20821DFBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC521167-B029-4FAA-A708-82D20821DFBC}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{BC521167-B029-4FAA-A708-82D20821DFBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC521167-B029-4FAA-A708-82D20821DFBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC521167-B029-4FAA-A708-82D20821DFBC}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F9FAC64A-523B-43CE-BC05-DD65E1892EC6}
 	EndGlobalSection
 EndGlobal
