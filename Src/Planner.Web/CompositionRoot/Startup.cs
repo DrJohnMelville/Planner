@@ -60,8 +60,8 @@ namespace Planner.Web.CompositionRoot
 
         private void AddCapWebAuthentication(IServiceCollection services) =>
             services.AddCapWebTokenService(
-                configuration.GetValue<string>("TokenService:Name"),
-                configuration.GetValue<string>("TokenService:Secret"));
+                configuration.GetValue<string>("TokenService:Name")??"No Name",
+                configuration.GetValue<string>("TokenService:Secret")??"No Secret");
 
         private void ConfigureJsonSerialization(JsonOptions o)
         {

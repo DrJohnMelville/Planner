@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Melville.IOC" Version="0.6.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Planner.Repository.Web\Planner.Repository.Web.csproj" />
+    <ProjectReference Include="..\Planner.Repository\Planner.Repository.csproj" />
+  </ItemGroup>
+
+</Project>

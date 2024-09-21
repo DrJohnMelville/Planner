@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using Melville.INPC;
 using Melville.MVVM.WaitingServices;
 using Melville.MVVM.Wpf.DiParameterSources;
 using Melville.MVVM.Wpf.KeyboardFacade;
 using Melville.MVVM.Wpf.ViewFrames;
+using Planner.CommonmUI.RepositoryMapping;
 using Planner.Models.Login;
 using Planner.Models.Time;
 using Planner.Wpf.PlannerPages;
@@ -16,11 +16,6 @@ using TokenServiceClient.Native.PersistentToken;
 
 namespace Planner.Wpf.Logins
 {
-    public interface IRegisterRepositorySource
-    {
-        void UseWebSource(HttpClient authenticatedClient);
-        void UseLocalTestSource();
-    }
     [OnDisplayed(nameof(TryAutoLogin))]
     public partial class LoginViewModel
     {

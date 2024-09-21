@@ -12,6 +12,7 @@ using Melville.WpfAppFramework.StartupBases;
 using Microsoft.Extensions.Configuration;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
+using Planner.CommonmUI.RepositoryMapping;
 using Planner.Models.Blobs;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Login;
@@ -165,6 +166,10 @@ namespace Planner.Wpf.AppRoot
 
         private static void SetupConfiguration(IBindableIocService service)
         {
+            // service.Bind<IList<TargetSite>>().ToConstant([
+            //     new TargetSite("Planner", "https://planner.johnmelville.com"),
+            //     new TargetSite("PlannerLocal", "https://localhost:44370")
+            // ]);
             service.AddConfigurationSources(i => i.AddUserSecrets<Startup>());
             service.Bind<IList<TargetSite>>().To<List<TargetSite>>(ConstructorSelectors.DefaultConstructor)
                 .InitializeFromConfiguration("Sites")

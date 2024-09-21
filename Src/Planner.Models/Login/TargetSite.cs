@@ -1,9 +1,9 @@
-﻿namespace Planner.Models.Login;
+﻿using Melville.INPC;
 
-public class TargetSite
+namespace Planner.Models.Login;
+
+public partial class TargetSite
 {
-    public string Name { get; set; } = "";
-    public string Url { get; set; } = "";
-    public string Secret { get; set; } = "";
-
+    [FromConstructor] public string Name { get; }
+    [FromConstructor] public string Url { get; } 
 }

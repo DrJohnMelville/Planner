@@ -16,7 +16,7 @@
       <PackageReference Include="Melville.MVVM" Version="0.6.7" />
       <PackageReference Include="Melville.MVVM.Wpf" Version="0.6.7" />
       <PackageReference Include="Melville.WpfAppFramework" Version="0.6.7" />
-      <PackageReference Include="Melville.WpfControls" Version="0.5.16" />
+      <PackageReference Include="Melville.WpfControls" Version="0.6.6" />
       <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0" />
       <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1619-prerelease" />
       <PackageReference Include="NodaTime.Serialization.SystemTextJson" Version="1.0.0" />
@@ -30,10 +30,11 @@
 
     <ItemGroup>
       <Resource Include="AppRoot/App.ico" />
+      <ProjectReference Include="..\Planner.CommonmUI\Planner.CommonUI.csproj" />
       <ProjectReference Include="..\Planner.Models\Planner.Models.csproj" />
       <ProjectReference Include="..\Planner.Repository.Web\Planner.Repository.Web.csproj" />
       <ProjectReference Include="..\Planner.Repository\Planner.Repository.csproj" />
-      <PackageReference Include="TokenServiceClient.Native" Version="0.2.5" />
+      <PackageReference Include="TokenServiceClient.Native" Version="0.3.1" />
       <PackageReference Include="CsvHelper" Version="30.0.1" />
     </ItemGroup>
 
