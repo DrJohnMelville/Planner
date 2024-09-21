@@ -14,7 +14,10 @@
              d:DesignHeight="300" d:DesignWidth="300">
         <Grid  easyGrids:GridOperations.ColsAndRows="*/*,auto,auto">
                 <wpf:WebView2 plannerPages:WebView2Adapter.BoundSource="{Binding NotesUrl, Mode=OneWay}"
-                              plannerPages:WebView2Adapter.LinkRedirect="{Binding LinkRedirect}"/>
+                              plannerPages:WebView2Adapter.LinkRedirect="{Binding LinkRedirect}"
+                              plannerPages:WebView2Adapter.IsNavigating="{Binding IsNavigating, Mode=OneWayToSource}"
+                              x:Name="WebView"
+                              />
                 <Grid Grid.Row="1" easyGrids:GridOperations.ColsAndRows="*,auto/auto">
                     <TextBox Text="{Binding NoteCreator.Title, UpdateSourceTrigger=PropertyChanged}"
                              TextWrapping="Wrap"/>

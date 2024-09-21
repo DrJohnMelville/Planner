@@ -70,7 +70,8 @@ namespace Planner.Wpf.Logins
 
         public async Task<bool> ConnectToWebRepository(TargetSite site, IRegisterRepositorySource register)
         {
-            var loginAttempt = CapWebTokenFactory.CreateCapWebClient(site.Name, site.Secret);
+            var loginAttempt = CapWebTokenFactory.CreateCapWebClient(
+                site.Name, "Anonymous");
             if (!await loginAttempt.LoginAsync()) return false;
             register.UseWebSource(CreateDestinationClient(loginAttempt, site.Url));
             return true;

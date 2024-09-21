@@ -3,8 +3,8 @@
     <PropertyGroup>
       <CefSharpAnyCpuSupport>true</CefSharpAnyCpuSupport>
       <OutputType>WinExe</OutputType>
-        <TargetFramework>net7.0-windows</TargetFramework>
-        <LangVersion>9</LangVersion>
+        <TargetFramework>net8.0-windows</TargetFramework>
+        <LangVersion>latest</LangVersion>
         <UseWPF>true</UseWPF>
         <Nullable>enable</Nullable>
       <UserSecretsId>61c8620a-93d0-499d-83e0-45328ebae465</UserSecretsId>
