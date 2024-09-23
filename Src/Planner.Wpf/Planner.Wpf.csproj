@@ -34,7 +34,6 @@
       <ProjectReference Include="..\Planner.Models\Planner.Models.csproj" />
       <ProjectReference Include="..\Planner.Repository.Web\Planner.Repository.Web.csproj" />
       <ProjectReference Include="..\Planner.Repository\Planner.Repository.csproj" />
-      <PackageReference Include="TokenServiceClient.Native" Version="0.3.1" />
       <PackageReference Include="CsvHelper" Version="30.0.1" />
     </ItemGroup>
 
