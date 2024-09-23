@@ -9,7 +9,10 @@ public readonly struct IocConfiguration(
 {
     public void Register()
     {
-        service.Bind<IList<TargetSite>>().ToConstant(
-            config.GetSection("Sites").Bind<List<TargetSite>>());
+            service.Bind<IList<TargetSite>>().ToConstant([
+                new TargetSite("Planner", "https://planner.drjohnmelville.com"),
+                new TargetSite("PlannerLocal", "https://localhost:44370"),
+                new TargetSite("LocalFake", ""),
+            ]);
     }
 }

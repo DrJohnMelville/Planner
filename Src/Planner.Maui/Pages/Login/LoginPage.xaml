@@ -14,7 +14,7 @@
                 <Button Text="{Binding Name}" Margin="10"
                         Command="{Binding BindingContext.LoginCommand, 
                     Source={x:Reference Outer}}"
-                        CommandParameter="{Binding}"/>
+                        CommandParameter="{Binding Source={RelativeSource Self}}"/>
             </DataTemplate>
         </BindableLayout.ItemTemplate>
     </login:FillItemsLayout>

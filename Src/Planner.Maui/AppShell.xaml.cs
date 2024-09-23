@@ -1,5 +1,4 @@
-﻿using Planner.Maui.Pages.Daily;
-using Planner.Maui.Pages.Login;
+﻿using Planner.Maui.Pages.Login;
 
 namespace Planner.Maui;
 

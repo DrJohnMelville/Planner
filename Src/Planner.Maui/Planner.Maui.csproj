@@ -16,6 +16,7 @@
 		<OutputType>Exe</OutputType>
 		<RootNamespace>Planner.Maui</RootNamespace>
 		<UseMaui>true</UseMaui>
+		<MauiVersion>8.0.90</MauiVersion>
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
@@ -90,7 +91,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\Planner.CommonmUI\Planner.CommonUI.csproj" />
 	  <ProjectReference Include="..\Planner.Models\Planner.Models.csproj" />
+	  <PackageReference Include="Melville.MVVM.Maui" Version="0.7.3-preview" />
+	  <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.90" />
+	  <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.90" />
 	</ItemGroup>
 
 </Project>

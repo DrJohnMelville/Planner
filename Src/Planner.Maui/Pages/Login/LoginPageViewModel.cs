@@ -1,4 +1,7 @@
 using System.Windows.Input;
+using Melville.MVVM.Maui.Commands;
+using Melville.MVVM.WaitingServices;
+using Planner.CommonmUI.RepositoryMapping;
 using Planner.Models.Login;
 
 namespace Planner.Maui.Pages.Login;
@@ -15,9 +18,14 @@ public partial class LoginPageViewModel(IList<TargetSite> sites)
     }
 
     private ICommand? loginCommand;
-    public ICommand LoginCommand => loginCommand ??= new Command<TargetSite>(Login);
-    public void Login(TargetSite site)
+    public ICommand LoginCommand => loginCommand ??= InheritedCommandFactory.Create(Login);
+    public async Task Login(TargetSite site, IShowProgress waitService,
+        [FromServices] IRegisterRepositorySource reguster)
     {
-        ;
+        using var wait = waitService.ShowProgress("Logging in...");
+        if (await reguster.LoginTo(site))
+        {
+            await (navigation?.PopModalAsync() ?? Task.CompletedTask);
+        }
     }
 }

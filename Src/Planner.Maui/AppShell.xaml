@@ -6,6 +6,7 @@
     xmlns:local="clr-namespace:Planner.Maui"
     xmlns:daily="clr-namespace:Planner.Maui.Pages.Daily"
     xmlns:searchNotes="clr-namespace:Planner.Maui.Pages.SearchNotes"
+    xmlns:waitingService="clr-namespace:Melville.MVVM.Maui.WaitingService;assembly=Melville.MVVM.Maui"
     Shell.FlyoutBehavior="Disabled"
     Title="Planner.Maui">
 
