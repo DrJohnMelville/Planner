@@ -8,7 +8,7 @@
              Title="LoginPage" 
              x:DataType="{x:Type login:LoginPageViewModel}" x:Name="Outer">
     <login:FillItemsLayout BindableLayout.ItemsSource="{Binding Sites}"
-                                MaxColumns="1" Background="Blue">
+                                MaxColumns="1">
         <BindableLayout.ItemTemplate>
             <DataTemplate x:DataType="{x:Type login1:TargetSite}">
                 <Button Text="{Binding Name}" Margin="10"

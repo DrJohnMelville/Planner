@@ -6,10 +6,12 @@ namespace Planner.Maui;
 
 public partial class App
 {
-    public App(Func<AppShell> shell)
+    public App(Func<AppShell> shell, Func<LoginPage> login)
     { 
         InitializeComponent();
-        MainPage = shell();
+        var loginPage = login();
+        loginPage.ViewModel.LoginSuccessful += (_, _) => MainPage = shell();
+        MainPage = loginPage;
     }
 
 }

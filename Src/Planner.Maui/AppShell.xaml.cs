@@ -4,9 +4,8 @@ namespace Planner.Maui;
 
 public partial class AppShell
 {
-    public AppShell(LoginPage page)
+    public AppShell()
     {
         InitializeComponent();
-        Navigation.PushModalAsync(page);
     }
 }

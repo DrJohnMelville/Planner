@@ -9,6 +9,12 @@ using Planner.Repository.Web;
 
 namespace Planner.CommonmUI.RepositoryMapping;
 
+public interface IRegisterRepositorySource
+{
+    void UseWebSource(HttpClient authenticatedClient);
+    void UseLocalTestSource();
+}
+
 public class RegisterRepositorySource : IRegisterRepositorySource
 {
     private IocContainer container;

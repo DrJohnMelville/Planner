@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
 using Planner.CommonmUI.RepositoryMapping;
+using Planner.CommonUI;
 using Planner.Models.Blobs;
 using Planner.Models.HtmlGeneration;
 using Planner.Models.Login;
@@ -40,13 +41,10 @@ namespace Planner.Wpf.AppRoot
 
         protected override void RegisterWithIocContainer(IBindableIocService service)
         {
+            new CommonMaappings(service).Configure();
             service.AddLogging();
             RegisterReloadEvents(service);
             RegisterMainWindowWithView(service);
-            RegisterNodaTimeClock(service);
-            SetupConfiguration(service);
-            SetupJsonSerialization(service);
-            RegisterRepositories(service);
             RegisterNoteServer(service);
             RegisterMarkdownPasters(service);
         }
@@ -103,29 +101,6 @@ namespace Planner.Wpf.AppRoot
                 .WhenConstructingType<ReloadingNavigator>();
         }
 
-        private void SetupJsonSerialization(IBindableIocService service)
-        {
-            var options = new JsonSerializerOptions();
-            options.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
-            options.IgnoreReadOnlyProperties = true;
-            options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-            options.ReferenceHandler = ReferenceHandler.Preserve;
-            service.Bind<JsonSerializerOptions>().ToConstant(options);
-        }
-
-        private static void RegisterRepositories(IBindableIocService service)
-        {
-            service.Bind<IRegisterRepositorySource>().To<RegisterRepositorySource>();
-            service.BindGeneric(typeof(ICachedRepositorySource<>),typeof(LocalToRemoteRepositoryBridge<>));
-            service.BindGeneric(typeof(ILocalRepository<>), typeof(CachedRepository<>), 
-                i=>i.AsSingleton());
-        }
-        
-        private static void RegisterNodaTimeClock(IBindableIocService service)
-        {
-            service.Bind<IClock>().ToConstant(SystemClock.Instance);
-        }
-
         private static void RegisterMainWindowWithView(IBindableIocService service)
         {
             service.Bind<INavigationHistory>().To<PlannerPageNavigationHistory>().AsScoped();
@@ -163,12 +138,5 @@ namespace Planner.Wpf.AppRoot
             while (root.ParentScope != null && root.ParentScope != root) root = root.ParentScope;
             return root;
         }
-
-        private static void SetupConfiguration(IBindableIocService service) =>
-            service.Bind<IList<TargetSite>>().ToConstant([
-                new TargetSite("Planner", "https://planner.drjohnmelville.com"),
-                new TargetSite("PlannerLocal", "https://localhost:44370"),
-                new TargetSite("LocalFake", ""),
-            ]);
     }
 }

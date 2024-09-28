@@ -11,6 +11,7 @@ public partial class LoginPageViewModel(IList<TargetSite> sites)
     public IList<TargetSite> Sites { get; } = sites;
     private INavigation? navigation;
     public void SetNavigation(INavigation navigation) => this.navigation = navigation;
+    public event EventHandler<EventArgs>? LoginSuccessful; 
 
 
     public void TryAutoLogin()
@@ -26,6 +27,7 @@ public partial class LoginPageViewModel(IList<TargetSite> sites)
         if (await reguster.LoginTo(site))
         {
             await (navigation?.PopModalAsync() ?? Task.CompletedTask);
+            LoginSuccessful?.Invoke(this, EventArgs.Empty);
         }
     }
 }

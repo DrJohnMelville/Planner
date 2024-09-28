@@ -5,9 +5,10 @@ namespace Planner.Maui.Pages.Login;
 
 public partial class LoginPage : ContentPage
 {
+    public LoginPageViewModel ViewModel { get; }
     public LoginPage(LoginPageViewModel vm)
     {
-        BindingContext = vm;
+        BindingContext = ViewModel = vm;
         InitializeComponent();
         vm.SetNavigation(Navigation);
     }
