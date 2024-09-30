@@ -20,6 +20,11 @@
         <Button Grid.Column="3" Margin="15,0" Text="&#xE5D5;" />
         <Button Grid.Column="4" Text="&#xE5E1;" Command="{Binding TomorrowCommand}" />
         <daily:LocalDateLabel Date="{Binding Date}"
-                              Grid.Column="1" VerticalOptions ="Center" FontSize="25"/>
+                              Grid.Column="1" VerticalOptions ="Center" FontSize="25">
+            <daily:LocalDateLabel.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding PickDateCommand}"
+                                      CommandParameter="{Binding Source={RelativeSource AncestorType={x:Type daily:LocalDateLabel}}}"></TapGestureRecognizer>
+            </daily:LocalDateLabel.GestureRecognizers>
+        </daily:LocalDateLabel>
     </Grid>
 </ContentView>

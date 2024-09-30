@@ -16,7 +16,7 @@ public partial class DailyPageViewModel
     public Command TomorrowCommand { get; }
     public Command YesterdayCommand { get; }
     public Command TodayCommand { get; }
-    public CommandBase PickDateCommand;
+    public CommandBase PickDateCommand { get; }
 
     public DailyPageViewModel(IUsersClock clock, Func<LocalDate, TaskViewModel> taskFactory)
     {
@@ -36,8 +36,9 @@ public partial class DailyPageViewModel
         TodayCommand.ChangeCanExecute();
     }
 
-    public async Task PickDate()
+    public Task PickDate(INavigation navigation, 
+        [FromServices] DatePickerPage pickerPage )
     {
-        ;
+        return navigation.PushModalAsync(pickerPage);
     }
 }
