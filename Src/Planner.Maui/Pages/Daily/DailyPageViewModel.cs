@@ -1,4 +1,5 @@
 ﻿using Melville.INPC;
+using Melville.MVVM.Maui.Commands;
 using NodaTime;
 using Planner.Maui.Pages.Daily.Tasks;
 using Planner.Models.Time;
@@ -15,6 +16,7 @@ public partial class DailyPageViewModel
     public Command TomorrowCommand { get; }
     public Command YesterdayCommand { get; }
     public Command TodayCommand { get; }
+    public CommandBase PickDateCommand;
 
     public DailyPageViewModel(IUsersClock clock, Func<LocalDate, TaskViewModel> taskFactory)
     {
@@ -24,6 +26,7 @@ public partial class DailyPageViewModel
         YesterdayCommand = new Command(() => Date = Date.PlusDays(-1));
         TodayCommand = new Command(() => Date = this.clock.CurrentDate(), 
             ()=> Date != this.clock.CurrentDate());
+        PickDateCommand = InheritedCommandFactory.Create(PickDate);
         Date = clock.CurrentDate();
     }
 
@@ -31,5 +34,10 @@ public partial class DailyPageViewModel
     {
         Tasks = taskFactory(date);
         TodayCommand.ChangeCanExecute();
+    }
+
+    public async Task PickDate()
+    {
+        ;
     }
 }
