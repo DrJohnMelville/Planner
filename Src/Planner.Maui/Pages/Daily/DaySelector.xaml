@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Planner.Maui.Pages.Daily.DaySelector">
+             xmlns:daily="clr-namespace:Planner.Maui.Pages.Daily"
+             x:Class="Planner.Maui.Pages.Daily.DaySelector"
+             x:DataType="{x:Type daily:DailyPageViewModel}">
     <Grid ColumnDefinitions="auto,*,auto, auto, auto">
         <Grid.Resources>
             <Style TargetType="{x:Type Button}" 
@@ -13,10 +15,11 @@
                 <Setter Property="MinimumWidthRequest" Value="1"/>
             </Style>
         </Grid.Resources>
-        <Button Text="&#xE5E0;" />
-        <Button Grid.Column="2" Text="&#xE8DF;" />
+        <Button Text="&#xE5E0;" Command="{Binding YesterdayCommand}" />
+        <Button Grid.Column="2" Text="&#xE8DF;" Command="{Binding  TodayCommand}" />
         <Button Grid.Column="3" Margin="15,0" Text="&#xE5D5;" />
-        <Button Grid.Column="4" Text="&#xE5E1;" />
-        <Label Grid.Column="1" VerticalOptions="Center" Text="{Binding Date}" FontSize="25"/>
+        <Button Grid.Column="4" Text="&#xE5E1;" Command="{Binding TomorrowCommand}" />
+        <daily:LocalDateLabel Date="{Binding Date}"
+                              Grid.Column="1" VerticalOptions ="Center" FontSize="25"/>
     </Grid>
 </ContentView>

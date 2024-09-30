@@ -1,34 +1,35 @@
-﻿using Melville.Lists.PersistentLinq;
+﻿using Melville.INPC;
 using NodaTime;
-using Planner.Models.Repositories;
-using Planner.Models.Tasks;
+using Planner.Maui.Pages.Daily.Tasks;
 using Planner.Models.Time;
 
 namespace Planner.Maui.Pages.Daily;
 
-public class DailyPageViewModel
+public partial class DailyPageViewModel
 {
-    public LocalDate Date { get; set; }
-    public TaskViewModel Tasks { get; }
-    public string Text => $"Daily Page View: {Date}";
+    [AutoNotify] private LocalDate date;
+    [AutoNotify] private TaskViewModel tasks;
+    private readonly Func<LocalDate, TaskViewModel> taskFactory;
+    private readonly IUsersClock clock;
+
+    public Command TomorrowCommand { get; }
+    public Command YesterdayCommand { get; }
+    public Command TodayCommand { get; }
+
     public DailyPageViewModel(IUsersClock clock, Func<LocalDate, TaskViewModel> taskFactory)
     {
+        this.taskFactory = taskFactory;
+        this.clock = clock;
+        TomorrowCommand = new Command(() => Date = Date.PlusDays(1));
+        YesterdayCommand = new Command(() => Date = Date.PlusDays(-1));
+        TodayCommand = new Command(() => Date = this.clock.CurrentDate(), 
+            ()=> Date != this.clock.CurrentDate());
         Date = clock.CurrentDate();
-        Tasks = taskFactory(Date);
     }
 
-}
-
-public class TaskViewModel(
-    ILocalRepository<PlannerTask> taskRepository, LocalDate date)
-{
-    public IList<SingleTaskViewModel> Tasks { get; } =
-        taskRepository.ItemsForDate(date)
-            .SelectCol(i => new SingleTaskViewModel(i));
-}
-
-public class SingleTaskViewModel(PlannerTask task)
-{
-    public PlannerTask Task { get; set; } = task;
-
+    private void OnDateChanged(LocalDate date)
+    {
+        Tasks = taskFactory(date);
+        TodayCommand.ChangeCanExecute();
+    }
 }

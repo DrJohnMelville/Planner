@@ -4,11 +4,7 @@
              xmlns:daily="clr-namespace:Planner.Maui.Pages.Daily"
              x:Class="Planner.Maui.Pages.Daily.DayPage">
     <VerticalStackLayout>
-        <Label 
-            TextType="Html"
-            Text="{Binding Text}"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
         <daily:DaySelector/>
+
     </VerticalStackLayout>
 </ContentPage>
