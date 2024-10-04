@@ -8,10 +8,10 @@
              Title="LoginPage" 
              x:DataType="{x:Type login:LoginPageViewModel}" x:Name="Outer">
     <login:FillItemsLayout BindableLayout.ItemsSource="{Binding Sites}"
-                                MaxColumns="1">
+                                MaxColumns="1" Margin="30">
         <BindableLayout.ItemTemplate>
             <DataTemplate x:DataType="{x:Type login1:TargetSite}">
-                <Button Text="{Binding Name}" Margin="10"
+                <login:MaxFontSizeButton Text="{Binding Name}" Margin="10"
                         Command="{Binding BindingContext.LoginCommand, 
                     Source={x:Reference Outer}}"
                         CommandParameter="{Binding Source={RelativeSource Self}}"/>

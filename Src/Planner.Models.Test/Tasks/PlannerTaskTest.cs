@@ -59,7 +59,8 @@ namespace Planner.Models.Test.Tasks
         public void PriorityOrder(char priority, int order, string display)
         {
             sut.Priority = priority;
-            using var _ = INPCCounter.VerifyInpcFired(sut, i => i.Order, i=>i.Prioritized, i => i.PriorityDisplay);
+            using var _ = INPCCounter.VerifyInpcFired(sut, 
+                i => i.Order, i => i.PriorityDisplay, i=>i.Prioritized);
             sut.Order = order;
             Assert.Equal(display, sut.PriorityDisplay);
         }

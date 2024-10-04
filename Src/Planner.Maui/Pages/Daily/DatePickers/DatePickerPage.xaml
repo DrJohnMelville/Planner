@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:XCalendar.Maui.Views;assembly=XCalendar.Maui"
+             xmlns:daily="clr-namespace:Planner.Maui.Pages.Daily"
+             xmlns:datePickers="clr-namespace:Planner.Maui.Pages.Daily.DatePickers"
+             xmlns:login="clr-namespace:Planner.Maui.Pages.Login"
+             x:Class="Planner.Maui.Pages.Daily.DatePickers.DatePickerPage"
+             Title="DatePickerPage"
+             x:DataType="{x:Type datePickers:DatePickerViewModel}">
+    <Grid RowDefinitions="Auto, *" >
+        <Button Text="{Binding Choices.Title}" Margin="10"/>
+        <login:FillItemsLayout Grid.Row="1" MaxColumns="{Binding Choices.Width}"
+                               BindableLayout.ItemsSource="{Binding Choices.Items}">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type datePickers:DateChoiceModel}">
+                    <login:MaxFontSizeButton Text="{Binding Title}" Margin="2"/>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </login:FillItemsLayout>
+    </Grid>
+</ContentPage>

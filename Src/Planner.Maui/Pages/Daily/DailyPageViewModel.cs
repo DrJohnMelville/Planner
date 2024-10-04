@@ -1,6 +1,7 @@
 ﻿using Melville.INPC;
 using Melville.MVVM.Maui.Commands;
 using NodaTime;
+using Planner.Maui.Pages.Daily.DatePickers;
 using Planner.Maui.Pages.Daily.Tasks;
 using Planner.Models.Time;
 
@@ -9,7 +10,7 @@ namespace Planner.Maui.Pages.Daily;
 public partial class DailyPageViewModel
 {
     [AutoNotify] private LocalDate date;
-    [AutoNotify] private TaskViewModel tasks;
+    [AutoNotify] private TaskViewModel tasks = null!;
     private readonly Func<LocalDate, TaskViewModel> taskFactory;
     private readonly IUsersClock clock;
 
@@ -39,6 +40,7 @@ public partial class DailyPageViewModel
     public Task PickDate(INavigation navigation, 
         [FromServices] DatePickerPage pickerPage )
     {
+        pickerPage.ViewModel.SetupDate(Date);
         return navigation.PushModalAsync(pickerPage);
     }
 }

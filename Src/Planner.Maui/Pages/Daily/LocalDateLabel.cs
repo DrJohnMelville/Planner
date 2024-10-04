@@ -3,7 +3,6 @@ using NodaTime;
 
 namespace Planner.Maui.Pages.Daily;
 
-[GenerateBP(typeof(LocalDate), "Date")]
 public partial class LocalDateLabel : Label
 {
     private static String[] FormatOptions = [
@@ -13,6 +12,10 @@ public partial class LocalDateLabel : Label
         "ddd MM/d/yyyy",
         "d"
     ];
+
+    [GenerateBP]
+    private void OnDateChanged(LocalDate date) => InvalidateMeasure();
+
     protected override Size MeasureOverride(double widthConstraint, double heightConstraint)
     {
         foreach (var format in FormatOptions)
