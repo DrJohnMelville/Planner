@@ -40,7 +40,12 @@ public partial class DailyPageViewModel
     public Task PickDate(INavigation navigation, 
         [FromServices] DatePickerPage pickerPage )
     {
-        pickerPage.ViewModel.SetupDate(Date);
+        pickerPage.ViewModel.SetupDate(Date, selectDate =>
+        {
+            navigation.PopModalAsync();
+            Date = selectDate;
+        });
+
         return navigation.PushModalAsync(pickerPage);
     }
 }

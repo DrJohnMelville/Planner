@@ -8,13 +8,31 @@
              x:Class="Planner.Maui.Pages.Daily.DatePickers.DatePickerPage"
              Title="DatePickerPage"
              x:DataType="{x:Type datePickers:DatePickerViewModel}">
-    <Grid RowDefinitions="Auto, *" >
-        <Button Text="{Binding Choices.Title}" Margin="10"/>
-        <login:FillItemsLayout Grid.Row="1" MaxColumns="{Binding Choices.Width}"
+    <Grid RowDefinitions="Auto, *" ColumnDefinitions="60,*,60" Background="Transparent">
+        <Grid.GestureRecognizers>
+            <SwipeGestureRecognizer Direction="Left"
+                                    Command="{Binding Choices.LeftCommand}"/>
+            <SwipeGestureRecognizer Direction="Right"
+                                    Command="{Binding Choices.RightCommand}"/>
+            <SwipeGestureRecognizer Direction="Up"
+                                    Command="{Binding Choices.UpCommand}"/>
+        </Grid.GestureRecognizers>
+        <Button FontSize="20" FontFamily="Material" Text="&#xE5E0;" Margin="10"
+                                 Command="{Binding Choices.RightCommand}"/>
+
+        <Button FontSize="20" FontFamily="Material" Text="&#xE5E1;" Grid.Column="2"
+                Margin="10" Command="{Binding Choices.LeftCommand}"/>
+ 
+        <Button FontSize="20" Text="{Binding Choices.Title}" Margin="10" Grid.Column="1"
+                Command="{Binding Choices.UpCommand}"/>
+        
+        <login:FillItemsLayout Grid.Row="1" Grid.ColumnSpan="3"
+                               MaxColumns="{Binding Choices.Width}"
                                BindableLayout.ItemsSource="{Binding Choices.Items}">
             <BindableLayout.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type datePickers:DateChoiceModel}">
-                    <login:MaxFontSizeButton Text="{Binding Title}" Margin="2"/>
+                    <login:MaxFontSizeButton Text="{Binding Title}" Margin="2"
+                                             Command="{Binding DownCommand}"/>
                 </DataTemplate>
             </BindableLayout.ItemTemplate>
         </login:FillItemsLayout>

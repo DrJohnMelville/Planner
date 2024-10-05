@@ -1,7 +1,4 @@
-﻿using System.Drawing.Drawing2D;
-using Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;
-
-namespace Planner.Maui.Pages.Login;
+﻿namespace Planner.Maui.Pages.Login;
 
 public class MaxFontSizeButton: Button
 {
@@ -14,39 +11,21 @@ public class MaxFontSizeButton: Button
 
     protected override Size MeasureOverride(double widthConstraint, double heightConstraint)
     {
-        if (constraint.Width != widthConstraint || constraint.Height != heightConstraint) FindMaxFontSize(widthConstraint, heightConstraint);
-
-        return new Size(widthConstraint, heightConstraint);
+        if (constraint.Width != widthConstraint || constraint.Height != heightConstraint) 
+            FindMaxFontSize(widthConstraint, heightConstraint);
+ 
+        return base.MeasureOverride(widthConstraint, heightConstraint);
     }
-
+     
     private void FindMaxFontSize(double widthConstraint, double heightConstraint)
     {
-        constraint = new Size(widthConstraint, heightConstraint);
-        var startingSize = FontSize;
-        if (IsTooBig())
-            SearchSize(2, startingSize);
-        else 
-            SearchSize(startingSize, 1000);
-    }
-
-
-    private bool IsTooBig()
-    {
-         var size = base.MeasureOverride(1_000_000, 1_000_000);
-         return (size.Width > constraint.Width || size.Height > constraint.Height);
-    }
-
-    private void SearchSize(double bottom, double top)
-    {
-        while (top - bottom > 1.0)
-        {
-            var mean = (top + bottom) / 2.0;
-            FontSize = mean;
-            if (IsTooBig())
-                top = mean;
-            else
-                bottom = mean;
-        }
-        FontSize = bottom;
+        var twoCorners = 2.0 * CornerRadius;
+        constraint = new Size(
+            widthConstraint, heightConstraint);
+        var measure = this.CreateTecMeasurer(constraint);
+        FontSize = (measure.IsTooBig(Text, FontSize) ?
+            measure.MaxSize(2, FontSize, Text) :
+            measure.MaxSize(FontSize, 1000, Text)) * 0.75;
+        InvalidateMeasure();
     }
 }
