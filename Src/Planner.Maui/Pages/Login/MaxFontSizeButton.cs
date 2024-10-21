@@ -19,13 +19,32 @@ public class MaxFontSizeButton: Button
      
     private void FindMaxFontSize(double widthConstraint, double heightConstraint)
     {
-        var twoCorners = 2.0 * CornerRadius;
         constraint = new Size(
             widthConstraint, heightConstraint);
-        var measure = this.CreateTecMeasurer(constraint);
-        FontSize = (measure.IsTooBig(Text, FontSize) ?
-            measure.MaxSize(2, FontSize, Text) :
-            measure.MaxSize(FontSize, 1000, Text)) * 0.75;
+
+        FontSize = (IsTooBig(Text, FontSize) ?
+            MaxSize(2, FontSize, Text) :
+            MaxSize(FontSize, 1000, Text)) * 0.75;
         InvalidateMeasure();
+    }
+
+    public bool IsTooBig(string text, double fontSize)
+    {
+        FontSize = fontSize;
+        var measuredSize = base.MeasureOverride(constraint.Width, constraint.Height);
+        return measuredSize.Width > constraint.Width ||
+               measuredSize.Height > constraint.Height;
+    }
+    public double MaxSize(double bottom, double top, string text)
+    {
+        while (top - bottom > 1.0)
+        {
+            var mean = (top + bottom) / 2.0;
+            if (IsTooBig(text, mean))
+                top = mean;
+            else
+                bottom = mean;
+        }
+        return bottom;
     }
 }

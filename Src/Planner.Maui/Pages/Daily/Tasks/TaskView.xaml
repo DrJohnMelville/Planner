@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:tasks="clr-namespace:Planner.Maui.Pages.Daily.Tasks"
+             x:Class="Planner.Maui.Pages.Daily.Tasks.TaskView"
+             x:DataType="{x:Type tasks:TaskViewModel}">
+    <Grid RowDefinitions="Auto, *, Auto" x:Name="OuterGrid">
+        <GraphicsView Grid.RowSpan="3">
+            <GraphicsView.Drawable>
+                <tasks:ColumnLines Color="{AppThemeBinding Light = {x:Static Colors.Black}, Dark={x:Static Colors.White}}" />
+            </GraphicsView.Drawable>
+        </GraphicsView>
+        <Grid ColumnDefinitions="35, 40, *">
+            <Label FontFamily="Material" FontSize="18" Text="&#xe5ca;"></Label>
+            <Label Grid.Column="1" FontSize="18" Text="A1"></Label>
+            <Label Grid.Column="2" FontSize="18" Text="Task"></Label>
+            <Rectangle Fill="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                       MaximumHeightRequest="3" VerticalOptions="End" Grid.ColumnSpan="3">
+            </Rectangle>
+        </Grid>
+        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Tasks}" Grid.Row="1">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type tasks:SingleTaskViewModel}">
+                    <Grid ColumnDefinitions="35, 40, *">
+                        <Label FontFamily="Material" FontSize="18" Text="&#xe5ca;"></Label>
+                        <Label Grid.Column="1" FontSize="18" Text="A" Margin="0" Padding="0"></Label>
+                        <Label Grid.Column="2" FontSize="12" Text="{Binding Task.Name}"></Label>
+                        <Rectangle Fill="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                                   MaximumHeightRequest="3" VerticalOptions="End" Grid.ColumnSpan="3">
+                        </Rectangle>
+                    </Grid>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </VerticalStackLayout>
+        <Grid ColumnDefinitions="35, 40, *" Grid.Row="2" >
+            <Entry Grid.Column="2" FontSize="12" Placeholder="Enter New Task Here" ClearButtonVisibility="WhileEditing"
+                   IsEnabled="True" IsReadOnly="False" Text="{Binding NewTaskName, Mode=TwoWay}"
+                   ReturnCommand="{Binding NewTaskCommand}"></Entry>   
+        </Grid>
+    </Grid>
+</ContentView>

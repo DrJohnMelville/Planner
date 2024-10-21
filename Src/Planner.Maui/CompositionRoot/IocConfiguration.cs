@@ -10,6 +10,7 @@ public readonly struct IocConfiguration(
 {
     public void Register()
     {
+        GC.KeepAlive(config); // Disable the not used warning -- I may use it in the future..
         new CommonMaappings(service).Configure();
         RegistedMauiDefaultPreferences();
     }

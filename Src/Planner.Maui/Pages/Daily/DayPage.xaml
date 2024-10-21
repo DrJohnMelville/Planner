@@ -2,9 +2,10 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:daily="clr-namespace:Planner.Maui.Pages.Daily"
+             xmlns:tasks="clr-namespace:Planner.Maui.Pages.Daily.Tasks"
              x:Class="Planner.Maui.Pages.Daily.DayPage">
     <VerticalStackLayout>
         <daily:DaySelector/>
-
+        <tasks:TaskView BindingContext="{Binding Tasks}"/>
     </VerticalStackLayout>
 </ContentPage>
