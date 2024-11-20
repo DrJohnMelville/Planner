@@ -1,7 +1,12 @@
-﻿namespace Planner.Maui.Pages.Login;
+﻿using Microsoft.Maui.Graphics.Platform;
+
+namespace Planner.Maui.Pages.Login;
 
 public class MaxFontSizeButton: Button
 {
+    #warning use IStringSizeService
+//    private readonly IStringSizeService sizeService = new PlatformStringSizeService();
+
     public MaxFontSizeButton()
     {
         LineBreakMode = LineBreakMode.NoWrap;
