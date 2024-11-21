@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Planner.Models.Tasks;
-using Xunit;
+﻿using Planner.Models.Tasks;
 
-namespace Planner.Models.Test.Tasks
-{
+namespace Planner.Test.Models.Tasks;
+
     public class ChangeTaskPriorityTest
     {
         private readonly List<PlannerTask> list = new();
@@ -20,21 +17,21 @@ namespace Planner.Models.Test.Tasks
             Assert.Equal(expected, string.Join("|", list.Select(i => i.PriorityDisplay)));
         }
 
-        [Fact]
+        [Test]
         public void InsertEmpty()
         {
             list.ChangeTaskPriority(item, 'A',3);
             AssertCompleteOrder("A3");
         }
 
-        [Fact]
+        [Test]
         public void DisplaceSingle()
         {
             list.Add(new PlannerTask(){Priority='A', Order = 1});
             list.ChangeTaskPriority(item,'A', 1);
             AssertCompleteOrder("A1|A2");
         }
-        [Fact]
+        [Test]
         public void DoNotAdjustDifferentPriority()
         {
             list.Add(new PlannerTask(){Priority='B', Order = 1});
@@ -42,7 +39,7 @@ namespace Planner.Models.Test.Tasks
             AssertCompleteOrder("A1|B1");
         }
 
-        [Fact]
+        [Test]
         public void DoNotAdjustNullPriority()
         {
             list.Add(new PlannerTask());
@@ -52,7 +49,7 @@ namespace Planner.Models.Test.Tasks
             AssertCompleteOrder(" | ");
         }
 
-        [Fact]
+        [Test]
         public void MoveWithinOrder()
         {
             list.ChangeTaskPriority(item, 'A',2);
@@ -62,7 +59,7 @@ namespace Planner.Models.Test.Tasks
             list.ChangeTaskPriority(item, 'A', 3);
             AssertCompleteOrder("A3|A1|A2|A4");
         }
-        [Fact]
+        [Test]
         public void IgnoreConfounders()
         {
             list.ChangeTaskPriority(item, 'A',2);
@@ -79,4 +76,3 @@ namespace Planner.Models.Test.Tasks
         }
 
     }
-}

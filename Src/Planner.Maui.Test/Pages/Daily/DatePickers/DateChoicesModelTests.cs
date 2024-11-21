@@ -51,7 +51,7 @@ public class DateChoicesModelTests
     [InlineData("UUU", "Century 2000")]
     [InlineData("UUUR", "Century 1900")]
     [InlineData("UUUL", "Century 2100")]
-    [InlineData("UUUL1", "Century 2100s")]
+    [InlineData("UUUL1", "2100s")]
     public void SwipeTest(string actions, string finalTitle)
     {
         DateChoicesModel model = NewMonthModel(2024, 10, 1);
