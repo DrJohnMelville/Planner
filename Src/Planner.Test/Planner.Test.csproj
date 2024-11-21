@@ -21,6 +21,8 @@
     <ProjectReference Include="..\Planner.Repository.Web\Planner.Repository.Web.csproj" />
 
     <ProjectReference Include="..\Planner.Repository\Planner.Repository.csproj" />
+
+    <ProjectReference Include="..\Planner.Web\Planner.Web.csproj" />
   </ItemGroup>
 
 </Project>
