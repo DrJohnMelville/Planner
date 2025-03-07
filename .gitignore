@@ -9,6 +9,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+web.config
 
 # Asp.Net key files
 key*.xml
