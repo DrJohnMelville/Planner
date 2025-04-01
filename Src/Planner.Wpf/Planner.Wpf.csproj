@@ -15,11 +15,12 @@
     <ItemGroup>
       <PackageReference Include="Melville.MVVM" Version="0.7.7" />
       <PackageReference Include="Melville.MVVM.Wpf" Version="0.7.7" />
-      <PackageReference Include="Melville.WpfAppFramework" Version="0.6.7" />
-      <PackageReference Include="Melville.WpfControls" Version="0.6.6" />
-      <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0" />
-      <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1619-prerelease" />
-      <PackageReference Include="NodaTime.Serialization.SystemTextJson" Version="1.0.0" />
+      <PackageReference Include="Melville.WpfAppFramework" Version="0.7.7" />
+      <PackageReference Include="Melville.WpfControls" Version="0.7.5" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.3" />
+      <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3124.44" />
+      <PackageReference Include="NodaTime.Serialization.SystemTextJson" Version="1.3.0" />
+      <PackageReference Include="System.Text.Json" Version="9.0.3" />
     </ItemGroup>
 
     <ItemGroup>
@@ -34,7 +35,7 @@
       <ProjectReference Include="..\Planner.Models\Planner.Models.csproj" />
       <ProjectReference Include="..\Planner.Repository.Web\Planner.Repository.Web.csproj" />
       <ProjectReference Include="..\Planner.Repository\Planner.Repository.csproj" />
-      <PackageReference Include="CsvHelper" Version="30.0.1" />
+      <PackageReference Include="CsvHelper" Version="33.0.1" />
     </ItemGroup>
 
 </Project>

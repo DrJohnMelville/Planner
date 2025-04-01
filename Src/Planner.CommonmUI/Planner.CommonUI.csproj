@@ -9,8 +9,9 @@
 
   <ItemGroup>
     <PackageReference Include="Melville.IOC" Version="0.7.7" />
-    <PackageReference Include="NodaTime.Serialization.SystemTextJson" Version="1.0.0" />
-    <PackageReference Include="TokenServiceClient.Native" Version="0.3.1" />
+    <PackageReference Include="NodaTime.Serialization.SystemTextJson" Version="1.3.0" />
+    <PackageReference Include="System.Text.Json" Version="9.0.3" />
+    <PackageReference Include="TokenServiceClient.Native" Version="0.4.3" />
   </ItemGroup>
 
   <ItemGroup>
