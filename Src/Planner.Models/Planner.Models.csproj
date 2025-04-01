@@ -1,19 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <LangVersion>10.0</LangVersion>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Markdig" Version="0.30.4" />
-      <PackageReference Include="Melville.FileSystem" Version="0.6.7" />
-      <PackageReference Include="Melville.INPC" Version="0.6.7" />
-      <PackageReference Include="Melville.Generators.INPC" Version="0.6.7" />
-      <PackageReference Include="Melville.MVVM" Version="0.6.7" />
-      <PackageReference Include="Melville.SystemInterface" Version="0.6.7" />
-      <PackageReference Include="NodaTime" Version="3.1.6" />
+      <PackageReference Include="Markdig" Version="0.40.0" />
+      <PackageReference Include="Melville.FileSystem" Version="0.7.7" />
+      <PackageReference Include="Melville.INPC" Version="0.7.7" />
+      <PackageReference Include="Melville.Generators.INPC" Version="0.7.7" />
+      <PackageReference Include="Melville.MVVM" Version="0.7.7" />
+      <PackageReference Include="Melville.SystemInterface" Version="0.7.7" />
+      <PackageReference Include="NodaTime" Version="3.2.2" />
       <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     </ItemGroup>
 

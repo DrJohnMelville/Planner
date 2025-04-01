@@ -3,7 +3,7 @@
     <PropertyGroup>
       <CefSharpAnyCpuSupport>true</CefSharpAnyCpuSupport>
       <OutputType>WinExe</OutputType>
-        <TargetFramework>net8.0-windows</TargetFramework>
+        <TargetFramework>net9.0-windows</TargetFramework>
         <LangVersion>latest</LangVersion>
         <UseWPF>true</UseWPF>
         <Nullable>enable</Nullable>
@@ -13,8 +13,8 @@
   </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Melville.MVVM" Version="0.6.7" />
-      <PackageReference Include="Melville.MVVM.Wpf" Version="0.6.7" />
+      <PackageReference Include="Melville.MVVM" Version="0.7.7" />
+      <PackageReference Include="Melville.MVVM.Wpf" Version="0.7.7" />
       <PackageReference Include="Melville.WpfAppFramework" Version="0.6.7" />
       <PackageReference Include="Melville.WpfControls" Version="0.6.6" />
       <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0" />
