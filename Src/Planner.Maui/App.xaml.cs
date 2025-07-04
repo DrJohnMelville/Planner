@@ -10,7 +10,8 @@ public partial class App
     { 
         InitializeComponent();
         var loginPage = login();
-        loginPage.ViewModel.LoginSuccessful += (_, _) => MainPage = shell();
+        loginPage.ViewModel.LoginSuccessful += (_, _) => 
+            MainPage = shell();
         MainPage = loginPage;
     }
 

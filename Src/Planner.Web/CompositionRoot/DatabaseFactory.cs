@@ -9,9 +9,10 @@ namespace Planner.Web.CompositionRoot
 {
     public static class DatabaseFactory
     {
-        public static void ConfigureDatabase(IServiceCollection services, IWebHostEnvironment environment)
+        public static void ConfigureDatabase(IServiceCollection services, IWebHostEnvironment environment,
+            string dataRoot)
         {
-            var dir = new FileSystemDirectory(Path.Join(environment.ContentRootPath, "App_Data"));
+            var dir = new FileSystemDirectory(dataRoot);
             RegisterDataDirectory(services, dir);
             RegisterDatabase(services, dir);
         }

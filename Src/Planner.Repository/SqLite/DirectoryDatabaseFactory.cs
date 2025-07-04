@@ -10,7 +10,7 @@ namespace Planner.Repository.SqLite
         public static Func<PlannerDataContext> DatabaseCreator(IDirectory dbDir)
         {
             var ret = DataContextFactory(dbDir.File("database.db"));
-            EnsureDatabaseIsLatestVersion(ret);
+         //   EnsureDatabaseIsLatestVersion(ret);
             return ret;
         }
 

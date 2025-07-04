@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.Text.Json.Serialization;
+using Melville.IOC.IocContainers;
+using Melville.IOC.TypeResolutionPolicy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -9,9 +11,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
 using Planner.Models.Blobs;
+
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
 using Planner.Models.Tasks;
@@ -34,9 +38,12 @@ namespace Planner.Web.CompositionRoot
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<ILoggerFactory, LoggerFactory>();
             ConfigureDataProtection(services);
             AddCapWebAuthentication(services);
-            DatabaseFactory.ConfigureDatabase(services, webHostEnvironment
+            DatabaseFactory.ConfigureDatabase(services, webHostEnvironment,
+                configuration.GetValue<string>("DataRoot") ??
+                throw new NotImplementedException("A dataroot is required")
             );
             services.AddSingleton<IClock>(SystemClock.Instance);
             services.AddScoped<IDatedRemoteRepository<PlannerTask>, SqlRemoteRepositoryWithDate<PlannerTask>>();
@@ -51,8 +58,8 @@ namespace Planner.Web.CompositionRoot
             services.AddScoped<BlobStreamExtractor>();
             
             services.AddControllersWithViews().AddJsonOptions(ConfigureJsonSerialization);
+            Console.WriteLine("End ConfigureServices");
         }
-
 
         private static void ConfigureDataProtection(IServiceCollection services) =>
             services.AddDataProtection()
