@@ -44,7 +44,7 @@ namespace Planner.Blazor.CompositionRoot
         {
             services.AddSingleton<IMarkdownTranslator>(
                 new MarkdownTranslator("/DailyPage/", hostEnvironment.BaseAddress+"BlobContent/"));
-            services.AddFileReaderService(o => o.UseWasmSharedBuffer = true);
+            services.AddFileReaderService();
             services.AddTransient<IBlobCreator, BlobCreator>();
         }
 

@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,6 +53,7 @@ namespace Planner.Web.CompositionRoot
             services.AddControllersWithViews().AddJsonOptions(ConfigureJsonSerialization);
         }
 
+
         private static void ConfigureDataProtection(IServiceCollection services) =>
             services.AddDataProtection()
                 .PersistKeysToFileSystem(new DirectoryInfo(".\\App_Data"))
@@ -82,11 +84,13 @@ namespace Planner.Web.CompositionRoot
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+
             app.UseStaticFiles();
             app.UseBlazorFrameworkFiles();
             app.UseRouting();

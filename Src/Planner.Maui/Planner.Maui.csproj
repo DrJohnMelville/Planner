@@ -65,11 +65,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Melville.Generators.INPC" Version="0.7.7" />
-		<PackageReference Include="Melville.IOC.AspNet" Version="0.7.6" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.3" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.3" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.3" />
+		<PackageReference Include="Melville.Generators.INPC" Version="0.7.10" />
+		<PackageReference Include="Melville.IOC.AspNet" Version="0.7.10" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.6" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.6" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.6" />
 		<PackageReference Include="XCalendar.Maui" Version="4.6.0" />
 	</ItemGroup>
 
@@ -103,11 +103,11 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\Planner.CommonmUI\Planner.CommonUI.csproj" />
 	  <ProjectReference Include="..\Planner.Models\Planner.Models.csproj" />
-	  <PackageReference Include="Melville.MVVM.Maui" Version="0.7.8-preview" />
+	  <PackageReference Include="Melville.MVVM.Maui" Version="0.7.10" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Update="Microsoft.Maui.Controls" Version="9.0.50" />
+	  <PackageReference Update="Microsoft.Maui.Controls" Version="9.0.81" />
 	</ItemGroup>
 
 </Project>

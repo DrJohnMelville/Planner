@@ -7,14 +7,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Markdig" Version="0.40.0" />
-      <PackageReference Include="Melville.FileSystem" Version="0.7.7" />
-      <PackageReference Include="Melville.INPC" Version="0.7.7" />
-      <PackageReference Include="Melville.Generators.INPC" Version="0.7.7" />
-      <PackageReference Include="Melville.MVVM" Version="0.7.7" />
-      <PackageReference Include="Melville.SystemInterface" Version="0.7.7" />
+      <PackageReference Include="Markdig" Version="0.41.3" />
+      <PackageReference Include="Melville.FileSystem" Version="0.7.10" />
+      <PackageReference Include="Melville.INPC" Version="0.7.10" />
+      <PackageReference Include="Melville.Generators.INPC" Version="0.7.10" />
+      <PackageReference Include="Melville.MVVM" Version="0.7.10" />
+      <PackageReference Include="Melville.SystemInterface" Version="0.7.10" />
       <PackageReference Include="NodaTime" Version="3.2.2" />
-      <PackageReference Include="System.Linq.Async" Version="6.0.1" />
+      <PackageReference Include="System.Linq.Async" Version="6.0.3" />
     </ItemGroup>
 
     <ItemGroup>
