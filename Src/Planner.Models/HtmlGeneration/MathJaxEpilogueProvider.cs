@@ -10,6 +10,13 @@ public static partial class MathJaxEpilogueProvider
     public static partial Regex MathRegex();
 
     public const string Epilogue = """
+        <script>
+        MathJax = {
+          tex: {
+            inlineMath: {'[+]': [['$', '$']]}
+          }
+        };
+        </script>
         <script src=\"https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js\"></script>
         """;
         
