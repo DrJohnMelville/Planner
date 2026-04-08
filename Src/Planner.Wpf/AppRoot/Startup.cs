@@ -42,7 +42,6 @@ namespace Planner.Wpf.AppRoot
         protected override void RegisterWithIocContainer(IBindableIocService service)
         {
             new CommonMaappings(service).Configure();
-            service.AddLogging();
             RegisterReloadEvents(service);
             RegisterMainWindowWithView(service);
             RegisterNoteServer(service);

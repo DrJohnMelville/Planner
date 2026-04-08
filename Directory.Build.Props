@@ -1,0 +1,13 @@
+<Project>
+	<PropertyGroup>
+		<Version>0.1.0</Version>
+		<Authors>John Melville, MS, MD</Authors>
+		<Company>Just Me</Company>
+		<Copyright>2026 John Melville</Copyright>
+		<RepositoryUrl></RepositoryUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Nullable>enable</Nullable>
+		<LangVersion>14.0</LangVersion>
+		<AnalysisLevel>latest</AnalysisLevel>
+	</PropertyGroup>
+</Project>

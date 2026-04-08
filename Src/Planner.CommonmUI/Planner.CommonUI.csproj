@@ -1,16 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Melville.IOC" Version="0.6.7" />
-    <PackageReference Include="NodaTime.Serialization.SystemTextJson" Version="1.0.0" />
-    <PackageReference Include="TokenServiceClient.Native" Version="0.3.1" />
+    <PackageReference Include="Melville.IOC" Version="0.8.3" />
+    <PackageReference Include="NodaTime.Serialization.SystemTextJson" Version="1.3.1" />
+    <PackageReference Include="TokenServiceClient.Native" Version="0.4.3" />
   </ItemGroup>
 
   <ItemGroup>
