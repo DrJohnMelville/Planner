@@ -30,7 +30,7 @@ public class PlannerTaskJsonSerialization
         var rpt = JsonSerializer.Deserialize<PlannerTask>(
             JsonTextForObject,
             SerializerSettings());
-        Assert.Equal(Guid.Parse("f3d68e2f-10ec-4a7c-9de7-bdb26906718b"), rpt.Key);
+        Assert.Equal(Guid.Parse("f3d68e2f-10ec-4a7c-9de7-bdb26906718b"), rpt!.Key);
         Assert.Equal("Foo", rpt.Name);
         Assert.Equal(2, rpt.Order);
         Assert.Equal('A', rpt.Priority);

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.11.35111.106
+# Visual Studio Version 18
+VisualStudioVersion = 18.5.11626.173 insiders
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Planner.Wpf", "Src\Planner.Wpf\Planner.Wpf.csproj", "{68964DF7-5B60-4B24-93BD-E66A2BD485DA}"
 EndProject
@@ -17,11 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Planner.Repository.Web", "S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Planner.Blazor", "Src\Planner.Blazor\Planner.Blazor.csproj", "{701576D8-599C-4C01-B0D0-58E32F63CC4A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Planner.Maui", "Src\Planner.Maui\Planner.Maui.csproj", "{BC521167-B029-4FAA-A708-82D20821DFBC}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Planner.CommonUI", "Src\Planner.CommonmUI\Planner.CommonUI.csproj", "{17469AA3-933C-48C0-97EC-748D0BEF79E0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Maui.Test", "Src\Planner.Maui.Test\Planner.Maui.Test.csproj", "{3AFAB144-1F97-4305-9DA1-417F23DB881C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Test", "Src\Planner.Test\Planner.Test.csproj", "{88A22049-E157-0DD6-186B-3CF24183C9F8}"
 EndProject
@@ -59,20 +55,10 @@ Global
 		{701576D8-599C-4C01-B0D0-58E32F63CC4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{701576D8-599C-4C01-B0D0-58E32F63CC4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{701576D8-599C-4C01-B0D0-58E32F63CC4A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BC521167-B029-4FAA-A708-82D20821DFBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BC521167-B029-4FAA-A708-82D20821DFBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BC521167-B029-4FAA-A708-82D20821DFBC}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{BC521167-B029-4FAA-A708-82D20821DFBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BC521167-B029-4FAA-A708-82D20821DFBC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BC521167-B029-4FAA-A708-82D20821DFBC}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{17469AA3-933C-48C0-97EC-748D0BEF79E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{17469AA3-933C-48C0-97EC-748D0BEF79E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17469AA3-933C-48C0-97EC-748D0BEF79E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17469AA3-933C-48C0-97EC-748D0BEF79E0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3AFAB144-1F97-4305-9DA1-417F23DB881C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3AFAB144-1F97-4305-9DA1-417F23DB881C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3AFAB144-1F97-4305-9DA1-417F23DB881C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3AFAB144-1F97-4305-9DA1-417F23DB881C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{88A22049-E157-0DD6-186B-3CF24183C9F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{88A22049-E157-0DD6-186B-3CF24183C9F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88A22049-E157-0DD6-186B-3CF24183C9F8}.Release|Any CPU.ActiveCfg = Release|Any CPU

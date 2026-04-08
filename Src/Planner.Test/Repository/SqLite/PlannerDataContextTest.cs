@@ -27,7 +27,7 @@ public class PlannerDataContextTest
 
         await using var ctx2 = data.NewContext();
         var newPt = await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(ctx2.PlannerTasks);
-        Assert.Equal("Foo", newPt.Name);
+        Assert.Equal("Foo", newPt!.Name);
         Assert.Equal('C', newPt.Priority);
         Assert.Equal(3, newPt.Order);
         Assert.Equal(new LocalDate(1975,07,28), newPt.Date);

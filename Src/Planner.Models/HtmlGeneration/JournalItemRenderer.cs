@@ -84,6 +84,7 @@ namespace Planner.Models.HtmlGeneration
                 (s=>true, "</div>"),
                 (s=>s.Contains("````mermaid"), 
                     "<script src=\"https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js\"></script><script>mermaid.initialize({startOnLoad:true});</script>"),
+                (MathJaxEpilogueProvider.MightHaveMath, MathJaxEpilogueProvider.Epilogue),
                 (s=>true, "</body></html>")
             };
         
