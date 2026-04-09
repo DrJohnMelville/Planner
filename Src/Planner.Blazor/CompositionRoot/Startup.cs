@@ -79,13 +79,14 @@ namespace Planner.Blazor.CompositionRoot
         {
             services.AddSingleton(typeof(IEventBroadcast<>), typeof(EventBroadcast<>));
             services.AddTransient<IJsonWebService, JsonWebService>();
-            services.AddSingleton<IBlobContentStore, WebBlobContentStore>();
+            services.AddTransient<IBlobContentStore, WebBlobContentStore>();
             services.AddTransient<INoteSearcher, WebNoteSearcher>();
             RegisterWebRepository<PlannerTask>("/Task");
             RegisterWebRepository<Note>("/Note");
             RegisterWebRepository<Blob>("/Blob");
-            services.AddSingleton(typeof(ICachedRepositorySource<>), typeof(LocalToRemoteRepositoryBridge<>));
-            services.AddSingleton(typeof(ILocalRepository<>), typeof(CachedRepository<>));
+            services.AddTransient(typeof(ICachedRepositorySource<>), typeof(LocalToRemoteRepositoryBridge<>));
+            services.AddTransient(typeof(ILocalRepository<>), typeof(CachedRepository<>));
+            services.AddSingleton(typeof(RepositoryCacheStore<,>), typeof(RepositoryCacheStore<,>));
         }
 
         private void RegisterWebRepository<T>(string name) where T:PlannerItemWithDate =>

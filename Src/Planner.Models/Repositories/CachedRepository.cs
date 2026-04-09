@@ -14,13 +14,23 @@ namespace Planner.Models.Repositories
     {
     }
 
+    public class RepositoryCacheStore<TKey, T> where T:class where TKey:notnull
+    {
+        public readonly Dictionary<LocalDate, WeakReference<IListPendingCompletion<T>>> ListCache =
+            new();
+
+        public readonly Dictionary<TKey, WeakReference<T>> ItemCache = new();
+
+    }
+
     public abstract class CachedRepositoryBase<TKey, T> : ILocalRepository<T> 
         where T : class where TKey: notnull
     {
-        private readonly Dictionary<LocalDate, WeakReference<IListPendingCompletion<T>>> listCache =
-            new();
+        private readonly RepositoryCacheStore<TKey,T> cacheStore;
+        private Dictionary<LocalDate, WeakReference<IListPendingCompletion<T>>> listCache =>
+            cacheStore.ListCache;
 
-        private readonly Dictionary<TKey, WeakReference<T>> itemCache = new();
+        private Dictionary<TKey, WeakReference<T>> itemCache => cacheStore.ItemCache;
 
         private readonly ILocalRepository<T> source;
 
@@ -31,10 +41,12 @@ namespace Planner.Models.Repositories
             ILocalRepository<T> source, IList<TKey> key);
 
         public CachedRepositoryBase(ICachedRepositorySource<T> source, 
-            IEventBroadcast<ClearCachesEventArgs> clearCacheSignal)
+            IEventBroadcast<ClearCachesEventArgs> clearCacheSignal,
+            RepositoryCacheStore<TKey, T> cacheStore)
         {
             this.source = source;
             clearCacheSignal.Fired += ClearCache;
+            this.cacheStore = cacheStore;
         }
 
         private void ClearCache(object? sender, ClearCachesEventArgs e)
@@ -162,7 +174,9 @@ namespace Planner.Models.Repositories
     
     public class CachedRepository<T> :CachedRepositoryBase<Guid, T> where T : PlannerItemWithDate
     {
-        public CachedRepository(ICachedRepositorySource<T> source, IEventBroadcast<ClearCachesEventArgs> clearCacheSignal) : base(source, clearCacheSignal)
+        public CachedRepository(
+            ICachedRepositorySource<T> source, IEventBroadcast<ClearCachesEventArgs> clearCacheSignal, RepositoryCacheStore<Guid, T> cacheStore) : 
+            base(source, clearCacheSignal, cacheStore)
         {
         }
 

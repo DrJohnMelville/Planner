@@ -73,14 +73,33 @@ public class NoteHtmlGeneratorTest: IDisposable
     {
         notes.Add(new Note
         {
-            Title = "Title", Text = @"````mermaid
+            Title = "Title",
+            Text = @"````mermaid
 ````"
         });
         await sut.GenerateResponse("1975-7-28/", output);
-        Assert.Contains("div class=\"mermaid\">", OutputAsString);
+        Assert.Contains("pre class=\"mermaid\">", OutputAsString);
         Assert.Contains(
             "<script src=\"https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js\"></script><script>mermaid.initialize({startOnLoad:true});</script>",
             OutputAsString);
+        Assert.DoesNotContain("mathjax", OutputAsString);
+    }
+
+    [Test]
+    [Arguments("$$ \\Alpha + \\beta$$", """<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>""")]
+    [Arguments("$ \\Alpha + \\beta$", """<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>""")]
+    public async Task MathJaxTest(string input, string expected)
+    {
+        notes.Add(new Note
+        {
+            Title = "Title",
+            Text = input
+        });
+        await sut.GenerateResponse("1975-7-28/", output);
+        Assert.Contains(
+            expected,
+            OutputAsString);
+        Assert.DoesNotContain("mermaid", OutputAsString);
     }
 
     [Test]

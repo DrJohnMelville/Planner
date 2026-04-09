@@ -6,15 +6,8 @@ using Planner.Models.Blobs;
 
 namespace Planner.Repository.Web
 {
-    public class WebBlobContentStore : IBlobContentStore
+    public class WebBlobContentStore(HttpClient client) : IBlobContentStore
     {
-        private HttpClient client;
-
-        public WebBlobContentStore(HttpClient client)
-        {
-            this.client = client;
-        }
-        
         private string Url(Guid key) => $"BlobContent/{key}";
 
         public Task Write(Guid key, Stream data)
