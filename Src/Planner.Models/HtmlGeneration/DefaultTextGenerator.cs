@@ -7,13 +7,13 @@ namespace Planner.Models.HtmlGeneration
 {
     public partial class DefaultTextGenerator : TryNoteHtmlGenerator
     {
-        public DefaultTextGenerator():base(MyRegex()) // matches everything because this is the default
+        public DefaultTextGenerator():base(AlwaysTrue()) // matches everything because this is the default
         {
         }
 
         protected override Task? TryRespond(Match match, Stream destination) => 
             destination.WriteAsync(Encoding.UTF8.GetBytes("<html><body></body></html>")).AsTask();
         [GeneratedRegex(".*")]
-        private static partial Regex MyRegex();
+        private static partial Regex AlwaysTrue();
     }
 }

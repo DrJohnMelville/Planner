@@ -10,14 +10,14 @@ using Planner.Models.Time;
 
 namespace Planner.Models.HtmlGeneration
 {
-    public class DailyJournalPageGenerator : TryNoteHtmlGenerator
+    public partial class DailyJournalPageGenerator : TryNoteHtmlGenerator
     {
         private readonly Func<TextWriter, JournalItemRenderer> rendererFactory;
         private ILocalRepository<Note> noteRepository;
         public DailyJournalPageGenerator(
             Func<TextWriter, JournalItemRenderer> rendererFactory, 
             ILocalRepository<Note> noteRepository) : base(
-            new Regex(@"(\d{4}-\d{1,2}-\d{1,2})/(?:show/([0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}))?"))
+            JournalUrl())
         {
             this.rendererFactory = rendererFactory;
             this.noteRepository = noteRepository;
@@ -38,5 +38,8 @@ namespace Planner.Models.HtmlGeneration
             rendererFactory(writer).WriteJournalList(items, (i,j)=>i.ToString(), items.FirstOrDefault(
                 i=>note.HasValue && note == i.Key));
         }
+
+        [GeneratedRegex(@"(\d{4}-\d{1,2}-\d{1,2})/(?:show/([0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}))?")]
+        private static partial Regex JournalUrl();
     }
 }

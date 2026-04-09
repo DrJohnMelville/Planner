@@ -46,13 +46,11 @@ namespace Planner.Models.Blobs
             return (intOrdinal > 0 && intOrdinal <= listForDate.Count) ? listForDate[intOrdinal - 1] : null;
         }
     }
-    public class BlobGenerator: TryNoteHtmlGenerator
+    public partial class BlobGenerator: TryNoteHtmlGenerator
     {
         private readonly BlobStreamExtractor extractor;
-        private static readonly Regex filter = new(
-            @"\/Images\/(\d{4}-\d{1,2}-\d{1,2})\/(\d+)\.(\d+)(?:\.(\d+))?_(\d+)", RegexOptions.IgnoreCase);
-
-        public BlobGenerator(BlobStreamExtractor extractor): base(filter)
+       
+        public BlobGenerator(BlobStreamExtractor extractor): base(BlobUrl())
         {
             this.extractor = extractor;
         }
@@ -74,5 +72,8 @@ namespace Planner.Models.Blobs
                 await stream.CopyToAsync(destination);
             }
         }
+
+        [GeneratedRegex(@"\/Images\/(\d{4}-\d{1,2}-\d{1,2})\/(\d+)\.(\d+)(?:\.(\d+))?_(\d+)", RegexOptions.IgnoreCase, "en-US")]
+        private static partial Regex BlobUrl();
     }
 }
