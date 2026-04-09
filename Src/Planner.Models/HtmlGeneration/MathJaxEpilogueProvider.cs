@@ -1,10 +1,14 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 
 namespace Planner.Models.HtmlGeneration;
 
 public static partial class MathJaxEpilogueProvider
 {
-    public static bool MightHaveMath(string code) => MathRegex().IsMatch(code);
+    public static bool MightHaveMath(string code) 
+    {
+        return MathRegex().IsMatch(code);
+    }
 
     [GeneratedRegex(@"\$.+\$", RegexOptions.Compiled)]
     public static partial Regex MathRegex();
@@ -12,8 +16,8 @@ public static partial class MathJaxEpilogueProvider
     public const string Epilogue = """
         <script>
         MathJax = {
-          tex: {
-            inlineMath: {'[+]': [['$', '$']]}
+          options: {
+          processHtmlClass: 'math',
           }
         };
         </script>

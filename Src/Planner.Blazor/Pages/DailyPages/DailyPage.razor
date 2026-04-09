@@ -1,11 +1,13 @@
 ﻿@page "/"
 @page "/DailyPage/{DateString}"
+@using Planner.Models.HtmlGeneration
 @using Planner.Models.Repositories
 @using Planner.Models.Tasks
 @using NodaTime
 @using Planner.Models.Markdown
 @using Planner.Models.Notes
 @using Planner.Models.Time
+@using System.IO
 @inject ILocalRepository<PlannerTask> taskStore
 @inject ILocalRepository<Note> noteStore
 @inject ModalService ModalService
@@ -53,7 +55,6 @@
     }
 </table>
 
-<h4>Appointments</h4>
 
 <h4>Notes</h4>
 @if (notes != null)
@@ -71,6 +72,8 @@
 <a href="/NewNote/@date.ToString("yyyy-MM-dd", null)">New Note</a>
 <a href="/SearchNote">Search Notes</a>
 
+@Epilogue()
+
 @code {
 
     [Parameter]
@@ -82,6 +85,13 @@
     private IListPendingCompletion<Note>? notes;
 
     protected override Task OnParametersSetAsync() => OnInitializedAsync();
+
+    private MarkupString Epilogue()
+    {
+        var writer = new StringWriter();
+        if (notes is not null) EpilogueManager.Write(notes, writer);
+        return (MarkupString) writer.ToString();    
+    }
 
     protected override Task OnInitializedAsync()
     {

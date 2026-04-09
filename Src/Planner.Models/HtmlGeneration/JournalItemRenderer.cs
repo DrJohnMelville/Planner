@@ -39,7 +39,9 @@ namespace Planner.Models.HtmlGeneration
                     position++;
                 }
             }
+            destination.WriteLine("</div>");
             EpilogueManager.Write(EffectiveNoteList(notes, desiredNote), destination);
+            destination.WriteLine("</body></html>");
         }
 
         private static IList<Note> EffectiveNoteList(IList<Note> notes, Note? desiredNote) => 
@@ -81,11 +83,9 @@ namespace Planner.Models.HtmlGeneration
         private static readonly List<(Func<string, bool> Predicate, string Epilogue)> providers =
             new List<(Func<string, bool> Predicate, string Epilogue)>
             {
-                (s=>true, "</div>"),
                 (s=>s.Contains("````mermaid"), 
                     "<script src=\"https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js\"></script><script>mermaid.initialize({startOnLoad:true});</script>"),
                 (MathJaxEpilogueProvider.MightHaveMath, MathJaxEpilogueProvider.Epilogue),
-                (s=>true, "</body></html>")
             };
         
         public static void Write(IList<Note> effectiveNoteList, TextWriter destination)
