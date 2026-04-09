@@ -42,7 +42,7 @@ namespace TUnit.Repository.Cache;
                 initialize(ret);
                 return ret;
             }
-
+        
             public IListPendingCompletion<PlannerTask> ItemsForDate(LocalDate date)
             {
                 return new ItemList<PlannerTask>

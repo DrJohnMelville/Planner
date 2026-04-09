@@ -64,9 +64,9 @@ namespace Planner.Wpf.Test.Notes.Pasters
 
         [Theory]
         [InlineData("UnicodeText", "a,b\r\nc,d", null)]
-        [InlineData("CSV", "a,b\r\nc,d", "a|b\r\n---|---\r\nc|d\r\n")]
-        [InlineData("CSV", "a,b\r\nc,d\r\nf,g", "a|b\r\n---|---\r\nc|d\r\nf|g\r\n")]
-        [InlineData("CSV", "a,b", "a|b\r\n---|---\r\n")]
+        [InlineData("Csv", "a,b\r\nc,d", "a|b\r\n---|---\r\nc|d\r\n")]
+        [InlineData("Csv", "a,b\r\nc,d\r\nf,g", "a|b\r\n---|---\r\nc|d\r\nf|g\r\n")]
+        [InlineData("Csv", "a,b", "a|b\r\n---|---\r\n")]
         public async Task CSVParser(string format, string text, string result)
         {
             PutTextInClipboard(format, text);
