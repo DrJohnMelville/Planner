@@ -63,7 +63,7 @@ namespace Planner.Web.CompositionRoot
 
         private static void ConfigureDataProtection(IServiceCollection services) =>
             services.AddDataProtection()
-                .PersistKeysToFileSystem(new DirectoryInfo(".\\App_Data"))
+                .PersistKeysToFileSystem(new DirectoryInfo("App_Data"))
                 .SetApplicationName("Planner")
                 .SetDefaultKeyLifetime(TimeSpan.FromDays(30));
 

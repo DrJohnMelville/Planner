@@ -14,7 +14,7 @@ namespace TUnit.Repository.Cache;
 
         public CachedRepoClearsWithGarbageCollection()
         {
-            sut = new CachedRepository<PlannerTask>(source, message);
+            sut = new CachedRepository<PlannerTask>(source, message, new());
         }
 
         [Test]

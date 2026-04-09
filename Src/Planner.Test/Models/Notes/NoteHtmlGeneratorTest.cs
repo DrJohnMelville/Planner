@@ -49,8 +49,11 @@ public class NoteHtmlGeneratorTest: IDisposable
     public async Task EmptyTest()
     {
         await sut.GenerateResponse("1975-7-28/", output);
-        Assert.Equal(
-            "<html><head><link rel=\"stylesheet\" href=\"/0/journal.css\"></head><body><div class =\"NotesList\">",
+        Assert.Equal("""
+<html><head><link rel="stylesheet" href="/0/journal.css"></head><body><div class ="NotesList"></div>
+</body></html>
+
+""",
             OutputAsString);
     }
 

@@ -19,7 +19,7 @@ public class CachedRepositoryTest2
 
     public CachedRepositoryTest2()
     {
-        sut = new CachedRepository<Note>(repo.Object, message);
+        sut = new CachedRepository<Note>(repo.Object, message, new());
         repo.Setup(i => i.ItemsForDate(It.IsAny<LocalDate>())).Returns((LocalDate _) =>
         {
             var ret = new ItemList<Note>() {new(){Key =k1 }, new(){Key=k2}};
