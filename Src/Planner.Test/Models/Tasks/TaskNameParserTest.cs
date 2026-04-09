@@ -30,7 +30,7 @@ public class TaskNameParserTest
         Assert.Equal(TaskTextType.NoLink, list[0].Label);
         Assert.Equal(TaskTextType.PlannerPage, list[1].Label);
         Assert.Equal(TaskTextType.NoLink, list[2].Label);
-        Assert.Equal(4, list[1]!.Match.Groups.Count);
+        Assert.Equal(4, list[1]!.Match!.Groups.Count);
         Assert.Null(list[0].Match);
         Assert.Null(list[2].Match);
     }

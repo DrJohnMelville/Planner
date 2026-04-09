@@ -33,12 +33,12 @@ namespace Planner.Wpf.Test.PlannerPages
                 d => new DailyTaskListViewModel(repo.Object, i=> new PlannerTaskViewModel(i),
                     Mock.Of<IKeyboardQuery>(), d);
             Func<LocalDate, DailyNoteDisplayViewModel> notesCreator = d => 
-                new DailyNoteDisplayViewModel(null, d, null, null);
+                new DailyNoteDisplayViewModel(null!, d, null!, null!);
             
             sut = new DailyPlannerPageViewModel(new LocalDate(1975,07,28), 
                 taskListFactory, notesCreator,
                         navigation.Object, requestEdit, Mock.Of<ILinkRedirect>(),
-                   i=>new RichTextCommandTarget(null,null,LocalDate.MaxIsoValue));
+                   i=>new RichTextCommandTarget(null!,null!,LocalDate.MaxIsoValue));
         }
 
         [Fact]

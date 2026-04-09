@@ -21,7 +21,7 @@ namespace Planner.Wpf.Test.Notes
         [Theory]
         [InlineData(null, "7/28/1975 1:01 AM")]
         [InlineData("{0:dddd}", "Monday")]
-        public void DisplayBaseTime(string format, string result)
+        public void DisplayBaseTime(string? format, string result)
         {
             Assert.Equal(result, sut.Convert(Instant.FromUtc(1975,07,28, 1,1),
                 typeof(string), format, CultureInfo.CurrentCulture));

@@ -9,13 +9,17 @@ using Planner.Web.Controllers;
 
 namespace TUnit.Web;
 
-public class BlobContentControllerTest
+public class BlobContentControllerTest: IDisposable
 {
     private readonly Mock<IUsersClock> clock = new();
     private readonly Mock<IBlobContentStore> storage = new();
     private readonly Mock<IDatedRemoteRepository<Blob>> repo = new();
     private readonly BlobContentController sut = new BlobContentController();
 
+    public void Dispose()
+    {
+        sut.Dispose();
+    }
     public BlobContentControllerTest()
     {
         clock.Setup(i => i.CurrentUiTimeZone()).Returns(DateTimeZone.Utc);

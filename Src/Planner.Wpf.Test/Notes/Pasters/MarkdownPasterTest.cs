@@ -19,11 +19,11 @@ namespace Planner.Wpf.Test.Notes.Pasters
         }
 
         [Theory]
-        [InlineData(null, null, null)]
-        [InlineData(null, "B", "B")]
+        [InlineData(null!, null!, null!)]
+        [InlineData(null!, "B", "B")]
         [InlineData("A", "B", "A")]
-        [InlineData("A", null, "A")]
-        public async Task CompositeTester(string a, string b, string result)
+        [InlineData("A", null!, "A")]
+        public async Task CompositeTester(string? a, string? b, string? result)
         {
             var pa = new Mock<IMarkdownPaster>();
             pa.Setup(i => i.GetPasteText(clip.Object, date)).ReturnsAsync(a);
@@ -45,7 +45,7 @@ namespace Planner.Wpf.Test.Notes.Pasters
         [Theory]
         [InlineData("UnicodeText", "Pasted")]
         [InlineData("HTML Format", null)]
-        public async Task ReadTextFromClipboard(string fmt, string result)
+        public async Task ReadTextFromClipboard(string fmt, string? result)
         {
             PutTextInClipboard(fmt, "Pasted");
             var sut = new StringPaster(DataFormats.UnicodeText);
@@ -55,7 +55,7 @@ namespace Planner.Wpf.Test.Notes.Pasters
         [Theory]
         [InlineData("UnicodeText", null)]
         [InlineData("HTML Format", "Pasted")]
-        public async Task ReadHtmlFromClipboard(string fmt, string result)
+        public async Task ReadHtmlFromClipboard(string fmt, string? result)
         {
             PutTextInClipboard(fmt, "SFAK<!--StartFragment-->Pasted<!--EndFragment-->");
             var sut = new HtmlMarkdownPaster();

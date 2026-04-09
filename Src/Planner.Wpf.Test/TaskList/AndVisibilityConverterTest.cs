@@ -13,10 +13,10 @@ namespace Planner.Wpf.Test.TaskList
         [InlineData(true, true, false, Visibility.Collapsed)]
         [InlineData(true, true, 1, Visibility.Collapsed)]
         [InlineData(true, true, null, Visibility.Collapsed)]
-        public void AndVisibilityTest(object o1, object o2, object o3, Visibility visibility)
+        public void AndVisibilityTest(object? o1, object? o2, object? o3, Visibility visibility)
         {
             Assert.Equal(visibility, AndVisibilityConverter.Instance.Convert(
-                new []{o1,o2,o3}, typeof(bool), null, CultureInfo.CurrentCulture));
+                new []{o1!,o2!,o3}!, typeof(bool), null!, CultureInfo.CurrentCulture));
             
         }
 
@@ -24,7 +24,7 @@ namespace Planner.Wpf.Test.TaskList
         public void NullReturnsCollapsed()
         {
             Assert.Equal(Visibility.Collapsed, AndVisibilityConverter.Instance.Convert(
-                null, typeof(bool), null, CultureInfo.CurrentCulture));
+                    null!, typeof(bool), null!, CultureInfo.CurrentCulture));
             
         }
     }

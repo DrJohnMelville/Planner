@@ -8,7 +8,7 @@ using Planner.Models.Markdown;
 
 namespace Planner.Test.Models.Notes;
 
-public class NoteHtmlGeneratorTest
+public class NoteHtmlGeneratorTest: IDisposable
 {
     private readonly Mock<ILocalRepository<Note>> repo = new Mock<ILocalRepository<Note>>();
     private readonly ItemList<Note> notes = new ItemList<Note>();
@@ -18,6 +18,10 @@ public class NoteHtmlGeneratorTest
     private readonly Mock<ILocalRepository<Blob>> blobRepo = new Mock<ILocalRepository<Blob>>();
     private readonly Mock<IBlobContentStore> blobStore = new Mock<IBlobContentStore>();
 
+    public void Dispose()
+    {
+        output.Dispose();
+    }
 
     private readonly LocalDate date = new LocalDate(1975, 07, 28);
 

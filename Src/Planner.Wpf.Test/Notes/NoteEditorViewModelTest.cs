@@ -41,7 +41,7 @@ namespace Planner.Wpf.Test.Notes
             };
             notes.Add(note);
             sut = new NoteEditorViewModel(new NoteEditRequestEventArgs(notes, note),
-                new NoteUrlGenerator(noteServer.Object), navWin.Object, i=>null, blobs.Object);
+                new NoteUrlGenerator(noteServer.Object), navWin.Object, i=>null!, blobs.Object);
         }
         
         [Fact]
@@ -73,7 +73,7 @@ namespace Planner.Wpf.Test.Notes
         public void OKTest()
         {
             sut.NavigateToPlannerPage();
-            navWin.Verify(i=>i.NavigateTo(null), Times.Once);
+            navWin.Verify(i=>i.NavigateTo(null!), Times.Once);
             navWin.VerifyNoOtherCalls();
         }
 
@@ -82,7 +82,7 @@ namespace Planner.Wpf.Test.Notes
         {
             note.Title = "Foo";
             sut.CancelEdit();
-            navWin.Verify(i=>i.NavigateTo(null), Times.Once);
+            navWin.Verify(i=>i.NavigateTo(null!), Times.Once);
             navWin.VerifyNoOtherCalls();
             Assert.Equal("Title", note.Title);
             
@@ -93,7 +93,7 @@ namespace Planner.Wpf.Test.Notes
         {
             note.Text = "Foo";
             sut.CancelEdit();
-            navWin.Verify(i=>i.NavigateTo(null), Times.Once);
+            navWin.Verify(i=>i.NavigateTo(null!), Times.Once);
             navWin.VerifyNoOtherCalls();
             Assert.Equal("**Text**", note.Text);
         }
@@ -111,7 +111,7 @@ namespace Planner.Wpf.Test.Notes
 
             if (confirmed)
             {
-                navWin.Verify(i=>i.NavigateTo(null), Times.Once);
+                navWin.Verify(i=>i.NavigateTo(null!), Times.Once);
             }
 
             Assert.Equal(!confirmed, notes.Contains(note));

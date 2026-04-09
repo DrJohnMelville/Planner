@@ -5,12 +5,16 @@ using Planner.Web.Controllers;
 
 namespace TUnit.Web;
 
-public class PlannerTaskControllerTest
+public class PlannerTaskControllerTest: IDisposable
 {
     private readonly Mock<IDatedRemoteRepository<PlannerTask>> repo = new Mock<IDatedRemoteRepository<PlannerTask>>();
     private readonly PlannerTaskController sut;
     private readonly LocalDate date = new LocalDate(1975, 7, 28);
 
+    public void Dispose()
+    {
+       sut.Dispose();
+    }
     public PlannerTaskControllerTest()
     {
         sut = new PlannerTaskController(repo.Object);
