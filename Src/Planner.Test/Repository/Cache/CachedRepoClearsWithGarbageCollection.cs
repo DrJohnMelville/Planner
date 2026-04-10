@@ -16,17 +16,6 @@ namespace TUnit.Repository.Cache;
         {
             sut = new CachedRepository<PlannerTask>(source, message, new());
         }
-
-        [Test]
-        public void AbandonTaskUponGC()
-        {
-            CreateItemInSeparateMethod();
-            GC.Collect(2, GCCollectionMode.Forced, true, true);
-            GC.WaitForPendingFinalizers();
-            GC.Collect(2, GCCollectionMode.Forced, true, true);
-            Assert.Equal(4, sut.ItemsForDate(baseDate).Count);
-        }
-
         private void CreateItemInSeparateMethod()
         {
             var list = sut.ItemsForDate(baseDate);

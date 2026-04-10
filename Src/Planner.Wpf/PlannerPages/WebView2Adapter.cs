@@ -11,7 +11,7 @@ namespace Planner.Wpf.PlannerPages
         [GenerateDP()]
         private static void OnBoundSourceChanged(DependencyObject wv, string url) =>
             ((WebView2)wv).Source = new Uri(url, UriKind.Absolute);
-
+        
         [GenerateDP(typeof(bool), "IsNavigating", Attached = true)]
         [GenerateDP]
         private static void OnLinkRedirectChanged(DependencyObject target, ILinkRedirect ld)
@@ -20,7 +20,13 @@ namespace Planner.Wpf.PlannerPages
             {
                 wv.NavigationStarting += OnNavigationStarting;
                 wv.NavigationCompleted += OnNavigationCompleted;
+                wv.SourceChanged += SourceChanged;
             }
+        }
+
+        private static void SourceChanged(object? sender, CoreWebView2SourceChangedEventArgs e)
+        {
+            ;
         }
 
         private static void OnNavigationStarting(object? sender, CoreWebView2NavigationStartingEventArgs e)

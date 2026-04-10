@@ -64,8 +64,10 @@
         <TextBlock Grid.Row="2" Text="{Binding Note.TimeCreated,
           Converter={StaticResource TimeDisplay},
           ConverterParameter=Note Created: {0:f}}"></TextBlock>
+        <ComboBox Grid.Column ="1" ItemsSource="{Binding GuideTitles}" 
+                  SelectedIndex="{Binding GuideIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         <winForms:WebView2 plannerPages:WebView2Adapter.BoundSource="{Binding NoteUrl}"
-                      Grid.Column="1" Grid.RowSpan="2" 
+                      Grid.Column="1" Grid.Row="1" 
                       NavigationStarting="{eventBindings:EventBinding OnNavigationStarting}"/>
         <DockPanel Grid.Row="2" Grid.Column="1" LastChildFill="False">
             <DockPanel.Resources>

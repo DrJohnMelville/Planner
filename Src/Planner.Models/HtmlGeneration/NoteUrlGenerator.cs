@@ -20,6 +20,7 @@ namespace Planner.Models.HtmlGeneration
         string ShowNoteUrl(LocalDate date, Guid key);
         string ShowNoteUrl(Note note) => ShowNoteUrl(note.Date, note.Key);
         string ArbitraryNoteView(IEnumerable<Guid> noteKeys);
+        string CreateGuideUrl(int index);
     }
     public class NoteUrlGenerator:INoteUrlGenerator
     {
@@ -39,5 +40,6 @@ namespace Planner.Models.HtmlGeneration
         public string ArbitraryNoteView(IEnumerable<Guid> noteKeys) =>
             string.Join("/", noteKeys.Select(i => i.ToString()).Prepend(Prefix() + "List"));
 
+        public string CreateGuideUrl(int index) => $"{Prefix()}Guide/{index}";
     }
 }

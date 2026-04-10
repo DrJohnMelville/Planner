@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Data;
 using Melville.INPC;
+using Melville.Linq;
 using Melville.MVVM.Wpf;
 using Melville.MVVM.Wpf.DiParameterSources;
 using Melville.MVVM.Wpf.RootWindows;
@@ -13,6 +15,7 @@ using Microsoft.Web.WebView2.Core;
 using NodaTime;
 using Planner.Models.Blobs;
 using Planner.Models.HtmlGeneration;
+using Planner.Models.Markdown;
 using Planner.Models.Notes;
 using Planner.Models.Repositories;
 using Planner.Models.Time;
@@ -67,8 +70,15 @@ namespace Planner.Wpf.Notes
             Note.Text = text;
         };
 
-        public string NoteUrl => urlGen.ShowNoteUrl(Note);
+        [AutoNotify] public partial int GuideIndex { get; set; }
+        public IEnumerable<string> GuideTitles => 
+            MarkdownGuideText.Notes
+            .Select(i => i.Title)
+            .Prepend("Note Preview");
 
+        public string NoteUrl => authorizedUrl = (GuideIndex == 0? urlGen.ShowNoteUrl(Note):
+                                urlGen.CreateGuideUrl(GuideIndex - 1));
+        private string authorizedUrl;
 
         public void NavigateToPlannerPage() => LeavePage(false);
         public void CancelEdit() => LeavePage(true);
@@ -102,7 +112,7 @@ namespace Planner.Wpf.Notes
         }
 
         public void OnNavigationStarting(CoreWebView2NavigationStartingEventArgs e) => 
-            e.Cancel = !Regex.IsMatch(e.Uri,@"/\d+/\d{4}-\d{1,2}-\d{1,2}/show/");
+            e.Cancel = e.Uri != authorizedUrl;
         
     }
 
