@@ -78,7 +78,7 @@ namespace Planner.Wpf.Notes
 
         public string NoteUrl => authorizedUrl = (GuideIndex == 0? urlGen.ShowNoteUrl(Note):
                                 urlGen.CreateGuideUrl(GuideIndex - 1));
-        private string authorizedUrl;
+        private string authorizedUrl = "";
 
         public void NavigateToPlannerPage() => LeavePage(false);
         public void CancelEdit() => LeavePage(true);

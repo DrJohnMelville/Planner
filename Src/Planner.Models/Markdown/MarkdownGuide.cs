@@ -1,6 +1,5 @@
 ﻿using NodaTime;
 using Planner.Models.HtmlGeneration;
-using Planner.Models.Notes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,26 +9,16 @@ using System.Threading.Tasks;
 
 namespace Planner.Models.Markdown;
 
-public static class MarkdownGuideText {
-
-    public static Note[] Notes { get; }  = [
-        new Note() {
-            Title = "Example Note",
-            Text = "This is an example note used to demonstrate the Markdown Guide.",
-        }
-    ];
-}
-
 public partial class MarkdownGuide(IMarkdownTranslator translator): TryNoteHtmlGenerator(GuideUrl())
 {
     protected async override Task? TryRespond(Match match, Stream destination)
     {
         await using var writer = new StreamWriter(destination);
         var generator = new JournalItemRenderer(writer, translator, new FakeUrlGenerator());
-        generator.WriteJournalList([new Note() {
-            Title = "Example Note",
-            Text = "This is an example note used to demonstrate the **Markdown Guide**.",
-        }], (i, n) => "Guide", null);
+        int.TryParse(match.Groups[1].Value, out var index);
+        generator.WriteJournalList([
+            MarkdownGuideText.NoteForIndex(index)
+            ], (i, n) => "", null);
 
     }
 

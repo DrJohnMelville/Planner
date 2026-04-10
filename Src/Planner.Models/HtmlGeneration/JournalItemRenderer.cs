@@ -65,11 +65,14 @@ namespace Planner.Models.HtmlGeneration
         private void GenerateNote(Note note, string itemNumber)
         {
             destination.Write("<h3>");
-            destination.Write($"<a href=\"{urlGenerator.EditNoteUrl(note)}\">");
-            destination.Write(itemNumber);
-            destination.Write(".");
-            destination.Write("</a>");
-            destination.Write(" ");
+            if (itemNumber.Length > 0)
+            {
+                destination.Write($"<a href=\"{urlGenerator.EditNoteUrl(note)}\">");
+                destination.Write(itemNumber);
+                destination.Write(".");
+                destination.Write("</a>");
+                destination.Write(" ");
+            }
             destination.Write(markdown.RenderLine(note.Date, note.Title));
             destination.Write("</h3>");
             destination.Write("<div>");
